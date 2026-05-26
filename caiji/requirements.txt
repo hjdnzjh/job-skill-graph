@@ -1,0 +1,30 @@
+# Data Collection System
+# Dependencies for Python 3.8+
+
+# --- Crawling ---
+scrapy>=2.11
+requests>=2.31
+beautifulsoup4>=4.12
+lxml>=4.9
+
+# --- Data processing ---
+pandas>=2.1
+numpy>=1.25
+
+# --- Storage ---
+sqlalchemy>=2.0
+pymysql>=1.1
+
+# --- Knowledge Graph ---
+neo4j>=5.0
+
+# --- LLM ---
+openai>=1.0
+
+# --- Web Dashboard ---
+fastapi>=0.100
+uvicorn[standard]>=0.23
+
+# --- Utilities ---
+python-dateutil>=2.8
+tqdm>=4.65

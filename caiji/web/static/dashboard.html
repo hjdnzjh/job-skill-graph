@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>岗位-能力知识图谱全息可视化平台</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:#0f1724;color:#e0e0e0;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1a3e,#0d1b3e);padding:16px 32px;text-align:center;border-bottom:2px solid #2a4a7f}
+.header h1{font-size:22px;color:#fff;letter-spacing:2px}
+.header .sub{font-size:13px;color:#8ab4f8;margin-top:4px}
+.error-banner{display:none;background:#5a1a1a;color:#faa;padding:12px 24px;text-align:center;font-size:14px}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;padding:16px 24px}
+.kpi-card{background:linear-gradient(135deg,#1e2a3a,#1a2440);border:1px solid #2a4070;border-radius:8px;padding:16px;text-align:center}
+.kpi-card .value{font-size:28px;font-weight:bold;color:#5cb8ff}
+.kpi-card .label{font-size:12px;color:#8899bb;margin-top:4px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 24px 16px}
+.grid-2-60{display:grid;grid-template-columns:3fr 2fr;gap:12px;padding:0 24px 16px}
+.grid-2-40{display:grid;grid-template-columns:2fr 3fr;gap:12px;padding:0 24px 16px}
+.panel{background:#131d30;border:1px solid #2a4070;border-radius:8px;overflow:hidden}
+.panel-title{font-size:14px;color:#8ab4f8;padding:12px 16px 8px;border-bottom:1px solid #1e3050}
+.panel-body{position:relative}
+.chart{width:100%;height:380px}
+.chart-tall{width:100%;height:500px}
+.chart-short{width:100%;height:300px}
+.full-width{padding:0 24px 16px}
+.interactive-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 24px 16px}
+.interactive-panel{background:#131d30;border:1px solid #2a4070;border-radius:8px;padding:16px}
+.input-group{margin-bottom:10px}
+.input-group label{display:block;font-size:13px;color:#8ab4f8;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:8px 12px;background:#0d1525;border:1px solid #2a4070;border-radius:4px;color:#e0e0e0;font-size:13px}
+.input-group select{max-height:200px}
+.btn{background:#2a5f8f;color:#fff;border:none;padding:8px 20px;border-radius:4px;cursor:pointer;font-size:13px;transition:.2s}
+.btn:hover{background:#3a7fbf}
+.btn-row{display:flex;gap:8px;margin-top:8px}
+.result-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+.result-table th{background:#1a2a40;color:#8ab4f8;padding:6px 10px;text-align:left}
+.result-table td{padding:6px 10px;border-bottom:1px solid #1e3050}
+.result-table tr:hover{background:#1a2840}
+.tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;margin:1px}
+.tag-green{background:#1a4a2a;color:#5cff8f}
+.tag-red{background:#4a1a1a;color:#ff5c5c}
+.tag-blue{background:#1a2a4a;color:#5c9fff}
+.footer{text-align:center;padding:16px;font-size:12px;color:#557;border-top:1px solid #1e3050;margin-top:16px}
+.loading{display:flex;align-items:center;justify-content:center;height:200px;color:#889}
+@media(max-width:1200px){.grid-2,.grid-2-60,.grid-2-40,.interactive-row{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>多源异构数据驱动的岗位-能力知识图谱全息可视化平台</h1>
+  <div class="sub">Dynamic Job-Skill Knowledge Graph — 全息可视化仪表盘</div>
+</div>
+<div class="error-banner" id="errorBanner"></div>
+
+<!-- KPI Cards -->
+<div class="kpi-row">
+  <div class="kpi-card"><div class="value" id="kpiNodes">-</div><div class="label">总节点数</div></div>
+  <div class="kpi-card"><div class="value" id="kpiEdges">-</div><div class="label">总边数</div></div>
+  <div class="kpi-card"><div class="value" id="kpiJobs">-</div><div class="label">岗位数</div></div>
+  <div class="kpi-card"><div class="value" id="kpiSkills">-</div><div class="label">技能数</div></div>
+  <div class="kpi-card"><div class="value" id="kpiCompanies">-</div><div class="label">公司数</div></div>
+  <div class="kpi-card"><div class="value" id="kpiCities">-</div><div class="label">城市数</div></div>
+</div>
+
+<!-- Row 1: Skill Ranking + Skill Categories -->
+<div class="grid-2-60">
+  <div class="panel"><div class="panel-title">技能需求排名 TOP 30</div><div class="panel-body"><div class="chart" id="chartSkillRank"></div></div></div>
+  <div class="panel"><div class="panel-title">技能类别分布</div><div class="panel-body"><div class="chart" id="chartSkillCat"></div></div></div>
+</div>
+
+<!-- Row 2: Skill Co-occurrence Network -->
+<div class="full-width">
+  <div class="panel"><div class="panel-title">技能共现网络图（节点大小 = 需求量，连线粗细 = 共现权重，可拖拽缩放）</div><div class="panel-body"><div class="chart-tall" id="chartNetwork"></div></div></div>
+</div>
+
+<!-- Row 3: City Distribution + Industry Distribution -->
+<div class="grid-2">
+  <div class="panel"><div class="panel-title">城市岗位分布</div><div class="panel-body"><div class="chart" id="chartCity"></div></div></div>
+  <div class="panel"><div class="panel-title">行业岗位分布</div><div class="panel-body"><div class="chart" id="chartIndustry"></div></div></div>
+</div>
+
+<!-- Row 4: Salary by Title -->
+<div class="full-width">
+  <div class="panel"><div class="panel-title">各岗位薪资对比 (月薪/千元)</div><div class="panel-body"><div class="chart" id="chartSalary"></div></div></div>
+</div>
+
+<!-- Row 5: Person-Job Matching + Evolution -->
+<div class="interactive-row">
+  <div class="interactive-panel">
+    <div class="panel-title" style="padding:0 0 8px 0;border:none">人岗匹配分析</div>
+    <div class="input-group">
+      <label>你的技能（逗号分隔）</label>
+      <input type="text" id="matchSkills" placeholder="如: Python,MySQL,Git,Linux,Django">
+    </div>
+    <div class="input-group">
+      <label>目标岗位</label>
+      <select id="matchTarget"><option value="">-- 加载中 --</option></select>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="doMatch()">匹配分析</button>
+      <button class="btn" onclick="doRecommend()">智能推荐</button>
+    </div>
+    <div class="chart-short" id="chartRadar" style="margin-top:8px"></div>
+    <div id="matchResult" style="font-size:13px;margin-top:8px"></div>
+  </div>
+  <div class="panel"><div class="panel-title">演化趋势</div><div class="panel-body"><div class="chart" id="chartEvo"></div></div></div>
+</div>
+
+<!-- Row 6: Skill Communities Sunburst -->
+<div class="full-width">
+  <div class="panel"><div class="panel-title">技能社群聚类</div><div class="panel-body"><div class="chart" id="chartSunburst"></div></div></div>
+</div>
+
+<div class="footer">数据来源：多源招聘数据采集 | 知识图谱：Neo4j + NetworkX | 可视化：ECharts 5</div>
+
+<script>
+// ===== Utility =====
+const API = '/api';
+let neoSatusOK = true;
+
+async function fetchJSON(url, opts) {
+  try {
+    const res = await fetch(url, opts);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    return await res.json();
+  } catch (e) {
+    if (e.message.includes('Failed to fetch') || e.message.includes('NetworkError')) {
+      showError('无法连接到服务器，请确认 python main_web.py 已启动');
+    } else if (e.message.includes('503') || e.message.includes('Neo4j')) {
+      showError('Neo4j 服务未连接，请启动 Neo4j 数据库');
+    }
+    throw e;
+  }
+}
+
+function showError(msg) {
+  const banner = document.getElementById('errorBanner');
+  banner.textContent = '⚠ ' + msg;
+  banner.style.display = 'block';
+  setTimeout(() => banner.style.display = 'none', 8000);
+}
+
+function initChart(domId) {
+  const dom = document.getElementById(domId);
+  if (!dom) return null;
+  const chart = echarts.init(dom, 'dark');
+  new ResizeObserver(() => chart.resize()).observe(dom);
+  return chart;
+}
+
+// ===== Overview =====
+async function loadOverview() {
+  try {
+    const data = await fetchJSON(API + '/overview');
+    document.getElementById('kpiNodes').textContent = data.total_nodes.toLocaleString();
+    document.getElementById('kpiEdges').textContent = data.total_edges.toLocaleString();
+    document.getElementById('kpiJobs').textContent = data.total_jobs.toLocaleString();
+    document.getElementById('kpiSkills').textContent = data.total_skills.toLocaleString();
+    document.getElementById('kpiCompanies').textContent = data.total_companies.toLocaleString();
+    document.getElementById('kpiCities').textContent = data.total_cities.toLocaleString();
+  } catch(e) { console.error(e); }
+}
+
+// ===== Skill Ranking =====
+async function loadSkillRanking() {
+  const chart = initChart('chartSkillRank');
+  if (!chart) return;
+  try {
+    const data = await fetchJSON(API + '/skills/ranking?limit=30');
+    const skills = data.skills || [];
+    chart.setOption({
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      grid: { left: 120, right: 40, top: 8, bottom: 8 },
+      xAxis: { type: 'value', name: '需求数' },
+      yAxis: { type: 'category', data: skills.map(s => s.name).reverse(), inverse: true, axisLabel: { fontSize: 11 } },
+      series: [{
+        type: 'bar', data: skills.map(s => s.demand).reverse(),
+        itemStyle: { color: new echarts.graphic.LinearGradient(0,0,1,0,[
+          {offset:0,color:'#2a5f8f'},{offset:1,color:'#5cb8ff'}
+        ])},
+        label: { show: true, position: 'right', fontSize: 11 }
+      }]
+    });
+  } catch(e) { chart.dispose(); }
+}
+
+// ===== Skill Categories Pie =====
+async function loadSkillCategories() {
+  const chart = initChart('chartSkillCat');
+  if (!chart) return;
+  try {
+    const data = await fetchJSON(API + '/skills/categories');
+    const cats = data.categories || [];
+    chart.setOption({
+      tooltip: { trigger: 'item' },
+      legend: { orient: 'vertical', right: 10, top: 'center', textStyle: { color: '#889', fontSize: 11 } },
+      series: [{
+        type: 'pie', radius: ['30%', '70%'], roseType: 'area',
+        center: ['40%', '50%'],
+        data: cats.map(c => ({ name: c.name, value: c.total_demand })),
+        label: { fontSize: 11 },
+        emphasis: { label: { fontSize: 14 } }
+      }]
+    });
+  } catch(e) { chart.dispose(); }
+}
+
+// ===== Skill Network =====
+async function loadSkillNetwork() {
+  const chart = initChart('chartNetwork');
+  if (!chart) return;
+  try {
+    const data = await fetchJSON(API + '/skills/network?limit=50');
+    const nodes = data.nodes || [];
+    const edges = data.edges || [];
+    const categories = [...new Set(nodes.map(n => n.category || '未分类'))].map(c => ({ name: c }));
+
+    chart.setOption({
+      tooltip: { trigger: 'item', formatter: p => p.dataType === 'node'
+        ? `<b>${p.name}</b><br/>类别: ${p.data.category || 'N/A'}<br/>需求: ${p.data.demand}`
+        : `${p.data.source} ↔ ${p.data.target}<br/>权重: ${p.data.weight}`
+      },
+      legend: { data: categories.map(c => c.name), bottom: 10, textStyle: { color: '#889' } },
+      series: [{
+        type: 'graph', layout: 'force', roam: true, draggable: true,
+        force: { repulsion: 300, gravity: 0.08, edgeLength: [50, 200] },
+        data: nodes.map(n => ({
+          name: n.name, category: n.category || '未分类',
+          symbolSize: Math.max(8, Math.sqrt(n.demand || 1) * 3),
+          value: n.demand
+        })),
+        categories: categories,
+        edges: edges.map(e => ({ source: e.source, target: e.target, value: e.weight })),
+        edgeSymbol: ['none', 'none'],
+        lineStyle: { opacity: 0.3, curveness: 0.1 },
+        label: { show: true, fontSize: 10, color: '#aaccff' },
+        emphasis: { focus: 'adjacency', lineStyle: { width: 3 } }
+      }]
+    });
+  } catch(e) { chart.dispose(); }
+}
+
+// ===== City Distribution =====
+async function loadCityDist() {
+  const chart = initChart('chartCity');
+  if (!chart) return;
+  try {
+    const data = await fetchJSON(API + '/cities/distribution');
+    const cities = (data.cities || []).slice(0, 20);
+    chart.setOption({
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      grid: { left: 80, right: 40, top: 8, bottom: 8 },
+      xAxis: { type: 'value', name: '岗位数' },
+      yAxis: { type: 'category', data: cities.map(c => c.city).reverse(), inverse: true, axisLabel: { fontSize: 10 } },
+      series: [{
+        type: 'bar', data: cities.map(c => c.jobs).reverse(),
+        itemStyle: { color: '#5c9fff' },
+        label: { show: true, position: 'right', fontSize: 11 }
+      }]
+    });
+  } catch(e) { chart.dispose(); }
+}
+
+// ===== Industry Distribution =====
+async function loadIndustryDist() {
+  const chart = initChart('chartIndustry');
+  if (!chart) return;
+  try {
+    const data = await fetchJSON(API + '/industries/distribution');
+    const industries = (data.industries || []).slice(0, 20);
+    chart.setOption({
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      grid: { left: 100, right: 40, top: 8, bottom: 8 },
+      xAxis: { type: 'value', name: '岗位数' },
+      yAxis: { type: 'category', data: industries.map(i => i.industry).reverse(), inverse: true, axisLabel: { fontSize: 10 } },
+      series: [{
+        type: 'bar', data: industries.map(i => i.jobs).reverse(),
+        itemStyle: { color: '#ff8c5c' },
+        label: { show: true, position: 'right', fontSize: 11 }
+      }]
+    });
+  } catch(e) { chart.dispose(); }
+}
+
+// ===== Salary =====
+async function loadSalary() {
+  const chart = initChart('chartSalary');
+  if (!chart) return;
+  try {
+    const data = await fetchJSON(API + '/salary/by-title?limit=15');
+    const salaries = data.salaries || [];
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['最低薪资', '最高薪资'], top: 8, textStyle: { color: '#889' } },
+      grid: { left: 120, right: 40, top: 40, bottom: 8 },
+      xAxis: { type: 'value', name: '千元/月' },
+      yAxis: { type: 'category', data: salaries.map(s => s.title).reverse(), inverse: true, axisLabel: { fontSize: 10 } },
+      series: [
+        { name: '最低薪资', type: 'bar', data: salaries.map(s => s.avg_min).reverse(), itemStyle: { color: '#3a7f5f' }, label: { show: true, position: 'right', fontSize: 10 } },
+        { name: '最高薪资', type: 'bar', data: salaries.map(s => s.avg_max).reverse(), itemStyle: { color: '#7f3a5f' }, label: { show: true, position: 'right', fontSize: 10 } }
+      ]
+    });
+  } catch(e) { chart.dispose(); }
+}
+
+// ===== Evolution Timeline =====
+async function loadEvolution() {
+  const chart = initChart('chartEvo');
+  if (!chart) return;
+  try {
+    const data = await fetchJSON(API + '/evolution/timeline');
+    const tl = data.timeline || [];
+    if (tl.length === 0) {
+      chart.setOption({
+        title: { text: '暂无演化快照数据', subtext: '运行 main_kg.py --snapshot 生成快照', left: 'center', top: 'center',
+          textStyle: { color: '#889', fontSize: 14 }, subtextStyle: { color: '#667', fontSize: 12 } }
+      });
+      return;
+    }
+    const times = tl.map(t => t.timestamp ? t.timestamp.slice(0,16).replace('T',' ') : '');
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['总节点', '总边数', '数据记录'], top: 8, textStyle: { color: '#889' } },
+      grid: { left: 60, right: 20, top: 40, bottom: 20 },
+      xAxis: { type: 'category', data: times, axisLabel: { rotate: 30, fontSize: 10 } },
+      yAxis: [{ type: 'value', name: '数量' }, { type: 'value', name: '记录数' }],
+      series: [
+        { name: '总节点', type: 'line', data: tl.map(t => t.total_nodes), smooth: true, itemStyle: { color: '#5cb8ff' } },
+        { name: '总边数', type: 'line', data: tl.map(t => t.total_edges), smooth: true, itemStyle: { color: '#5cff9f' } },
+        { name: '数据记录', type: 'line', yAxisIndex: 1, data: tl.map(t => t.record_count), smooth: true, itemStyle: { color: '#ff8c5c' } }
+      ]
+    });
+  } catch(e) { chart.dispose(); }
+}
+
+// ===== Skill Communities Sunburst =====
+async function loadSunburst() {
+  const chart = initChart('chartSunburst');
+  if (!chart) return;
+  try {
+    const data = await fetchJSON(API + '/skills/communities');
+    const clusters = data.clusters || [];
+    if (clusters.length === 0) {
+      chart.dispose(); return;
+    }
+    const sunData = clusters.map(c => ({
+      name: c.id,
+      itemStyle: { color: '#' + (Math.abs(hashCode(c.id)) % 0xFFFFFF).toString(16).padStart(6,'0') },
+      children: (c.top_skills || []).map(s => {
+        const name = typeof s === 'string' ? s : (s.skill || s.name || '');
+        const val = typeof s === 'object' ? (s.pagerank || s.demand || 1) : 1;
+        return { name: name, value: typeof val === 'number' ? Math.round(val * 100) : 1 };
+      })
+    }));
+    chart.setOption({
+      tooltip: { trigger: 'item' },
+      series: [{
+        type: 'sunburst', data: sunData, radius: ['15%', '85%'],
+        label: { rotate: 'radial', fontSize: 10 },
+        itemStyle: { borderColor: '#0f1724', borderWidth: 1 },
+        levels: [{}, { r0: '15%', r: '50%' }, { r0: '50%', r: '75%', label: { fontSize: 10 } }]
+      }]
+    });
+  } catch(e) { chart.dispose(); }
+}
+
+function hashCode(s) { let h = 0; for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;} return h; }
+
+// ===== Person-Job Matching =====
+async function loadJobTitles() {
+  try {
+    const data = await fetchJSON(API + '/job-titles');
+    const sel = document.getElementById('matchTarget');
+    sel.innerHTML = '<option value="">-- 选择岗位 --</option>';
+    (data.titles || []).forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t; opt.textContent = t;
+      sel.appendChild(opt);
+    });
+  } catch(e) {}
+}
+
+async function doMatch() {
+  const skills = document.getElementById('matchSkills').value.split(/[,，\s]+/).filter(Boolean);
+  const target = document.getElementById('matchTarget').value;
+  if (!skills.length || !target) { alert('请输入技能并选择目标岗位'); return; }
+  try {
+    const result = await fetchJSON(API + '/match', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ skills, target })
+    });
+    renderRadar(result);
+    renderMatchResult(result);
+  } catch(e) {}
+}
+
+async function doRecommend() {
+  const skills = document.getElementById('matchSkills').value.split(/[,，\s]+/).filter(Boolean);
+  if (!skills.length) { alert('请输入技能'); return; }
+  try {
+    const data = await fetchJSON(API + '/recommend', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ skills, top_n: 10 })
+    });
+    const recs = data.recommendations || [];
+    const sel = document.getElementById('matchTarget');
+    sel.innerHTML = '<option value="">-- 推荐岗位 --</option>';
+    recs.forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r.title;
+      opt.textContent = `${r.title} (${Math.round(r.match_score*100)}%)`;
+      sel.appendChild(opt);
+    });
+    if (recs.length) document.getElementById('matchTarget').value = recs[0].title;
+  } catch(e) {}
+}
+
+function renderRadar(result) {
+  const chart = initChart('chartRadar');
+  if (!chart) return;
+  const reqRate = result.total_required ? result.matched_skills.length / result.total_required : 0;
+  const prefRate = result.total_preferred ? result.preferred_matched.length / result.total_preferred : 1;
+  const pathLen = result.learning_path ? result.learning_path.length : 0;
+  const pathScore = Math.max(0, 1 - pathLen * 0.15);
+
+  chart.setOption({
+    tooltip: {},
+    legend: { data: ['当前水平', '满分'], bottom: 8, textStyle: { color: '#889' } },
+    radar: {
+      center: ['50%', '50%'], radius: '65%',
+      indicator: [
+        { name: '综合匹配度', max: 1 },
+        { name: '必备技能', max: 1 },
+        { name: '加分技能', max: 1 },
+        { name: '学习效率', max: 1 },
+        { name: '整体评分', max: 1 }
+      ]
+    },
+    series: [{
+      type: 'radar',
+      data: [
+        { value: [result.match_score, reqRate, prefRate, pathScore, result.match_score], name: '当前水平',
+          areaStyle: { color: 'rgba(92,184,255,0.2)' }, lineStyle: { color: '#5cb8ff' }, itemStyle: { color: '#5cb8ff' } },
+        { value: [1, 1, 1, 1, 1], name: '满分',
+          areaStyle: { color: 'rgba(92,255,159,0.05)' }, lineStyle: { color: '#3a7050', type: 'dashed' }, itemStyle: { color: '#5cff9f' } }
+      ]
+    }]
+  });
+}
+
+function renderMatchResult(result) {
+  let html = `<div style="font-weight:bold;margin-bottom:6px">匹配度: ${Math.round(result.match_score*100)}% | 目标: ${result.target_title}</div>`;
+  html += `<div><span class="tag tag-green">已具备必备: ${result.matched_skills.join(', ') || '无'}</span></div>`;
+  html += `<div style="margin-top:4px"><span class="tag tag-red">缺失必备: ${result.missing_skills.join(', ') || '无'}</span></div>`;
+  if (result.preferred_matched.length) {
+    html += `<div style="margin-top:4px"><span class="tag tag-blue">已具备加分: ${result.preferred_matched.join(', ')}</span></div>`;
+  }
+  if (result.preferred_missing.length) {
+    html += `<div style="margin-top:4px"><span class="tag tag-red">缺失加分: ${result.preferred_missing.join(', ')}</span></div>`;
+  }
+  if (result.learning_path && result.learning_path.length) {
+    html += `<div style="margin-top:8px;font-weight:bold;color:#8ab4f8">学习路径建议:</div>`;
+    result.learning_path.forEach(s => {
+      html += `<div style="font-size:12px;margin:2px 0">• <b>${s.skill}</b>: ${s.note || ''} ${s.bridge_skills ? ' → '.join(s.bridge_skills) : ''}</div>`;
+    });
+  }
+  document.getElementById('matchResult').innerHTML = html;
+}
+
+// ===== Init =====
+window.addEventListener('DOMContentLoaded', () => {
+  loadOverview();
+  loadSkillRanking();
+  loadSkillCategories();
+  loadSkillNetwork();
+  loadCityDist();
+  loadIndustryDist();
+  loadSalary();
+  loadEvolution();
+  loadSunburst();
+  loadJobTitles();
+});
+
+window.addEventListener('resize', () => {});
+</script>
+</body>
+</html>

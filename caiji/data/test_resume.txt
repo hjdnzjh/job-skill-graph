@@ -1,0 +1,20 @@
+姓名：张三
+职位：Python开发工程师
+工作年限：3年
+学历：本科
+
+技能：
+Python, Django, Flask, MySQL, Redis, Git, Linux, Docker, HTML, JavaScript
+
+教育背景：
+2019-2023 某某大学 计算机科学 本科
+
+工作经历：
+2023-至今 Python后端开发工程师
+- 使用Django和Flask开发RESTful API
+- MySQL数据库设计和优化
+- Redis缓存方案设计
+- Docker容器化部署
+- Git版本控制和代码审查
+
+求职意向：希望转向大数据开发或Java开发方向

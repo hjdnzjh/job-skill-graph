@@ -1,0 +1,249 @@
+"""Main ETL pipeline orchestrator.
+
+Pipeline flow:
+  Crawlers → Cleaner → Normalizer → Deduplicator → QualityScorer
+  → MySQL (primary) + File (backup)
+"""
+
+import json
+import logging
+import os
+import time
+from datetime import datetime
+from typing import Dict, List, Optional
+
+from config.settings import Settings
+from config.schema import UnifiedJobSchema
+
+try:
+    from crawlers.recruitment import RecruitmentSpider
+    _CRAWLERS_AVAILABLE = True
+except ImportError:
+    _CRAWLERS_AVAILABLE = False
+    RecruitmentSpider = None
+
+from etl.cleaner import DataCleaner
+from etl.normalizer import Normalizer
+from etl.deduplicator import Deduplicator
+from etl.quality import QualityScorer
+
+from storage.file_storage import FileStorage
+
+try:
+    from storage.mysql_client import MySQLClient
+except ImportError:
+    MySQLClient = None
+
+logger = logging.getLogger(__name__)
+
+
+class DataPipeline:
+    """Orchestrates the full data acquisition → storage pipeline."""
+
+    def __init__(self, settings: Settings = None):
+        self.settings = settings or Settings()
+        self._setup_logging()
+
+        self.mysql = MySQLClient(self.settings) if MySQLClient else None
+        self.file_storage = FileStorage(self.settings)
+
+        self.cleaner = DataCleaner()
+        self.normalizer = Normalizer()
+        self.deduplicator = Deduplicator(
+            similarity_threshold=self.settings.dedup_similarity_threshold
+        )
+        self.quality_scorer = QualityScorer(
+            min_score=self.settings.quality_min_score
+        )
+
+        if _CRAWLERS_AVAILABLE:
+            self.spiders = {
+                "recruitment": RecruitmentSpider(self.settings),
+            }
+        else:
+            self.spiders = {}
+
+        self._stats: Dict[str, any] = {}
+
+    def run(
+        self,
+        keywords: List[str] = None,
+        cities: List[str] = None,
+        sources: List[str] = None,
+        use_mysql: bool = True,
+        pages: int = 3,
+        fetch_details: bool = False,
+    ) -> Dict[str, any]:
+        sources = sources or self.settings.enabled_sources
+        start_time = time.time()
+
+        # ------------------------------------------------------------------
+        # Phase 1: Crawl
+        # ------------------------------------------------------------------
+        logger.info("=" * 60)
+        logger.info("PHASE 1: Multi-source crawling")
+        logger.info("=" * 60)
+
+        all_records: List[UnifiedJobSchema] = []
+
+        for source_name in sources:
+            spider = self.spiders.get(source_name)
+            if spider is None:
+                logger.warning(f"Unknown source '{source_name}', skipping")
+                continue
+
+            logger.info(f"Starting crawler: {source_name}")
+            t0 = time.time()
+
+            try:
+                if source_name == "recruitment":
+                    records = spider.crawl(keywords=keywords, cities=cities,
+                                           pages=pages, fetch_details=fetch_details)
+                else:
+                    records = spider.crawl(keywords=keywords)
+
+                elapsed = time.time() - t0
+                self._stats[f"crawl_{source_name}_count"] = len(records)
+                self._stats[f"crawl_{source_name}_time"] = round(elapsed, 1)
+                logger.info(f"  {source_name}: {len(records)} records, {elapsed:.1f}s")
+
+                if records:
+                    self.file_storage.save_processed(records, batch_tag=f"{source_name}_raw")
+
+                all_records.extend(records)
+
+            except Exception as exc:
+                logger.error(f"Crawler {source_name} failed: {exc}", exc_info=True)
+
+        self._stats["crawl_total"] = len(all_records)
+        logger.info(f"Crawl phase complete: {len(all_records)} total records")
+
+        if not all_records:
+            logger.warning("No records collected. Pipeline stopped.")
+            return self._stats
+
+        # ------------------------------------------------------------------
+        # Phase 2: ETL — Clean → Normalize → Dedup → Score
+        # ------------------------------------------------------------------
+        logger.info("=" * 60)
+        logger.info("PHASE 2: ETL — Clean / Normalize / Dedup / Score")
+        logger.info("=" * 60)
+
+        t0 = time.time()
+        records = self.cleaner.clean(all_records)
+        self._stats["after_clean"] = len(records)
+        logger.info(f"  2a. Clean: {len(all_records)} → {len(records)} ({time.time() - t0:.1f}s)")
+
+        t0 = time.time()
+        records = self.normalizer.normalize(records)
+        self._stats["after_normalize"] = len(records)
+        logger.info(f"  2b. Normalize: {len(records)} records ({time.time() - t0:.1f}s)")
+
+        t0 = time.time()
+        records = self.deduplicator.deduplicate(records)
+        self._stats["after_dedup"] = len(records)
+        logger.info(f"  2c. Dedup: → {len(records)} records ({time.time() - t0:.1f}s)")
+
+        t0 = time.time()
+        records = self.quality_scorer.score_batch(records)
+        self._stats["after_quality"] = len(records)
+        quality_summary = QualityScorer.summary(records)
+        self._stats["quality"] = quality_summary
+        logger.info(f"  2d. Quality: {len(records)} passed (min={self.settings.quality_min_score})")
+        if quality_summary.get("total", 0) > 0:
+            logger.info(f"      Grade dist: {quality_summary.get('grade_distribution', {})}")
+            logger.info(f"      Avg quality: {quality_summary.get('avg_quality', 0)}")
+
+        # ------------------------------------------------------------------
+        # Phase 3: Storage — MySQL (primary) + File (backup)
+        # ------------------------------------------------------------------
+        logger.info("=" * 60)
+        logger.info("PHASE 3: Storage — MySQL + File")
+        logger.info("=" * 60)
+
+        # 3a. File backup (always)
+        t0 = time.time()
+        filepath = self.file_storage.save_processed(records, batch_tag="final")
+        json_path = self.file_storage.save_processed_json(records)
+        self._stats["file_storage_path"] = filepath
+        self._stats["file_storage_json"] = json_path
+        logger.info(f"  3a. File backup: {filepath}")
+
+        # 3b. MySQL (primary storage)
+        if use_mysql and self.mysql:
+            t0 = time.time()
+            try:
+                self.mysql.init_db()
+                inserted = self.mysql.insert_batch(records, batch_size=self.settings.batch_size)
+                self._stats["mysql_inserted"] = inserted
+                logger.info(f"  3b. MySQL: {inserted} records inserted ({(time.time() - t0):.1f}s)")
+            except Exception as exc:
+                logger.error(f"MySQL write failed: {exc}")
+                self._stats["mysql_error"] = str(exc)
+        else:
+            logger.info("  3b. MySQL: skipped")
+
+        # ------------------------------------------------------------------
+        # Summary
+        # ------------------------------------------------------------------
+        total_time = time.time() - start_time
+        self._stats["pipeline_total_time"] = round(total_time, 1)
+        self._stats["final_record_count"] = len(records)
+        self._stats["completed_at"] = datetime.now().isoformat()
+
+        logger.info("=" * 60)
+        logger.info(f"PIPELINE COMPLETE — {len(records)} records in {total_time:.1f}s")
+        logger.info(f"Stats: {json.dumps(self._stats, indent=2, ensure_ascii=False, default=str)}")
+        logger.info("=" * 60)
+
+        return self._stats
+
+    def _setup_logging(self):
+        log_dir = self.settings.log_dir
+        os.makedirs(log_dir, exist_ok=True)
+
+        log_format = logging.Formatter(
+            "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+
+        file_handler = logging.FileHandler(
+            f"{log_dir}/pipeline_{datetime.now().strftime('%Y%m%d')}.log",
+            encoding="utf-8",
+        )
+        file_handler.setFormatter(log_format)
+        file_handler.setLevel(logging.DEBUG)
+
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(log_format)
+        console_handler.setLevel(getattr(logging, self.settings.log_level.upper(), logging.INFO))
+
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)
+        root_logger.handlers.clear()
+        root_logger.addHandler(file_handler)
+        root_logger.addHandler(console_handler)
+
+    def get_stats(self) -> dict:
+        return self._stats
+
+    def print_summary(self):
+        s = self._stats
+        print("\n" + "=" * 60)
+        print("  数据采集管道 — 执行摘要")
+        print("=" * 60)
+        print(f"  总爬取记录数:     {s.get('crawl_total', 0)}")
+        print(f"  清洗后:           {s.get('after_clean', 0)}")
+        print(f"  去重后:           {s.get('after_dedup', 0)}")
+        print(f"  质量过滤后:       {s.get('after_quality', 0)}")
+        print(f"  最终入库记录数:   {s.get('final_record_count', 0)}")
+
+        if "quality" in s and s["quality"].get("total", 0) > 0:
+            q = s["quality"]
+            print(f"  平均质量分:       {q.get('avg_quality', 0):.3f}")
+            print(f"  质量等级分布:     {q.get('grade_distribution', {})}")
+
+        print(f"  管道总耗时:       {s.get('pipeline_total_time', 0):.1f}s")
+        print(f"  MySQL入库:        {s.get('mysql_inserted', 'N/A')}")
+        print(f"  文件存储路径:     {s.get('file_storage_path', 'N/A')}")
+        print("=" * 60 + "\n")

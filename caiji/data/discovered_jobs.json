@@ -1,0 +1,412 @@
+[
+  {
+    "original_title": "招聘Node.Js开发工程师",
+    "normalized_title": "Node.js开发工程师",
+    "category": "emerging",
+    "known_match": null,
+    "responsibilities": "1. 负责Node.js后端服务的设计、开发与维护\n2. 参与系统架构设计，优化性能与可扩展性\n3. 编写单元测试和集成测试，确保代码质量",
+    "required_skills": [
+      "Node.js",
+      "JavaScript",
+      "Express/Koa"
+    ],
+    "preferred_skills": [
+      "TypeScript",
+      "MongoDB",
+      "Redis",
+      "Docker"
+    ],
+    "industries": [
+      "互联网/IT",
+      "电商",
+      "金融科技"
+    ],
+    "confidence": 0.95,
+    "job_count": 50
+  },
+  {
+    "original_title": "招聘鸿蒙开发",
+    "normalized_title": "鸿蒙开发工程师",
+    "category": "emerging",
+    "known_match": null,
+    "responsibilities": "1. 基于鸿蒙操作系统进行应用开发与调试\n2. 参与鸿蒙生态组件设计与实现\n3. 优化应用性能，适配不同鸿蒙设备",
+    "required_skills": [
+      "HarmonyOS",
+      "Java/Kotlin",
+      "ArkUI"
+    ],
+    "preferred_skills": [
+      "分布式技术",
+      "多设备适配",
+      "性能优化"
+    ],
+    "industries": [
+      "互联网/IT",
+      "智能终端",
+      "物联网"
+    ],
+    "confidence": 0.9,
+    "job_count": 8
+  },
+  {
+    "original_title": "招聘数据科学家",
+    "normalized_title": "数据科学家",
+    "category": "emerging",
+    "known_match": null,
+    "responsibilities": "1. 构建和优化机器学习模型，解决业务问题\n2. 设计A/B实验并分析结果\n3. 探索性数据分析，发现业务洞察",
+    "required_skills": [
+      "Python",
+      "机器学习",
+      "统计学"
+    ],
+    "preferred_skills": [
+      "深度学习",
+      "Spark",
+      "SQL"
+    ],
+    "industries": [
+      "互联网/IT",
+      "金融",
+      "医疗"
+    ],
+    "confidence": 0.95,
+    "job_count": 7
+  },
+  {
+    "original_title": "招聘Nodejs开发工程师",
+    "normalized_title": "Node.js开发工程师",
+    "category": "emerging",
+    "known_match": null,
+    "responsibilities": "1. 负责Node.js后端服务的设计、开发与维护\n2. 参与系统架构设计，优化性能与可扩展性\n3. 编写单元测试和集成测试，确保代码质量",
+    "required_skills": [
+      "Node.js",
+      "JavaScript",
+      "Express/Koa"
+    ],
+    "preferred_skills": [
+      "TypeScript",
+      "MongoDB",
+      "Redis",
+      "Docker"
+    ],
+    "industries": [
+      "互联网/IT",
+      "电商",
+      "金融科技"
+    ],
+    "confidence": 0.95,
+    "job_count": 6
+  },
+  {
+    "original_title": "招聘Data Analyst",
+    "normalized_title": "数据分析师",
+    "category": "variation_of_known",
+    "known_match": "数据分析师",
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 13
+  },
+  {
+    "original_title": "招聘高级Php开发工程师",
+    "normalized_title": "PHP开发工程师",
+    "category": "variation_of_known",
+    "known_match": "PHP开发工程师",
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 11
+  },
+  {
+    "original_title": "招聘Php开发",
+    "normalized_title": "PHP开发工程师",
+    "category": "variation_of_known",
+    "known_match": "PHP开发工程师",
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 6
+  },
+  {
+    "original_title": "招聘行政",
+    "normalized_title": "行政",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 9
+  },
+  {
+    "original_title": "招聘会计",
+    "normalized_title": "会计",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 7
+  },
+  {
+    "original_title": "招聘电商客服(居家版)",
+    "normalized_title": "电商客服",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 5
+  },
+  {
+    "original_title": "招聘行政专员",
+    "normalized_title": "行政专员",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 5
+  },
+  {
+    "original_title": "招聘人事行政经理",
+    "normalized_title": "人事行政经理",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘财务会计",
+    "normalized_title": "财务会计",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘搬运工",
+    "normalized_title": "搬运工",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘行政经理/主管",
+    "normalized_title": "行政经理/主管",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘出纳员8K双休",
+    "normalized_title": "出纳员",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘招客服",
+    "normalized_title": "客服",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘行政专员8K双休",
+    "normalized_title": "行政专员",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘董助办专项助理",
+    "normalized_title": "董助办专项助理",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘出纳财务",
+    "normalized_title": "出纳财务",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘核算会计主管",
+    "normalized_title": "核算会计主管",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘电商客服",
+    "normalized_title": "电商客服",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 4
+  },
+  {
+    "original_title": "招聘跟单文员",
+    "normalized_title": "跟单文员",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 3
+  },
+  {
+    "original_title": "招聘客服专员/助理",
+    "normalized_title": "客服专员/助理",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 3
+  },
+  {
+    "original_title": "招聘急聘前台接待员",
+    "normalized_title": "前台接待员",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 3
+  },
+  {
+    "original_title": "招聘会计8K双休",
+    "normalized_title": "会计",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 3
+  },
+  {
+    "original_title": "招聘行政后勤/总务",
+    "normalized_title": "行政后勤/总务",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 3
+  },
+  {
+    "original_title": "招聘人事行政专员",
+    "normalized_title": "人事行政专员",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 3
+  },
+  {
+    "original_title": "招聘足浴服务员",
+    "normalized_title": "足浴服务员",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 3
+  },
+  {
+    "original_title": "招聘审计助理",
+    "normalized_title": "审计助理",
+    "category": "generic",
+    "known_match": null,
+    "responsibilities": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "industries": [],
+    "confidence": 1.0,
+    "job_count": 3
+  }
+]

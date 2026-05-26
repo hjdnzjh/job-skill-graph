@@ -1,0 +1,2594 @@
+{
+  "generated": "2026-05-17T12:15:11.796411",
+  "graph_stats": {
+    "nodes": 2473,
+    "edges": 13467
+  },
+  "skill_graph_stats": {
+    "nodes": 112,
+    "edges": 1905
+  },
+  "top_skills": [
+    {
+      "skill": "MySQL",
+      "demand": 565,
+      "category": "数据库"
+    },
+    {
+      "skill": "Linux",
+      "demand": 516,
+      "category": "操作系统"
+    },
+    {
+      "skill": "Git",
+      "demand": 468,
+      "category": "版本控制"
+    },
+    {
+      "skill": "Redis",
+      "demand": 348,
+      "category": "数据库"
+    },
+    {
+      "skill": "Java",
+      "demand": 322,
+      "category": "编程语言"
+    },
+    {
+      "skill": "Python",
+      "demand": 293,
+      "category": "编程语言"
+    },
+    {
+      "skill": "Docker",
+      "demand": 240,
+      "category": "DevOps"
+    },
+    {
+      "skill": "Kafka",
+      "demand": 215,
+      "category": "消息队列"
+    },
+    {
+      "skill": "http",
+      "demand": 195,
+      "category": "其他"
+    },
+    {
+      "skill": "C++",
+      "demand": 159,
+      "category": "编程语言"
+    },
+    {
+      "skill": "Spring Boot",
+      "demand": 159,
+      "category": "后端框架"
+    },
+    {
+      "skill": "微服务",
+      "demand": 156,
+      "category": "架构模式"
+    },
+    {
+      "skill": "分布式",
+      "demand": 147,
+      "category": "架构模式"
+    },
+    {
+      "skill": "Kubernetes",
+      "demand": 113,
+      "category": "DevOps"
+    },
+    {
+      "skill": "TCP/IP",
+      "demand": 96,
+      "category": "网络协议"
+    },
+    {
+      "skill": "嵌入式",
+      "demand": 95,
+      "category": "其他"
+    },
+    {
+      "skill": "SQL",
+      "demand": 94,
+      "category": "数据库"
+    },
+    {
+      "skill": "JavaScript",
+      "demand": 80,
+      "category": "编程语言"
+    },
+    {
+      "skill": "React",
+      "demand": 79,
+      "category": "前端框架"
+    },
+    {
+      "skill": "TypeScript",
+      "demand": 78,
+      "category": "编程语言"
+    }
+  ],
+  "top_companies": [
+    {
+      "company": "某知名公司",
+      "jobs": 38
+    },
+    {
+      "company": "温州市讯和电脑科技",
+      "jobs": 35
+    },
+    {
+      "company": "嘉兴新模文化传媒",
+      "jobs": 27
+    },
+    {
+      "company": "上海茫讯商务咨询中心",
+      "jobs": 21
+    },
+    {
+      "company": "某大连计算机软件公司",
+      "jobs": 20
+    },
+    {
+      "company": "威海恒旺光伏发电服务",
+      "jobs": 11
+    },
+    {
+      "company": "某上海大型互联网公司",
+      "jobs": 11
+    },
+    {
+      "company": "软通动力",
+      "jobs": 10
+    },
+    {
+      "company": "深圳市和鑫晟食品科技",
+      "jobs": 9
+    },
+    {
+      "company": "某上海专业技术服务公司",
+      "jobs": 9
+    },
+    {
+      "company": "南京尚儒商贸",
+      "jobs": 7
+    },
+    {
+      "company": "广州茜龙商贸",
+      "jobs": 7
+    },
+    {
+      "company": "稷山县为真商贸",
+      "jobs": 6
+    },
+    {
+      "company": "某杭州大型互联网公司",
+      "jobs": 6
+    },
+    {
+      "company": "某苏州电子/半导体/集成电路公司",
+      "jobs": 6
+    },
+    {
+      "company": "广州淮琛贸易",
+      "jobs": 6
+    },
+    {
+      "company": "海南省志熙宇广告",
+      "jobs": 6
+    },
+    {
+      "company": "长鑫存储技术",
+      "jobs": 6
+    },
+    {
+      "company": "广州芩款科技",
+      "jobs": 6
+    },
+    {
+      "company": "广州衡友贸易",
+      "jobs": 6
+    }
+  ],
+  "skill_communities": {
+    "cluster_1": {
+      "size": 43,
+      "top_skills": [
+        {
+          "skill": "Python",
+          "pagerank": 0.0788
+        },
+        {
+          "skill": "PyTorch",
+          "pagerank": 0.0467
+        },
+        {
+          "skill": "TensorFlow",
+          "pagerank": 0.0457
+        },
+        {
+          "skill": "Transformer",
+          "pagerank": 0.0425
+        },
+        {
+          "skill": "Flask",
+          "pagerank": 0.0418
+        },
+        {
+          "skill": "Scikit-learn",
+          "pagerank": 0.0411
+        },
+        {
+          "skill": "FastAPI",
+          "pagerank": 0.0377
+        },
+        {
+          "skill": "MongoDB",
+          "pagerank": 0.0353
+        },
+        {
+          "skill": "Django",
+          "pagerank": 0.035
+        },
+        {
+          "skill": "深度学习",
+          "pagerank": 0.0297
+        }
+      ]
+    },
+    "cluster_2": {
+      "size": 18,
+      "top_skills": [
+        {
+          "skill": "MySQL",
+          "pagerank": 0.1116
+        },
+        {
+          "skill": "Redis",
+          "pagerank": 0.0893
+        },
+        {
+          "skill": "Linux",
+          "pagerank": 0.0875
+        },
+        {
+          "skill": "Git",
+          "pagerank": 0.0873
+        },
+        {
+          "skill": "Docker",
+          "pagerank": 0.0771
+        },
+        {
+          "skill": "微服务",
+          "pagerank": 0.0667
+        },
+        {
+          "skill": "Java",
+          "pagerank": 0.0656
+        },
+        {
+          "skill": "分布式",
+          "pagerank": 0.0641
+        },
+        {
+          "skill": "Kafka",
+          "pagerank": 0.0623
+        },
+        {
+          "skill": "Spring Boot",
+          "pagerank": 0.0534
+        }
+      ]
+    },
+    "cluster_3": {
+      "size": 12,
+      "top_skills": [
+        {
+          "skill": "敏捷开发",
+          "pagerank": 0.135
+        },
+        {
+          "skill": "项目管理",
+          "pagerank": 0.135
+        },
+        {
+          "skill": "PRD",
+          "pagerank": 0.0779
+        },
+        {
+          "skill": "Figma",
+          "pagerank": 0.0779
+        },
+        {
+          "skill": "竞品分析",
+          "pagerank": 0.0779
+        },
+        {
+          "skill": "用户研究",
+          "pagerank": 0.0779
+        },
+        {
+          "skill": "数据分析",
+          "pagerank": 0.0779
+        },
+        {
+          "skill": "JIRA",
+          "pagerank": 0.0681
+        },
+        {
+          "skill": "PMO",
+          "pagerank": 0.0681
+        },
+        {
+          "skill": "风险管理",
+          "pagerank": 0.0681
+        }
+      ]
+    },
+    "cluster_4": {
+      "size": 11,
+      "top_skills": [
+        {
+          "skill": "C++",
+          "pagerank": 0.2339
+        },
+        {
+          "skill": "TCP/IP",
+          "pagerank": 0.164
+        },
+        {
+          "skill": "嵌入式",
+          "pagerank": 0.1121
+        },
+        {
+          "skill": "多线程",
+          "pagerank": 0.0917
+        },
+        {
+          "skill": "CMake",
+          "pagerank": 0.0917
+        },
+        {
+          "skill": "STL",
+          "pagerank": 0.0917
+        },
+        {
+          "skill": "Qt",
+          "pagerank": 0.0917
+        },
+        {
+          "skill": "Unreal",
+          "pagerank": 0.0371
+        },
+        {
+          "skill": "Unity",
+          "pagerank": 0.0371
+        },
+        {
+          "skill": "matlab",
+          "pagerank": 0.0321
+        }
+      ]
+    },
+    "cluster_5": {
+      "size": 9,
+      "top_skills": [
+        {
+          "skill": "React",
+          "pagerank": 0.1169
+        },
+        {
+          "skill": "TypeScript",
+          "pagerank": 0.1165
+        },
+        {
+          "skill": "Vue",
+          "pagerank": 0.1163
+        },
+        {
+          "skill": "JavaScript",
+          "pagerank": 0.1159
+        },
+        {
+          "skill": "Node.js",
+          "pagerank": 0.1124
+        },
+        {
+          "skill": "Webpack",
+          "pagerank": 0.1055
+        },
+        {
+          "skill": "HTML5",
+          "pagerank": 0.1055
+        },
+        {
+          "skill": "CSS3",
+          "pagerank": 0.1055
+        },
+        {
+          "skill": "小程序",
+          "pagerank": 0.1055
+        }
+      ]
+    }
+  },
+  "city_skill_profile": [
+    {
+      "city": "上海",
+      "job_count": 263,
+      "top_skills": [
+        {
+          "skill": "MySQL",
+          "count": 117
+        },
+        {
+          "skill": "Linux",
+          "count": 109
+        },
+        {
+          "skill": "Git",
+          "count": 99
+        },
+        {
+          "skill": "Java",
+          "count": 79
+        },
+        {
+          "skill": "Python",
+          "count": 77
+        },
+        {
+          "skill": "Redis",
+          "count": 76
+        },
+        {
+          "skill": "Docker",
+          "count": 60
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 59
+        },
+        {
+          "skill": "Kafka",
+          "count": 50
+        },
+        {
+          "skill": "微服务",
+          "count": 46
+        }
+      ]
+    },
+    {
+      "city": "北京",
+      "job_count": 143,
+      "top_skills": [
+        {
+          "skill": "Linux",
+          "count": 63
+        },
+        {
+          "skill": "MySQL",
+          "count": 59
+        },
+        {
+          "skill": "Git",
+          "count": 56
+        },
+        {
+          "skill": "Redis",
+          "count": 45
+        },
+        {
+          "skill": "Python",
+          "count": 41
+        },
+        {
+          "skill": "Docker",
+          "count": 37
+        },
+        {
+          "skill": "Java",
+          "count": 29
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 22
+        },
+        {
+          "skill": "Kafka",
+          "count": 20
+        },
+        {
+          "skill": "分布式",
+          "count": 18
+        }
+      ]
+    },
+    {
+      "city": "深圳",
+      "job_count": 115,
+      "top_skills": [
+        {
+          "skill": "MySQL",
+          "count": 62
+        },
+        {
+          "skill": "Linux",
+          "count": 52
+        },
+        {
+          "skill": "Git",
+          "count": 49
+        },
+        {
+          "skill": "Redis",
+          "count": 39
+        },
+        {
+          "skill": "Java",
+          "count": 34
+        },
+        {
+          "skill": "Docker",
+          "count": 26
+        },
+        {
+          "skill": "Python",
+          "count": 24
+        },
+        {
+          "skill": "http",
+          "count": 23
+        },
+        {
+          "skill": "Kafka",
+          "count": 21
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 21
+        }
+      ]
+    },
+    {
+      "city": "广州",
+      "job_count": 90,
+      "top_skills": [
+        {
+          "skill": "MySQL",
+          "count": 43
+        },
+        {
+          "skill": "Linux",
+          "count": 39
+        },
+        {
+          "skill": "Git",
+          "count": 38
+        },
+        {
+          "skill": "Redis",
+          "count": 24
+        },
+        {
+          "skill": "Docker",
+          "count": 19
+        },
+        {
+          "skill": "Java",
+          "count": 17
+        },
+        {
+          "skill": "Python",
+          "count": 17
+        },
+        {
+          "skill": "http",
+          "count": 15
+        },
+        {
+          "skill": "Kafka",
+          "count": 12
+        },
+        {
+          "skill": "微服务",
+          "count": 12
+        }
+      ]
+    },
+    {
+      "city": "杭州",
+      "job_count": 51,
+      "top_skills": [
+        {
+          "skill": "MySQL",
+          "count": 25
+        },
+        {
+          "skill": "Linux",
+          "count": 23
+        },
+        {
+          "skill": "Git",
+          "count": 20
+        },
+        {
+          "skill": "Java",
+          "count": 19
+        },
+        {
+          "skill": "Python",
+          "count": 16
+        },
+        {
+          "skill": "Redis",
+          "count": 16
+        },
+        {
+          "skill": "Kafka",
+          "count": 14
+        },
+        {
+          "skill": "Docker",
+          "count": 13
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 12
+        },
+        {
+          "skill": "分布式",
+          "count": 10
+        }
+      ]
+    }
+  ],
+  "industry_skill_profile": [
+    {
+      "industry": "专业技术服务",
+      "total_requirements": 196,
+      "top_skills": [
+        {
+          "skill": "Linux",
+          "count": 13
+        },
+        {
+          "skill": "Git",
+          "count": 11
+        },
+        {
+          "skill": "MySQL",
+          "count": 10
+        },
+        {
+          "skill": "Redis",
+          "count": 10
+        },
+        {
+          "skill": "Docker",
+          "count": 9
+        },
+        {
+          "skill": "Python",
+          "count": 7
+        },
+        {
+          "skill": "分布式",
+          "count": 5
+        },
+        {
+          "skill": "微服务",
+          "count": 5
+        },
+        {
+          "skill": "C++",
+          "count": 4
+        },
+        {
+          "skill": "CMake",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "industry": "云计算/大数据",
+      "total_requirements": 20,
+      "top_skills": [
+        {
+          "skill": "Git",
+          "count": 2
+        },
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "Go",
+          "count": 1
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 1
+        },
+        {
+          "skill": "Linux",
+          "count": 1
+        },
+        {
+          "skill": "MySQL",
+          "count": 1
+        },
+        {
+          "skill": "Redis",
+          "count": 1
+        },
+        {
+          "skill": "gRPC",
+          "count": 1
+        },
+        {
+          "skill": "分布式",
+          "count": 1
+        },
+        {
+          "skill": "微服务",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "互联网/IT",
+      "total_requirements": 2715,
+      "top_skills": [
+        {
+          "skill": "Git",
+          "count": 333
+        },
+        {
+          "skill": "Linux",
+          "count": 313
+        },
+        {
+          "skill": "MySQL",
+          "count": 313
+        },
+        {
+          "skill": "http",
+          "count": 195
+        },
+        {
+          "skill": "Redis",
+          "count": 115
+        },
+        {
+          "skill": "Docker",
+          "count": 114
+        },
+        {
+          "skill": "微服务",
+          "count": 72
+        },
+        {
+          "skill": "分布式",
+          "count": 68
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 55
+        },
+        {
+          "skill": "Python",
+          "count": 54
+        }
+      ]
+    },
+    {
+      "industry": "人力资源服务",
+      "total_requirements": 62,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 4
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 4
+        },
+        {
+          "skill": "MySQL",
+          "count": 4
+        },
+        {
+          "skill": "Redis",
+          "count": 4
+        },
+        {
+          "skill": "分布式",
+          "count": 4
+        },
+        {
+          "skill": "微服务",
+          "count": 4
+        },
+        {
+          "skill": "Git",
+          "count": 3
+        },
+        {
+          "skill": "Go",
+          "count": 2
+        },
+        {
+          "skill": "Linux",
+          "count": 2
+        },
+        {
+          "skill": "gRPC",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "人工智能",
+      "total_requirements": 208,
+      "top_skills": [
+        {
+          "skill": "Python",
+          "count": 13
+        },
+        {
+          "skill": "机器学习",
+          "count": 11
+        },
+        {
+          "skill": "深度学习",
+          "count": 11
+        },
+        {
+          "skill": "Git",
+          "count": 11
+        },
+        {
+          "skill": "Linux",
+          "count": 10
+        },
+        {
+          "skill": "MySQL",
+          "count": 10
+        },
+        {
+          "skill": "Redis",
+          "count": 9
+        },
+        {
+          "skill": "Docker",
+          "count": 8
+        },
+        {
+          "skill": "微服务",
+          "count": 8
+        },
+        {
+          "skill": "分布式",
+          "count": 7
+        }
+      ]
+    },
+    {
+      "industry": "仪器仪表",
+      "total_requirements": 10,
+      "top_skills": [
+        {
+          "skill": "Ansible",
+          "count": 1
+        },
+        {
+          "skill": "CI/CD",
+          "count": 1
+        },
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "Grafana",
+          "count": 1
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 1
+        },
+        {
+          "skill": "Linux",
+          "count": 1
+        },
+        {
+          "skill": "Nginx",
+          "count": 1
+        },
+        {
+          "skill": "Prometheus",
+          "count": 1
+        },
+        {
+          "skill": "Python",
+          "count": 1
+        },
+        {
+          "skill": "Shell",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "其他商务服务业",
+      "total_requirements": 44,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 4
+        },
+        {
+          "skill": "Git",
+          "count": 4
+        },
+        {
+          "skill": "Linux",
+          "count": 4
+        },
+        {
+          "skill": "MySQL",
+          "count": 4
+        },
+        {
+          "skill": "Redis",
+          "count": 4
+        },
+        {
+          "skill": "Django",
+          "count": 2
+        },
+        {
+          "skill": "FastAPI",
+          "count": 2
+        },
+        {
+          "skill": "Flask",
+          "count": 2
+        },
+        {
+          "skill": "MongoDB",
+          "count": 2
+        },
+        {
+          "skill": "Python",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "具身智能与机器人",
+      "total_requirements": 10,
+      "top_skills": [
+        {
+          "skill": "CSS3",
+          "count": 1
+        },
+        {
+          "skill": "Git",
+          "count": 1
+        },
+        {
+          "skill": "HTML5",
+          "count": 1
+        },
+        {
+          "skill": "JavaScript",
+          "count": 1
+        },
+        {
+          "skill": "Node.js",
+          "count": 1
+        },
+        {
+          "skill": "React",
+          "count": 1
+        },
+        {
+          "skill": "TypeScript",
+          "count": 1
+        },
+        {
+          "skill": "Vue",
+          "count": 1
+        },
+        {
+          "skill": "Webpack",
+          "count": 1
+        },
+        {
+          "skill": "小程序",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "制药",
+      "total_requirements": 30,
+      "top_skills": [
+        {
+          "skill": "Git",
+          "count": 2
+        },
+        {
+          "skill": "Python",
+          "count": 2
+        },
+        {
+          "skill": "Django",
+          "count": 1
+        },
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "FastAPI",
+          "count": 1
+        },
+        {
+          "skill": "Flask",
+          "count": 1
+        },
+        {
+          "skill": "Linux",
+          "count": 1
+        },
+        {
+          "skill": "MongoDB",
+          "count": 1
+        },
+        {
+          "skill": "MySQL",
+          "count": 1
+        },
+        {
+          "skill": "Redis",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "化工",
+      "total_requirements": 11,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "Java",
+          "count": 1
+        },
+        {
+          "skill": "Kafka",
+          "count": 1
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 1
+        },
+        {
+          "skill": "MySQL",
+          "count": 1
+        },
+        {
+          "skill": "Redis",
+          "count": 1
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 1
+        },
+        {
+          "skill": "分布式",
+          "count": 1
+        },
+        {
+          "skill": "微服务",
+          "count": 1
+        },
+        {
+          "skill": "系统设计",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "医疗健康",
+      "total_requirements": 208,
+      "top_skills": [
+        {
+          "skill": "MySQL",
+          "count": 28
+        },
+        {
+          "skill": "Python",
+          "count": 26
+        },
+        {
+          "skill": "Java",
+          "count": 24
+        },
+        {
+          "skill": "数据分析",
+          "count": 18
+        },
+        {
+          "skill": "Git",
+          "count": 11
+        },
+        {
+          "skill": "Redis",
+          "count": 10
+        },
+        {
+          "skill": "JavaScript",
+          "count": 7
+        },
+        {
+          "skill": "Node.js",
+          "count": 7
+        },
+        {
+          "skill": "React",
+          "count": 7
+        },
+        {
+          "skill": "TypeScript",
+          "count": 7
+        }
+      ]
+    },
+    {
+      "industry": "咨询服务",
+      "total_requirements": 21,
+      "top_skills": [
+        {
+          "skill": "CSS3",
+          "count": 1
+        },
+        {
+          "skill": "Git",
+          "count": 1
+        },
+        {
+          "skill": "HTML5",
+          "count": 1
+        },
+        {
+          "skill": "JavaScript",
+          "count": 1
+        },
+        {
+          "skill": "Node.js",
+          "count": 1
+        },
+        {
+          "skill": "React",
+          "count": 1
+        },
+        {
+          "skill": "TypeScript",
+          "count": 1
+        },
+        {
+          "skill": "Vue",
+          "count": 1
+        },
+        {
+          "skill": "Webpack",
+          "count": 1
+        },
+        {
+          "skill": "小程序",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "在线社交/媒体",
+      "total_requirements": 12,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "Git",
+          "count": 1
+        },
+        {
+          "skill": "Java",
+          "count": 1
+        },
+        {
+          "skill": "Kafka",
+          "count": 1
+        },
+        {
+          "skill": "Linux",
+          "count": 1
+        },
+        {
+          "skill": "Maven",
+          "count": 1
+        },
+        {
+          "skill": "MyBatis",
+          "count": 1
+        },
+        {
+          "skill": "MySQL",
+          "count": 1
+        },
+        {
+          "skill": "Redis",
+          "count": 1
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "大数据",
+      "total_requirements": 43,
+      "top_skills": [
+        {
+          "skill": "Axure",
+          "count": 2
+        },
+        {
+          "skill": "DevOps",
+          "count": 2
+        },
+        {
+          "skill": "Flask",
+          "count": 2
+        },
+        {
+          "skill": "PostgreSQL",
+          "count": 2
+        },
+        {
+          "skill": "PyTorch",
+          "count": 2
+        },
+        {
+          "skill": "RabbitMQ",
+          "count": 2
+        },
+        {
+          "skill": "Rust",
+          "count": 2
+        },
+        {
+          "skill": "Scikit-learn",
+          "count": 2
+        },
+        {
+          "skill": "TensorFlow",
+          "count": 2
+        },
+        {
+          "skill": "Transformer",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "室内娱乐",
+      "total_requirements": 22,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 2
+        },
+        {
+          "skill": "Java",
+          "count": 2
+        },
+        {
+          "skill": "Kafka",
+          "count": 2
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 2
+        },
+        {
+          "skill": "MySQL",
+          "count": 2
+        },
+        {
+          "skill": "Redis",
+          "count": 2
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 2
+        },
+        {
+          "skill": "分布式",
+          "count": 2
+        },
+        {
+          "skill": "微服务",
+          "count": 2
+        },
+        {
+          "skill": "系统设计",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "工程施工",
+      "total_requirements": 20,
+      "top_skills": [
+        {
+          "skill": "Ansible",
+          "count": 2
+        },
+        {
+          "skill": "CI/CD",
+          "count": 2
+        },
+        {
+          "skill": "Docker",
+          "count": 2
+        },
+        {
+          "skill": "Grafana",
+          "count": 2
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 2
+        },
+        {
+          "skill": "Linux",
+          "count": 2
+        },
+        {
+          "skill": "Nginx",
+          "count": 2
+        },
+        {
+          "skill": "Prometheus",
+          "count": 2
+        },
+        {
+          "skill": "Python",
+          "count": 2
+        },
+        {
+          "skill": "Shell",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "广告/公关/会展",
+      "total_requirements": 10,
+      "top_skills": [
+        {
+          "skill": "CSS3",
+          "count": 1
+        },
+        {
+          "skill": "Git",
+          "count": 1
+        },
+        {
+          "skill": "HTML5",
+          "count": 1
+        },
+        {
+          "skill": "JavaScript",
+          "count": 1
+        },
+        {
+          "skill": "Node.js",
+          "count": 1
+        },
+        {
+          "skill": "React",
+          "count": 1
+        },
+        {
+          "skill": "TypeScript",
+          "count": 1
+        },
+        {
+          "skill": "Vue",
+          "count": 1
+        },
+        {
+          "skill": "Webpack",
+          "count": 1
+        },
+        {
+          "skill": "小程序",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "广播/影视/录音",
+      "total_requirements": 12,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "Git",
+          "count": 1
+        },
+        {
+          "skill": "Java",
+          "count": 1
+        },
+        {
+          "skill": "Kafka",
+          "count": 1
+        },
+        {
+          "skill": "Linux",
+          "count": 1
+        },
+        {
+          "skill": "Maven",
+          "count": 1
+        },
+        {
+          "skill": "MyBatis",
+          "count": 1
+        },
+        {
+          "skill": "MySQL",
+          "count": 1
+        },
+        {
+          "skill": "Redis",
+          "count": 1
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "房地产开发经营",
+      "total_requirements": 24,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 2
+        },
+        {
+          "skill": "Git",
+          "count": 2
+        },
+        {
+          "skill": "Java",
+          "count": 2
+        },
+        {
+          "skill": "Kafka",
+          "count": 2
+        },
+        {
+          "skill": "Linux",
+          "count": 2
+        },
+        {
+          "skill": "Maven",
+          "count": 2
+        },
+        {
+          "skill": "MyBatis",
+          "count": 2
+        },
+        {
+          "skill": "MySQL",
+          "count": 2
+        },
+        {
+          "skill": "Redis",
+          "count": 2
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "教育/培训",
+      "total_requirements": 123,
+      "top_skills": [
+        {
+          "skill": "Python",
+          "count": 37
+        },
+        {
+          "skill": "Java",
+          "count": 36
+        },
+        {
+          "skill": "SQL",
+          "count": 36
+        },
+        {
+          "skill": "PyTorch",
+          "count": 2
+        },
+        {
+          "skill": "Angular",
+          "count": 1
+        },
+        {
+          "skill": "JavaScript",
+          "count": 1
+        },
+        {
+          "skill": "Scikit-learn",
+          "count": 1
+        },
+        {
+          "skill": "TypeScript",
+          "count": 1
+        },
+        {
+          "skill": "gRPC",
+          "count": 1
+        },
+        {
+          "skill": "Django",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "数字经济",
+      "total_requirements": 41,
+      "top_skills": [
+        {
+          "skill": "AWS",
+          "count": 2
+        },
+        {
+          "skill": "CI/CD",
+          "count": 2
+        },
+        {
+          "skill": "DevOps",
+          "count": 2
+        },
+        {
+          "skill": "Docker",
+          "count": 2
+        },
+        {
+          "skill": "Flask",
+          "count": 2
+        },
+        {
+          "skill": "Go",
+          "count": 2
+        },
+        {
+          "skill": "Google Cloud",
+          "count": 2
+        },
+        {
+          "skill": "Kafka",
+          "count": 2
+        },
+        {
+          "skill": "Keras",
+          "count": 2
+        },
+        {
+          "skill": "Linux",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "文化艺术业",
+      "total_requirements": 10,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "Git",
+          "count": 1
+        },
+        {
+          "skill": "Go",
+          "count": 1
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 1
+        },
+        {
+          "skill": "Linux",
+          "count": 1
+        },
+        {
+          "skill": "MySQL",
+          "count": 1
+        },
+        {
+          "skill": "Redis",
+          "count": 1
+        },
+        {
+          "skill": "gRPC",
+          "count": 1
+        },
+        {
+          "skill": "分布式",
+          "count": 1
+        },
+        {
+          "skill": "微服务",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "新能源",
+      "total_requirements": 163,
+      "top_skills": [
+        {
+          "skill": "Python",
+          "count": 19
+        },
+        {
+          "skill": "C++",
+          "count": 18
+        },
+        {
+          "skill": "matlab",
+          "count": 17
+        },
+        {
+          "skill": "嵌入式",
+          "count": 17
+        },
+        {
+          "skill": "Kafka",
+          "count": 6
+        },
+        {
+          "skill": "MySQL",
+          "count": 6
+        },
+        {
+          "skill": "Docker",
+          "count": 5
+        },
+        {
+          "skill": "Java",
+          "count": 5
+        },
+        {
+          "skill": "Redis",
+          "count": 5
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "industry": "新闻和出版业",
+      "total_requirements": 10,
+      "top_skills": [
+        {
+          "skill": "CSS3",
+          "count": 1
+        },
+        {
+          "skill": "Git",
+          "count": 1
+        },
+        {
+          "skill": "HTML5",
+          "count": 1
+        },
+        {
+          "skill": "JavaScript",
+          "count": 1
+        },
+        {
+          "skill": "Node.js",
+          "count": 1
+        },
+        {
+          "skill": "React",
+          "count": 1
+        },
+        {
+          "skill": "TypeScript",
+          "count": 1
+        },
+        {
+          "skill": "Vue",
+          "count": 1
+        },
+        {
+          "skill": "Webpack",
+          "count": 1
+        },
+        {
+          "skill": "小程序",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "智能制造",
+      "total_requirements": 128,
+      "top_skills": [
+        {
+          "skill": "Python",
+          "count": 14
+        },
+        {
+          "skill": "C++",
+          "count": 13
+        },
+        {
+          "skill": "Linux",
+          "count": 12
+        },
+        {
+          "skill": "嵌入式",
+          "count": 12
+        },
+        {
+          "skill": "TensorFlow",
+          "count": 3
+        },
+        {
+          "skill": "Docker",
+          "count": 3
+        },
+        {
+          "skill": "Git",
+          "count": 3
+        },
+        {
+          "skill": "Java",
+          "count": 3
+        },
+        {
+          "skill": "Kafka",
+          "count": 3
+        },
+        {
+          "skill": "MySQL",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "industry": "服装/纺织/皮革",
+      "total_requirements": 22,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 2
+        },
+        {
+          "skill": "Java",
+          "count": 2
+        },
+        {
+          "skill": "Kafka",
+          "count": 2
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 2
+        },
+        {
+          "skill": "MySQL",
+          "count": 2
+        },
+        {
+          "skill": "Redis",
+          "count": 2
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 2
+        },
+        {
+          "skill": "分布式",
+          "count": 2
+        },
+        {
+          "skill": "微服务",
+          "count": 2
+        },
+        {
+          "skill": "系统设计",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "机械/设备",
+      "total_requirements": 64,
+      "top_skills": [
+        {
+          "skill": "Linux",
+          "count": 3
+        },
+        {
+          "skill": "Python",
+          "count": 3
+        },
+        {
+          "skill": "Git",
+          "count": 3
+        },
+        {
+          "skill": "Docker",
+          "count": 2
+        },
+        {
+          "skill": "Java",
+          "count": 2
+        },
+        {
+          "skill": "Kafka",
+          "count": 2
+        },
+        {
+          "skill": "Maven",
+          "count": 2
+        },
+        {
+          "skill": "MyBatis",
+          "count": 2
+        },
+        {
+          "skill": "MySQL",
+          "count": 2
+        },
+        {
+          "skill": "Redis",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "检测/认证",
+      "total_requirements": 39,
+      "top_skills": [
+        {
+          "skill": "Linux",
+          "count": 4
+        },
+        {
+          "skill": "Python",
+          "count": 4
+        },
+        {
+          "skill": "Django",
+          "count": 3
+        },
+        {
+          "skill": "Docker",
+          "count": 3
+        },
+        {
+          "skill": "FastAPI",
+          "count": 3
+        },
+        {
+          "skill": "Flask",
+          "count": 3
+        },
+        {
+          "skill": "Git",
+          "count": 3
+        },
+        {
+          "skill": "MongoDB",
+          "count": 3
+        },
+        {
+          "skill": "MySQL",
+          "count": 3
+        },
+        {
+          "skill": "Redis",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "industry": "民航/铁路/公路/水路客运",
+      "total_requirements": 10,
+      "top_skills": [
+        {
+          "skill": "PyTorch",
+          "count": 1
+        },
+        {
+          "skill": "Python",
+          "count": 1
+        },
+        {
+          "skill": "Scikit-learn",
+          "count": 1
+        },
+        {
+          "skill": "TensorFlow",
+          "count": 1
+        },
+        {
+          "skill": "Transformer",
+          "count": 1
+        },
+        {
+          "skill": "数据挖掘",
+          "count": 1
+        },
+        {
+          "skill": "机器学习",
+          "count": 1
+        },
+        {
+          "skill": "深度学习",
+          "count": 1
+        },
+        {
+          "skill": "自然语言处理",
+          "count": 1
+        },
+        {
+          "skill": "计算机视觉",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "汽车/出行",
+      "total_requirements": 81,
+      "top_skills": [
+        {
+          "skill": "Linux",
+          "count": 9
+        },
+        {
+          "skill": "Python",
+          "count": 9
+        },
+        {
+          "skill": "C++",
+          "count": 6
+        },
+        {
+          "skill": "ros",
+          "count": 6
+        },
+        {
+          "skill": "Docker",
+          "count": 5
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 4
+        },
+        {
+          "skill": "MySQL",
+          "count": 3
+        },
+        {
+          "skill": "Redis",
+          "count": 3
+        },
+        {
+          "skill": "Ansible",
+          "count": 2
+        },
+        {
+          "skill": "CI/CD",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "游戏/娱乐",
+      "total_requirements": 86,
+      "top_skills": [
+        {
+          "skill": "C++",
+          "count": 14
+        },
+        {
+          "skill": "Python",
+          "count": 14
+        },
+        {
+          "skill": "Unity",
+          "count": 14
+        },
+        {
+          "skill": "Unreal",
+          "count": 14
+        },
+        {
+          "skill": "Git",
+          "count": 3
+        },
+        {
+          "skill": "Docker",
+          "count": 2
+        },
+        {
+          "skill": "Go",
+          "count": 2
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 2
+        },
+        {
+          "skill": "Linux",
+          "count": 2
+        },
+        {
+          "skill": "MySQL",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "物联网",
+      "total_requirements": 11,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "Java",
+          "count": 1
+        },
+        {
+          "skill": "Kafka",
+          "count": 1
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 1
+        },
+        {
+          "skill": "MySQL",
+          "count": 1
+        },
+        {
+          "skill": "Redis",
+          "count": 1
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 1
+        },
+        {
+          "skill": "分布式",
+          "count": 1
+        },
+        {
+          "skill": "微服务",
+          "count": 1
+        },
+        {
+          "skill": "系统设计",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "珠宝/首饰",
+      "total_requirements": 1,
+      "top_skills": [
+        {
+          "skill": "Python",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "电力/热力/燃气/水务",
+      "total_requirements": 30,
+      "top_skills": [
+        {
+          "skill": "Django",
+          "count": 3
+        },
+        {
+          "skill": "Docker",
+          "count": 3
+        },
+        {
+          "skill": "FastAPI",
+          "count": 3
+        },
+        {
+          "skill": "Flask",
+          "count": 3
+        },
+        {
+          "skill": "Git",
+          "count": 3
+        },
+        {
+          "skill": "Linux",
+          "count": 3
+        },
+        {
+          "skill": "MongoDB",
+          "count": 3
+        },
+        {
+          "skill": "MySQL",
+          "count": 3
+        },
+        {
+          "skill": "Python",
+          "count": 3
+        },
+        {
+          "skill": "Redis",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "industry": "电商/零售",
+      "total_requirements": 489,
+      "top_skills": [
+        {
+          "skill": "MySQL",
+          "count": 106
+        },
+        {
+          "skill": "Redis",
+          "count": 106
+        },
+        {
+          "skill": "Java",
+          "count": 104
+        },
+        {
+          "skill": "Kafka",
+          "count": 104
+        },
+        {
+          "skill": "Docker",
+          "count": 4
+        },
+        {
+          "skill": "Git",
+          "count": 4
+        },
+        {
+          "skill": "Linux",
+          "count": 4
+        },
+        {
+          "skill": "分布式",
+          "count": 4
+        },
+        {
+          "skill": "微服务",
+          "count": 4
+        },
+        {
+          "skill": "Axure",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "industry": "综合",
+      "total_requirements": 77,
+      "top_skills": [
+        {
+          "skill": "C++",
+          "count": 3
+        },
+        {
+          "skill": "DevOps",
+          "count": 3
+        },
+        {
+          "skill": "Git",
+          "count": 3
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 3
+        },
+        {
+          "skill": "Linux",
+          "count": 3
+        },
+        {
+          "skill": "React",
+          "count": 3
+        },
+        {
+          "skill": "Spark",
+          "count": 3
+        },
+        {
+          "skill": "TensorFlow",
+          "count": 3
+        },
+        {
+          "skill": "Vue",
+          "count": 3
+        },
+        {
+          "skill": "gRPC",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "industry": "网络/信息安全",
+      "total_requirements": 30,
+      "top_skills": [
+        {
+          "skill": "Django",
+          "count": 3
+        },
+        {
+          "skill": "Docker",
+          "count": 3
+        },
+        {
+          "skill": "FastAPI",
+          "count": 3
+        },
+        {
+          "skill": "Flask",
+          "count": 3
+        },
+        {
+          "skill": "Git",
+          "count": 3
+        },
+        {
+          "skill": "Linux",
+          "count": 3
+        },
+        {
+          "skill": "MongoDB",
+          "count": 3
+        },
+        {
+          "skill": "MySQL",
+          "count": 3
+        },
+        {
+          "skill": "Python",
+          "count": 3
+        },
+        {
+          "skill": "Redis",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "industry": "航空/航天设备",
+      "total_requirements": 31,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 3
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 3
+        },
+        {
+          "skill": "MySQL",
+          "count": 3
+        },
+        {
+          "skill": "Redis",
+          "count": 3
+        },
+        {
+          "skill": "分布式",
+          "count": 3
+        },
+        {
+          "skill": "微服务",
+          "count": 3
+        },
+        {
+          "skill": "Git",
+          "count": 2
+        },
+        {
+          "skill": "Go",
+          "count": 2
+        },
+        {
+          "skill": "Linux",
+          "count": 2
+        },
+        {
+          "skill": "gRPC",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "industry": "融资租赁/保理",
+      "total_requirements": 60,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 5
+        },
+        {
+          "skill": "Git",
+          "count": 5
+        },
+        {
+          "skill": "Java",
+          "count": 5
+        },
+        {
+          "skill": "Kafka",
+          "count": 5
+        },
+        {
+          "skill": "Linux",
+          "count": 5
+        },
+        {
+          "skill": "Maven",
+          "count": 5
+        },
+        {
+          "skill": "MyBatis",
+          "count": 5
+        },
+        {
+          "skill": "MySQL",
+          "count": 5
+        },
+        {
+          "skill": "Redis",
+          "count": 5
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "industry": "货运/物流/仓储",
+      "total_requirements": 10,
+      "top_skills": [
+        {
+          "skill": "PyTorch",
+          "count": 1
+        },
+        {
+          "skill": "Python",
+          "count": 1
+        },
+        {
+          "skill": "Scikit-learn",
+          "count": 1
+        },
+        {
+          "skill": "TensorFlow",
+          "count": 1
+        },
+        {
+          "skill": "Transformer",
+          "count": 1
+        },
+        {
+          "skill": "数据挖掘",
+          "count": 1
+        },
+        {
+          "skill": "机器学习",
+          "count": 1
+        },
+        {
+          "skill": "深度学习",
+          "count": 1
+        },
+        {
+          "skill": "自然语言处理",
+          "count": 1
+        },
+        {
+          "skill": "计算机视觉",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "轨道交通/船舶设备",
+      "total_requirements": 11,
+      "top_skills": [
+        {
+          "skill": "Docker",
+          "count": 1
+        },
+        {
+          "skill": "Java",
+          "count": 1
+        },
+        {
+          "skill": "Kafka",
+          "count": 1
+        },
+        {
+          "skill": "Kubernetes",
+          "count": 1
+        },
+        {
+          "skill": "MySQL",
+          "count": 1
+        },
+        {
+          "skill": "Redis",
+          "count": 1
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 1
+        },
+        {
+          "skill": "分布式",
+          "count": 1
+        },
+        {
+          "skill": "微服务",
+          "count": 1
+        },
+        {
+          "skill": "系统设计",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "industry": "通信/电子",
+      "total_requirements": 751,
+      "top_skills": [
+        {
+          "skill": "Linux",
+          "count": 91
+        },
+        {
+          "skill": "C++",
+          "count": 69
+        },
+        {
+          "skill": "TCP/IP",
+          "count": 69
+        },
+        {
+          "skill": "嵌入式",
+          "count": 66
+        },
+        {
+          "skill": "Git",
+          "count": 26
+        },
+        {
+          "skill": "Python",
+          "count": 24
+        },
+        {
+          "skill": "Docker",
+          "count": 23
+        },
+        {
+          "skill": "MySQL",
+          "count": 23
+        },
+        {
+          "skill": "Redis",
+          "count": 22
+        },
+        {
+          "skill": "Java",
+          "count": 13
+        }
+      ]
+    },
+    {
+      "industry": "金融",
+      "total_requirements": 427,
+      "top_skills": [
+        {
+          "skill": "Java",
+          "count": 55
+        },
+        {
+          "skill": "Spring Boot",
+          "count": 55
+        },
+        {
+          "skill": "Python",
+          "count": 46
+        },
+        {
+          "skill": "SQL",
+          "count": 45
+        },
+        {
+          "skill": "Git",
+          "count": 20
+        },
+        {
+          "skill": "MySQL",
+          "count": 17
+        },
+        {
+          "skill": "Redis",
+          "count": 17
+        },
+        {
+          "skill": "Linux",
+          "count": 14
+        },
+        {
+          "skill": "Docker",
+          "count": 12
+        },
+        {
+          "skill": "分布式",
+          "count": 11
+        }
+      ]
+    }
+  ]
+}
