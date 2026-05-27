@@ -265,8 +265,15 @@ class RAGEngine:
         )
         answer = response.choices[0].message.content.strip()
 
-        # Step 4: Hallucination check
-        warnings = self._check_hallucination(answer, retrieved_docs, graph_context)
+        # Step 4: Hallucination check (rules + graph verification)
+        basic_warnings = self._check_hallucination(answer, retrieved_docs, graph_context)
+        from kg.hallucination_checker import HallucinationChecker
+        hc = HallucinationChecker(self.settings)
+        verification = hc.verify(answer)
+        warnings = basic_warnings + [
+            {"type": "fact_verification", "message": w.get("correction", w.get("claim", ""))}
+            for w in verification.get("warnings", [])
+        ]
 
         return {
             "question": question,
@@ -274,6 +281,9 @@ class RAGEngine:
             "retrieved_docs": retrieved_docs,
             "graph_context": graph_context,
             "warnings": warnings,
+            "hallucination_score": verification.get("overall_score", 1.0),
+            "verified_claims": verification.get("verified_claims", 0),
+            "total_claims": verification.get("total_claims", 0),
         }
 
     def _get_graph_context(self, question: str) -> list:
