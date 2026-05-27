@@ -42,6 +42,7 @@ from web.api_distribution import router as distribution_router
 from web.api_salary import router as salary_router
 from web.api_matching import router as matching_router
 from web.api_evolution import router as evolution_router
+from web.api_rag import router as rag_router
 
 app.include_router(overview_router)
 app.include_router(skills_router)
@@ -49,6 +50,7 @@ app.include_router(distribution_router)
 app.include_router(salary_router)
 app.include_router(matching_router)
 app.include_router(evolution_router)
+app.include_router(rag_router)
 
 # Serve dashboard.html at /
 from fastapi.responses import FileResponse

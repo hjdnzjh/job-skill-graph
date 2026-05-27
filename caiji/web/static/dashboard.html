@@ -116,7 +116,21 @@ body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:#0f1724;c
   <div class="panel"><div class="panel-title">技能社群聚类</div><div class="panel-body"><div class="chart" id="chartSunburst"></div></div></div>
 </div>
 
-<div class="footer">数据来源：多源招聘数据采集 | 知识图谱：Neo4j + NetworkX | 可视化：ECharts 5</div>
+<!-- Row 7: RAG QA -->
+<div class="full-width">
+  <div class="panel"><div class="panel-title">RAG 智能问答（基于图谱检索增强生成）</div>
+    <div class="panel-body" style="padding:16px">
+      <div style="display:flex;gap:8px">
+        <input type="text" id="ragQuestion" placeholder="如：Python工程师需要什么技能？上海和北京的薪资对比？" style="flex:1;padding:8px 12px;background:#0d1525;border:1px solid #2a4070;border-radius:4px;color:#e0e0e0;font-size:13px">
+        <button class="btn" onclick="doRagQuery()">提问</button>
+      </div>
+      <div id="ragAnswer" style="margin-top:12px;font-size:13px;line-height:1.8;white-space:pre-wrap;color:#d0d0d0"></div>
+      <div id="ragWarnings" style="margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">数据来源：多源招聘数据采集 | 知识图谱：Neo4j + TF-IDF | RAG：检索增强生成 | 可视化：ECharts 5</div>
 
 <script>
 // ===== Utility =====
@@ -473,6 +487,26 @@ function renderMatchResult(result) {
     });
   }
   document.getElementById('matchResult').innerHTML = html;
+}
+
+// ===== RAG QA =====
+async function doRagQuery() {
+  const q = document.getElementById('ragQuestion').value.trim();
+  if (!q) return;
+  document.getElementById('ragAnswer').innerHTML = '<span style="color:#889">正在检索知识库并生成回答...</span>';
+  document.getElementById('ragWarnings').innerHTML = '';
+  try {
+    const data = await fetchJSON(API + '/rag/query', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({question: q, top_k: 5})
+    });
+    document.getElementById('ragAnswer').textContent = data.answer || '（无回答）';
+    if (data.warnings && data.warnings.length) {
+      document.getElementById('ragWarnings').innerHTML = data.warnings.map(w =>
+        '<span class="tag tag-red" style="margin:2px">' + w.message + '</span>'
+      ).join('');
+    }
+  } catch(e) { document.getElementById('ragAnswer').innerHTML = '<span style="color:#faa">查询失败，请检查服务是否正常运行</span>'; }
 }
 
 // ===== Init =====
