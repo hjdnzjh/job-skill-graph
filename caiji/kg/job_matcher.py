@@ -82,6 +82,19 @@ class JobMatcher:
         required = self._get_job_skills(target_title, "REQUIRES")
         preferred = self._get_job_skills(target_title, "PREFERS")
 
+        # Fallback to canonical skills if Neo4j has none
+        if not required:
+            from kg.skill_extractor import TITLE_TO_SKILLS
+            canonical = TITLE_TO_SKILLS.get(target_title, [])
+            required = [{"skill": s, "category": "", "demand": 1} for s in canonical]
+        if not preferred:
+            from kg.skill_extractor import TITLE_TO_SKILLS
+            canonical = TITLE_TO_SKILLS.get(target_title, [])
+            # Preferred = canonical skills not already in required
+            req_names = {r["skill"].lower() for r in required}
+            preferred = [{"skill": s, "category": "", "demand": 1}
+                        for s in canonical if s.lower() not in req_names]
+
         user_lower = {s.lower() for s in user_skills}
 
         # Match required skills

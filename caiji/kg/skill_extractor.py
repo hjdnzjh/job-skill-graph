@@ -105,6 +105,88 @@ SKILL_KEYWORDS: List[tuple] = [
     (r"\bGradle\b", "Gradle"), (r"\b微服务\b", "微服务"),
     (r"\b分布式\b", "分布式"), (r"\b高并发\b", "高并发"),
     (r"\b系统设计\b", "系统设计"), (r"\b多线程\b", "多线程"),
+    # Additional patterns for skills in SKILL_CATEGORIES
+    (r"\bSelenium\b", "Selenium"), (r"\bAppium\b", "Appium"),
+    (r"\bJMeter\b", "JMeter"), (r"\bPostman\b", "Postman"),
+    (r"\b自动化测试\b", "自动化测试"), (r"\b性能测试\b", "性能测试"),
+    (r"\bCelery\b", "Celery"), (r"\bRedux\b", "Redux"),
+    (r"\b数据仓库\b", "数据仓库"), (r"\b数据分析\b", "数据分析"),
+    (r"\b推荐系统\b", "推荐系统"), (r"\b网络安全\b", "网络安全"),
+    (r"\b渗透测试\b", "渗透测试"),
+    (r"\bAxure\b", "Axure"), (r"\bFigma\b", "Figma"),
+    (r"\bUnity\b", "Unity"), (r"\bUnreal\b", "Unreal"),
+    (r"\bSolidity\b", "Solidity"), (r"\b项目管理\b", "项目管理"),
+    (r"\b敏捷开发\b", "敏捷开发"), (r"\bScrum\b", "Scrum"),
+    (r"\bJIRA\b", "JIRA"), (r"\bAB实验\b", "AB实验"),
+    (r"\bC\#\b", "C#"), (r"\bDart\b", "Dart"),
+    (r"\bFlutter\b", "Flutter"), (r"\bFFmpeg\b", "FFmpeg"),
+    (r"\bWebRTC\b", "WebRTC"), (r"\bOpenGL\b", "OpenGL"),
+    (r"\bTableau\b", "Tableau"), (r"\bPandas\b", "Pandas"),
+    (r"\bNumPy\b", "NumPy"), (r"\bExcel\b", "Excel"),
+    (r"\bAndroid\b", "Android"), (r"\biOS\b", "iOS"),
+    # Additional common technologies
+    (r"\bSpring\s*Cloud\b", "Spring Cloud"),
+    (r"\bSpring\s*MVC\b", "Spring MVC"),
+    (r"\bNetty\b", "Netty"), (r"\bDubbo\b", "Dubbo"),
+    (r"\bZooKeeper\b", "ZooKeeper"), (r"\bNacos\b", "Nacos"),
+    (r"\bSentinel\b", "Sentinel"), (r"\bSeata\b", "Seata"),
+    (r"\bRocketMQ\b", "RocketMQ"), (r"\bOracle\b", "Oracle"),
+    (r"\bWebLogic\b", "WebLogic"), (r"\bJVM\b", "JVM"),
+    (r"\bJUC\b", "JUC"), (r"\bXGBoost\b", "XGBoost"),
+    (r"\bLightGBM\b", "LightGBM"), (r"\bLangChain\b", "LangChain"),
+    (r"\bMLflow\b", "MLflow"), (r"\bKubeflow\b", "Kubeflow"),
+    (r"\bCUDA\b", "CUDA"), (r"\bYOLO\b", "YOLO"),
+    (r"\bStable\s*Diffusion\b", "Stable Diffusion"),
+    (r"\bTensorRT\b", "TensorRT"), (r"\bONNX\b", "ONNX"),
+    (r"\bD3\.js\b", "D3.js"), (r"\bThree\.js\b", "Three.js"),
+    (r"\bWebGL\b", "WebGL"), (r"\bCanvas\b", "Canvas"),
+    (r"\bSVG\b", "SVG"), (r"\bNext\.js\b", "Next.js"),
+    (r"\bNode\.js\b", "Node.js"), (r"\bTailwind\s*CSS\b", "Tailwind CSS"),
+    (r"\bPrisma\b", "Prisma"), (r"\bRxJS\b", "RxJS"),
+    (r"\bAxios\b", "Axios"), (r"\bECharts\b", "ECharts"),
+    (r"\bVite\b", "Vite"), (r"\bReact\s*Native\b", "React Native"),
+    (r"\bWebSocket\b", "WebSocket"), (r"\bTaro\b", "Taro"),
+    (r"\b微信小程序\b", "微信小程序"), (r"\bArkTS\b", "ArkTS"),
+    (r"\bHarmonyOS\b", "HarmonyOS"),
+    (r"\bScrapy\b", "Scrapy"), (r"\bRequests\b", "Requests"),
+    (r"\bXPath\b", "XPath"), (r"\b正则表达式\b", "正则表达式"),
+    (r"\bSQLAlchemy\b", "SQLAlchemy"), (r"\bAlembic\b", "Alembic"),
+    (r"\bPytest\b", "Pytest"), (r"\bGunicorn\b", "Gunicorn"),
+    (r"\bMatplotlib\b", "Matplotlib"), (r"\bSciPy\b", "SciPy"),
+    (r"\bC\b(?![+])", "C"), (r"\bShell\b", "Shell"),
+    (r"\bARM\b", "ARM"), (r"\b嵌入式\b", "嵌入式"),
+    (r"\b物联网\b", "物联网"), (r"\bClickHouse\b", "ClickHouse"),
+    (r"\bDoris\b", "Doris"), (r"\bHelm\b", "Helm"),
+    (r"\bIstio\b", "Istio"), (r"\bEnvoy\b", "Envoy"),
+    (r"\bHarbor\b", "Harbor"), (r"\bConsul\b", "Consul"),
+    (r"\bJaeger\b", "Jaeger"), (r"\bELK\b", "ELK"),
+    (r"\bSonarQube\b", "SonarQube"), (r"\bGrafana\b", "Grafana"),
+    (r"\bRetrofit\b", "Retrofit"), (r"\bRoom\b", "Room"),
+    (r"\bJetpack\b", "Jetpack"), (r"\bMVVM\b", "MVVM"),
+    (r"\bAlamofire\b", "Alamofire"), (r"\bCocos\b", "Cocos"),
+    (r"\bUnreal\s*Engine\b", "Unreal Engine"),
+    (r"\bLLM\b", "LLM"), (r"\bRAG\b", "RAG"),
+    (r"\b多模态\b", "多模态"), (r"\b向量数据库\b", "向量数据库"),
+    (r"\b量化交易\b", "量化交易"), (r"\b语音识别\b", "语音识别"),
+    (r"\b语音合成\b", "语音合成"), (r"\b强化学习\b", "强化学习"),
+    (r"\b微前端\b", "微前端"), (r"\b前端监控\b", "前端监控"),
+    (r"\b消息队列\b", "消息队列"), (r"\b架构设计\b", "架构设计"),
+    (r"\b技术管理\b", "技术管理"), (r"\b安全测试\b", "安全测试"),
+    (r"\b安全运维\b", "安全运维"), (r"\b云计算\b", "云计算"),
+    (r"\b网络工程\b", "网络工程"), (r"\b音视频\b", "音视频"),
+    (r"\b技术方案\b", "技术方案"), (r"\b原型设计\b", "原型设计"),
+    (r"\b需求分析\b", "需求分析"), (r"\b单元测试\b", "单元测试"),
+    (r"\b领域驱动设计\b", "领域驱动设计"),
+    (r"\b并发编程\b", "并发编程"), (r"\b特征工程\b", "特征工程"),
+    (r"\b搜索引擎\b", "搜索引擎"), (r"\b向量检索\b", "向量检索"),
+    (r"\b统计学\b", "统计学"), (r"\b用户体验\b", "用户体验"),
+    (r"\bWeb3\b", "Web3"), (r"\b以太坊\b", "以太坊"),
+    (r"\b区块链\b", "区块链"), (r"\bLaravel\b", "Laravel"),
+    (r"\bSAP\b", "SAP"), (r"\bERP\b", "ERP"),
+    (r"\bKaldi\b", "Kaldi"), (r"\bjieba\b", "jieba"),
+    (r"\bspaCy\b", "spaCy"), (r"\bYARN\b", "YARN"),
+    (r"\bAI\b", "AI"), (r"\bHTML\b", "HTML"),
+    (r"\bSketch\b", "Sketch"),
 ]
 
 # Broad industry → default skills (fallback when <3 skills detected)
@@ -172,6 +254,21 @@ SKILL_CATEGORIES: Dict[str, str] = {
     "自动化测试": "测试领域", "性能测试": "测试领域",
     "Selenium": "测试工具", "JMeter": "测试工具", "Postman": "测试工具",
     "Appium": "测试工具",
+    "Shell": "脚本语言", "CMake": "构建工具", "STL": "C++库",
+    "Objective-C": "编程语言", "Qt": "UI框架", "Xcode": "IDE工具",
+    "Combine": "iOS框架", "Core Data": "iOS框架", "MVVM": "架构模式",
+    "Retrofit": "网络框架", "CUDA": "AI加速", "TensorRT": "AI推理",
+    "模型部署": "AI工具", "模型优化": "AI工具", "图像分割": "AI领域",
+    "命名实体识别": "AI领域", "文本分类": "AI领域", "目标检测": "AI领域",
+    "数据仓库": "数据领域", "统计分析": "数据分析", "数据可视化": "数据分析",
+    "数据分析": "数据分析",
+    "用户研究": "产品设计", "PRD": "产品文档", "竞品分析": "产品能力",
+    "风险管理": "管理能力", "沟通协调": "管理能力", "PMO": "管理能力",
+    "WAF": "安全工具", "漏洞扫描": "安全工具", "SOC": "安全运营",
+    "ISO27001": "安全标准", "密码学": "安全领域", "DeFi": "区块链",
+    "通信协议": "网络协议", "量化交易": "金融科技",
+    "Node.js": "运行时", "NLP": "AI领域",
+    "XGBoost": "AI框架", "特征工程": "AI领域",
 }
 
 
@@ -179,9 +276,18 @@ class SkillExtractor:
     """Extract skills from job records using hybrid title/keyword/industry inference."""
 
     def __init__(self):
-        self._compiled_patterns = [
-            (re.compile(p, re.IGNORECASE), name) for p, name in SKILL_KEYWORDS
-        ]
+        self._compiled_patterns = []
+        for p, name in SKILL_KEYWORDS:
+            # Fix \b for CJK text compatibility:
+            # - re.ASCII: \b only matches ASCII word boundaries, so Chinese
+            #   characters count as non-word → boundary between Chinese and English
+            # - For Chinese-only patterns, remove \b (CJK chars are all \W with
+            #   re.ASCII, so \b can't match between them)
+            if any('一' <= c <= '鿿' for c in p):
+                p = p.replace('\\b', '')
+            self._compiled_patterns.append(
+                (re.compile(p, re.IGNORECASE | re.ASCII), name)
+            )
 
     def extract(self, title: str = "", description: str = "",
                 industry: str = "", existing_skills: List[str] = None) -> List[str]:

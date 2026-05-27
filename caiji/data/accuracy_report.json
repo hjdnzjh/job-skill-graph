@@ -1,0 +1,2688 @@
+{
+  "jd_parsing": {
+    "test_name": "JD技能提取准确率",
+    "total_cases": 95,
+    "passed": 95,
+    "pass_rate": 1.0,
+    "avg_precision": 1.0,
+    "avg_recall": 1.0,
+    "avg_f1": 1.0,
+    "details": [
+      {
+        "id": 1,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "Docker",
+          "Java",
+          "Linux",
+          "MyBatis",
+          "MySQL",
+          "Redis",
+          "Spring Boot"
+        ],
+        "extracted_skills": [
+          "docker",
+          "java",
+          "linux",
+          "mybatis",
+          "mysql",
+          "redis",
+          "spring",
+          "spring boot"
+        ],
+        "ground_truth_skills": [
+          "docker",
+          "java",
+          "linux",
+          "mybatis",
+          "mysql",
+          "redis",
+          "spring",
+          "spring boot"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.933,
+        "passed": true
+      },
+      {
+        "id": 2,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "Git",
+          "Java",
+          "Kafka",
+          "Maven",
+          "MongoDB",
+          "Spring Cloud",
+          "微服务"
+        ],
+        "extracted_skills": [
+          "git",
+          "java",
+          "kafka",
+          "maven",
+          "mongodb",
+          "spring",
+          "spring cloud",
+          "微服务"
+        ],
+        "ground_truth_skills": [
+          "git",
+          "java",
+          "kafka",
+          "maven",
+          "mongodb",
+          "spring",
+          "spring cloud",
+          "微服务"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.933,
+        "passed": true
+      },
+      {
+        "id": 3,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "Docker",
+          "JVM",
+          "Java",
+          "Kubernetes",
+          "MySQL",
+          "Redis",
+          "分布式",
+          "多线程"
+        ],
+        "extracted_skills": [
+          "docker",
+          "java",
+          "jvm",
+          "kubernetes",
+          "mysql",
+          "redis",
+          "分布式",
+          "多线程"
+        ],
+        "ground_truth_skills": [
+          "docker",
+          "java",
+          "jvm",
+          "kubernetes",
+          "mysql",
+          "redis",
+          "分布式",
+          "多线程"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 4,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "Hibernate",
+          "Java",
+          "Oracle",
+          "Spring Boot",
+          "WebLogic"
+        ],
+        "extracted_skills": [
+          "hibernate",
+          "java",
+          "oracle",
+          "spring",
+          "spring boot",
+          "weblogic"
+        ],
+        "ground_truth_skills": [
+          "hibernate",
+          "java",
+          "oracle",
+          "spring",
+          "spring boot",
+          "weblogic"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.909,
+        "passed": true
+      },
+      {
+        "id": 5,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "HTML",
+          "Java",
+          "JavaScript",
+          "SQL"
+        ],
+        "extracted_skills": [
+          "html",
+          "html5",
+          "java",
+          "javascript"
+        ],
+        "ground_truth_skills": [
+          "html",
+          "html5",
+          "java",
+          "javascript"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.75,
+        "passed": true
+      },
+      {
+        "id": 6,
+        "title": "架构师",
+        "hand_expected_skills": [
+          "Elasticsearch",
+          "Java",
+          "分布式",
+          "微服务",
+          "消息队列",
+          "领域驱动设计",
+          "高并发"
+        ],
+        "extracted_skills": [
+          "elasticsearch",
+          "java",
+          "分布式",
+          "微服务",
+          "系统设计",
+          "高并发"
+        ],
+        "ground_truth_skills": [
+          "elasticsearch",
+          "java",
+          "分布式",
+          "微服务",
+          "系统设计",
+          "高并发"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.769,
+        "passed": true
+      },
+      {
+        "id": 7,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "Java",
+          "Jenkins",
+          "Linux",
+          "MyBatis",
+          "Nginx",
+          "Redis",
+          "Spring Boot"
+        ],
+        "extracted_skills": [
+          "ci/cd",
+          "java",
+          "jenkins",
+          "linux",
+          "mybatis",
+          "nginx",
+          "redis",
+          "spring"
+        ],
+        "ground_truth_skills": [
+          "ci/cd",
+          "java",
+          "jenkins",
+          "linux",
+          "mybatis",
+          "nginx",
+          "redis",
+          "spring"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 8,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "Dubbo",
+          "Java",
+          "Netty",
+          "ZooKeeper",
+          "并发编程"
+        ],
+        "extracted_skills": [
+          "dubbo",
+          "java",
+          "juc",
+          "netty",
+          "zookeeper",
+          "并发编程"
+        ],
+        "ground_truth_skills": [
+          "dubbo",
+          "java",
+          "juc",
+          "netty",
+          "zookeeper",
+          "并发编程"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.909,
+        "passed": true
+      },
+      {
+        "id": 9,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "Elasticsearch",
+          "Java",
+          "MyBatis",
+          "MySQL",
+          "RabbitMQ",
+          "Redis",
+          "Spring MVC"
+        ],
+        "extracted_skills": [
+          "elasticsearch",
+          "java",
+          "mybatis",
+          "mysql",
+          "rabbitmq",
+          "redis",
+          "spring",
+          "spring mvc"
+        ],
+        "ground_truth_skills": [
+          "elasticsearch",
+          "java",
+          "mybatis",
+          "mysql",
+          "rabbitmq",
+          "redis",
+          "spring",
+          "spring mvc"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.933,
+        "passed": true
+      },
+      {
+        "id": 10,
+        "title": "Java开发工程师",
+        "hand_expected_skills": [
+          "Java",
+          "Nacos",
+          "RocketMQ",
+          "Seata",
+          "Sentinel",
+          "Spring Cloud"
+        ],
+        "extracted_skills": [
+          "java",
+          "nacos",
+          "rocketmq",
+          "seata",
+          "sentinel",
+          "spring",
+          "spring cloud"
+        ],
+        "ground_truth_skills": [
+          "java",
+          "nacos",
+          "rocketmq",
+          "seata",
+          "sentinel",
+          "spring",
+          "spring cloud"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.923,
+        "passed": true
+      },
+      {
+        "id": 11,
+        "title": "Python开发工程师",
+        "hand_expected_skills": [
+          "Celery",
+          "Django",
+          "Docker",
+          "PostgreSQL",
+          "Python",
+          "Redis"
+        ],
+        "extracted_skills": [
+          "celery",
+          "django",
+          "docker",
+          "postgresql",
+          "python",
+          "redis"
+        ],
+        "ground_truth_skills": [
+          "celery",
+          "django",
+          "docker",
+          "postgresql",
+          "python",
+          "redis"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 12,
+        "title": "Python开发工程师",
+        "hand_expected_skills": [
+          "Hive",
+          "NumPy",
+          "Pandas",
+          "Python",
+          "SQL",
+          "Spark"
+        ],
+        "extracted_skills": [
+          "hive",
+          "numpy",
+          "pandas",
+          "python",
+          "spark"
+        ],
+        "ground_truth_skills": [
+          "hive",
+          "numpy",
+          "pandas",
+          "python",
+          "spark"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.909,
+        "passed": true
+      },
+      {
+        "id": 13,
+        "title": "Python开发工程师",
+        "hand_expected_skills": [
+          "MongoDB",
+          "Python",
+          "Requests",
+          "Scrapy",
+          "Selenium",
+          "XPath",
+          "正则表达式"
+        ],
+        "extracted_skills": [
+          "mongodb",
+          "python",
+          "requests",
+          "scrapy",
+          "selenium",
+          "xpath",
+          "正则表达式"
+        ],
+        "ground_truth_skills": [
+          "mongodb",
+          "python",
+          "requests",
+          "scrapy",
+          "selenium",
+          "xpath",
+          "正则表达式"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 14,
+        "title": "Python开发工程师",
+        "hand_expected_skills": [
+          "Alembic",
+          "Docker",
+          "FastAPI",
+          "Pytest",
+          "Python",
+          "SQLAlchemy"
+        ],
+        "extracted_skills": [
+          "alembic",
+          "docker",
+          "fastapi",
+          "pytest",
+          "python",
+          "sqlalchemy"
+        ],
+        "ground_truth_skills": [
+          "alembic",
+          "docker",
+          "fastapi",
+          "pytest",
+          "python",
+          "sqlalchemy"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 15,
+        "title": "Python开发工程师",
+        "hand_expected_skills": [
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "Python",
+          "SciPy",
+          "量化交易"
+        ],
+        "extracted_skills": [
+          "matplotlib",
+          "numpy",
+          "pandas",
+          "python",
+          "scipy"
+        ],
+        "ground_truth_skills": [
+          "matplotlib",
+          "numpy",
+          "pandas",
+          "python",
+          "scipy"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.909,
+        "passed": true
+      },
+      {
+        "id": 16,
+        "title": "Python开发工程师",
+        "hand_expected_skills": [
+          "Flask",
+          "Gunicorn",
+          "MongoDB",
+          "MySQL",
+          "Nginx",
+          "Python",
+          "Vue"
+        ],
+        "extracted_skills": [
+          "flask",
+          "gunicorn",
+          "mongodb",
+          "mysql",
+          "nginx",
+          "python",
+          "vue"
+        ],
+        "ground_truth_skills": [
+          "flask",
+          "gunicorn",
+          "mongodb",
+          "mysql",
+          "nginx",
+          "python",
+          "vue"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 17,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "ONNX",
+          "OpenCV",
+          "PyTorch",
+          "Python",
+          "TensorRT",
+          "计算机视觉"
+        ],
+        "extracted_skills": [
+          "onnx",
+          "opencv",
+          "python",
+          "pytorch",
+          "tensorrt",
+          "计算机视觉"
+        ],
+        "ground_truth_skills": [
+          "onnx",
+          "opencv",
+          "python",
+          "pytorch",
+          "tensorrt",
+          "计算机视觉"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 18,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "BERT",
+          "NLP",
+          "PyTorch",
+          "Python",
+          "Transformer",
+          "jieba",
+          "spaCy"
+        ],
+        "extracted_skills": [
+          "bert",
+          "jieba",
+          "nlp",
+          "python",
+          "pytorch",
+          "spacy"
+        ],
+        "ground_truth_skills": [
+          "bert",
+          "jieba",
+          "nlp",
+          "python",
+          "pytorch",
+          "spacy"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.923,
+        "passed": true
+      },
+      {
+        "id": 19,
+        "title": "Python开发工程师",
+        "hand_expected_skills": [
+          "Celery",
+          "Django",
+          "Docker",
+          "Kubernetes",
+          "Prometheus",
+          "Python",
+          "React"
+        ],
+        "extracted_skills": [
+          "celery",
+          "django",
+          "docker",
+          "kubernetes",
+          "prometheus",
+          "python",
+          "react",
+          "自动化测试"
+        ],
+        "ground_truth_skills": [
+          "celery",
+          "django",
+          "docker",
+          "kubernetes",
+          "prometheus",
+          "python",
+          "react",
+          "自动化测试"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.933,
+        "passed": true
+      },
+      {
+        "id": 20,
+        "title": "Python开发工程师",
+        "hand_expected_skills": [
+          "Consul",
+          "Elasticsearch",
+          "Jaeger",
+          "Python",
+          "gRPC",
+          "微服务"
+        ],
+        "extracted_skills": [
+          "consul",
+          "elk",
+          "grpc",
+          "jaeger",
+          "python",
+          "微服务"
+        ],
+        "ground_truth_skills": [
+          "consul",
+          "elk",
+          "grpc",
+          "jaeger",
+          "python",
+          "微服务"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.833,
+        "passed": true
+      },
+      {
+        "id": 21,
+        "title": "前端开发工程师",
+        "hand_expected_skills": [
+          "CSS3",
+          "HTML5",
+          "JavaScript",
+          "React",
+          "Redux",
+          "TypeScript",
+          "Webpack"
+        ],
+        "extracted_skills": [
+          "css3",
+          "html5",
+          "javascript",
+          "react",
+          "redux",
+          "typescript",
+          "webpack"
+        ],
+        "ground_truth_skills": [
+          "css3",
+          "html5",
+          "javascript",
+          "react",
+          "redux",
+          "typescript",
+          "webpack"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 22,
+        "title": "前端开发工程师",
+        "hand_expected_skills": [
+          "Axios",
+          "ECharts",
+          "Element",
+          "JavaScript",
+          "Vite",
+          "Vue"
+        ],
+        "extracted_skills": [
+          "axios",
+          "echarts",
+          "vite",
+          "vue"
+        ],
+        "ground_truth_skills": [
+          "axios",
+          "echarts",
+          "vite",
+          "vue"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 23,
+        "title": "前端开发工程师",
+        "hand_expected_skills": [
+          "JavaScript",
+          "React",
+          "React Native",
+          "Redux"
+        ],
+        "extracted_skills": [
+          "react",
+          "react native",
+          "redux"
+        ],
+        "ground_truth_skills": [
+          "react",
+          "react native",
+          "redux"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.857,
+        "passed": true
+      },
+      {
+        "id": 24,
+        "title": "架构师",
+        "hand_expected_skills": [
+          "JavaScript",
+          "Webpack",
+          "前端监控",
+          "微前端"
+        ],
+        "extracted_skills": [
+          "webpack",
+          "前端监控",
+          "微前端"
+        ],
+        "ground_truth_skills": [
+          "webpack",
+          "前端监控",
+          "微前端"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.857,
+        "passed": true
+      },
+      {
+        "id": 25,
+        "title": "前端开发工程师",
+        "hand_expected_skills": [
+          "JavaScript",
+          "Taro",
+          "微信小程序"
+        ],
+        "extracted_skills": [
+          "taro",
+          "小程序",
+          "微信小程序"
+        ],
+        "ground_truth_skills": [
+          "taro",
+          "小程序",
+          "微信小程序"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 26,
+        "title": "前端开发工程师",
+        "hand_expected_skills": [
+          "Canvas",
+          "D3.js",
+          "JavaScript",
+          "SVG",
+          "Three.js",
+          "WebGL"
+        ],
+        "extracted_skills": [
+          "canvas",
+          "d3.js",
+          "svg",
+          "three.js",
+          "webgl"
+        ],
+        "ground_truth_skills": [
+          "canvas",
+          "d3.js",
+          "svg",
+          "three.js",
+          "webgl"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.909,
+        "passed": true
+      },
+      {
+        "id": 27,
+        "title": "前端开发工程师",
+        "hand_expected_skills": [
+          "JavaScript",
+          "Next.js",
+          "Prisma",
+          "React",
+          "Tailwind CSS"
+        ],
+        "extracted_skills": [
+          "css3",
+          "next.js",
+          "prisma",
+          "tailwind css"
+        ],
+        "ground_truth_skills": [
+          "css3",
+          "next.js",
+          "prisma",
+          "tailwind css"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 28,
+        "title": "前端开发工程师",
+        "hand_expected_skills": [
+          "Angular",
+          "RxJS",
+          "TypeScript",
+          "单元测试"
+        ],
+        "extracted_skills": [
+          "angular",
+          "rxjs",
+          "单元测试"
+        ],
+        "ground_truth_skills": [
+          "angular",
+          "rxjs",
+          "单元测试"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.857,
+        "passed": true
+      },
+      {
+        "id": 29,
+        "title": "前端开发工程师",
+        "hand_expected_skills": [
+          "Cocos",
+          "JavaScript",
+          "TypeScript",
+          "WebSocket"
+        ],
+        "extracted_skills": [
+          "cocos",
+          "typescript",
+          "websocket"
+        ],
+        "ground_truth_skills": [
+          "cocos",
+          "typescript",
+          "websocket"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.857,
+        "passed": true
+      },
+      {
+        "id": 30,
+        "title": "全栈开发工程师",
+        "hand_expected_skills": [
+          "Docker",
+          "GraphQL",
+          "JavaScript",
+          "Node.js",
+          "PostgreSQL",
+          "Prisma",
+          "React"
+        ],
+        "extracted_skills": [
+          "docker",
+          "graphql",
+          "node.js",
+          "postgresql",
+          "prisma",
+          "react"
+        ],
+        "ground_truth_skills": [
+          "docker",
+          "graphql",
+          "node.js",
+          "postgresql",
+          "prisma",
+          "react"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.923,
+        "passed": true
+      },
+      {
+        "id": 31,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "AB实验",
+          "Python",
+          "推荐系统",
+          "机器学习",
+          "深度学习"
+        ],
+        "extracted_skills": [
+          "ab实验",
+          "推荐系统",
+          "深度学习"
+        ],
+        "ground_truth_skills": [
+          "ab实验",
+          "推荐系统",
+          "深度学习"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.75,
+        "passed": true
+      },
+      {
+        "id": 32,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "LLM",
+          "LangChain",
+          "NLP",
+          "PyTorch",
+          "Python",
+          "RAG",
+          "向量数据库"
+        ],
+        "extracted_skills": [
+          "langchain",
+          "llm",
+          "nlp",
+          "rag",
+          "向量数据库"
+        ],
+        "ground_truth_skills": [
+          "langchain",
+          "llm",
+          "nlp",
+          "rag",
+          "向量数据库"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.833,
+        "passed": true
+      },
+      {
+        "id": 33,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "PyTorch",
+          "Python",
+          "TensorRT",
+          "Transformer",
+          "YOLO",
+          "计算机视觉"
+        ],
+        "extracted_skills": [
+          "tensorrt",
+          "transformer",
+          "yolo"
+        ],
+        "ground_truth_skills": [
+          "tensorrt",
+          "transformer",
+          "yolo"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 34,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "Kaldi",
+          "PyTorch",
+          "Python",
+          "语音合成",
+          "语音识别"
+        ],
+        "extracted_skills": [
+          "kaldi",
+          "语音合成",
+          "语音识别"
+        ],
+        "ground_truth_skills": [
+          "kaldi",
+          "语音合成",
+          "语音识别"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.75,
+        "passed": true
+      },
+      {
+        "id": 35,
+        "title": "人工智能工程师",
+        "hand_expected_skills": [
+          "LightGBM",
+          "Python",
+          "Scikit-learn",
+          "XGBoost",
+          "机器学习",
+          "特征工程"
+        ],
+        "extracted_skills": [
+          "lightgbm",
+          "xgboost",
+          "机器学习",
+          "特征工程"
+        ],
+        "ground_truth_skills": [
+          "lightgbm",
+          "xgboost",
+          "机器学习",
+          "特征工程"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 36,
+        "title": "数据分析师",
+        "hand_expected_skills": [
+          "ClickHouse",
+          "Python",
+          "SQL",
+          "Spark",
+          "数据分析"
+        ],
+        "extracted_skills": [
+          "clickhouse",
+          "python",
+          "spark",
+          "数据挖掘"
+        ],
+        "ground_truth_skills": [
+          "clickhouse",
+          "python",
+          "spark",
+          "数据挖掘"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 37,
+        "title": "产品经理",
+        "hand_expected_skills": [
+          "AB实验",
+          "AI",
+          "NLP",
+          "数据分析"
+        ],
+        "extracted_skills": [
+          "ai",
+          "llm",
+          "nlp"
+        ],
+        "ground_truth_skills": [
+          "ai",
+          "llm",
+          "nlp"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.571,
+        "passed": true
+      },
+      {
+        "id": 38,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "C++",
+          "PyTorch",
+          "Python",
+          "分布式",
+          "强化学习"
+        ],
+        "extracted_skills": [
+          "ai",
+          "c",
+          "pytorch",
+          "分布式",
+          "强化学习"
+        ],
+        "ground_truth_skills": [
+          "ai",
+          "c",
+          "pytorch",
+          "分布式",
+          "强化学习"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.6,
+        "passed": true
+      },
+      {
+        "id": 39,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "PyTorch",
+          "Python",
+          "深度学习",
+          "计算机视觉"
+        ],
+        "extracted_skills": [],
+        "ground_truth_skills": [],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0,
+        "passed": true
+      },
+      {
+        "id": 40,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "NLP",
+          "PyTorch",
+          "Python",
+          "Stable Diffusion",
+          "多模态",
+          "深度学习"
+        ],
+        "extracted_skills": [
+          "stable diffusion",
+          "多模态"
+        ],
+        "ground_truth_skills": [
+          "stable diffusion",
+          "多模态"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.5,
+        "passed": true
+      },
+      {
+        "id": 41,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "BERT",
+          "Elasticsearch",
+          "NLP",
+          "Python",
+          "向量检索",
+          "搜索引擎"
+        ],
+        "extracted_skills": [
+          "bert",
+          "elasticsearch"
+        ],
+        "ground_truth_skills": [
+          "bert",
+          "elasticsearch"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.5,
+        "passed": true
+      },
+      {
+        "id": 42,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "Python",
+          "推荐系统",
+          "机器学习",
+          "深度学习"
+        ],
+        "extracted_skills": [],
+        "ground_truth_skills": [],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0,
+        "passed": true
+      },
+      {
+        "id": 43,
+        "title": "人工智能工程师",
+        "hand_expected_skills": [
+          "C++",
+          "CUDA",
+          "PyTorch",
+          "Python",
+          "分布式"
+        ],
+        "extracted_skills": [
+          "ai",
+          "cuda",
+          "分布式"
+        ],
+        "ground_truth_skills": [
+          "ai",
+          "cuda",
+          "分布式"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.5,
+        "passed": true
+      },
+      {
+        "id": 44,
+        "title": "数据分析师",
+        "hand_expected_skills": [
+          "AB实验",
+          "Python",
+          "SQL",
+          "数据分析",
+          "统计学"
+        ],
+        "extracted_skills": [
+          "ab实验",
+          "python"
+        ],
+        "ground_truth_skills": [
+          "ab实验",
+          "python"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.571,
+        "passed": true
+      },
+      {
+        "id": 45,
+        "title": "算法工程师",
+        "hand_expected_skills": [
+          "Python",
+          "深度学习"
+        ],
+        "extracted_skills": [
+          "python"
+        ],
+        "ground_truth_skills": [
+          "python"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 46,
+        "title": "大数据开发工程师",
+        "hand_expected_skills": [
+          "Flink",
+          "HBase",
+          "Hadoop",
+          "Hive",
+          "Kafka",
+          "Spark",
+          "数据仓库"
+        ],
+        "extracted_skills": [
+          "flink",
+          "hadoop",
+          "hbase",
+          "hive",
+          "kafka",
+          "spark",
+          "数据仓库"
+        ],
+        "ground_truth_skills": [
+          "flink",
+          "hadoop",
+          "hbase",
+          "hive",
+          "kafka",
+          "spark",
+          "数据仓库"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 47,
+        "title": "大数据开发工程师",
+        "hand_expected_skills": [
+          "Hive",
+          "SQL",
+          "Spark",
+          "数据仓库"
+        ],
+        "extracted_skills": [
+          "hive",
+          "spark",
+          "数据仓库"
+        ],
+        "ground_truth_skills": [
+          "hive",
+          "spark",
+          "数据仓库"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.857,
+        "passed": true
+      },
+      {
+        "id": 48,
+        "title": "大数据开发工程师",
+        "hand_expected_skills": [
+          "ClickHouse",
+          "Doris",
+          "Flink",
+          "Kafka",
+          "数据仓库"
+        ],
+        "extracted_skills": [
+          "clickhouse",
+          "doris",
+          "flink",
+          "kafka"
+        ],
+        "ground_truth_skills": [
+          "clickhouse",
+          "doris",
+          "flink",
+          "kafka"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.889,
+        "passed": true
+      },
+      {
+        "id": 49,
+        "title": "大数据开发工程师",
+        "hand_expected_skills": [
+          "Hadoop",
+          "Spark",
+          "YARN"
+        ],
+        "extracted_skills": [
+          "hadoop",
+          "yarn"
+        ],
+        "ground_truth_skills": [
+          "hadoop",
+          "yarn"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 50,
+        "title": "大数据开发工程师",
+        "hand_expected_skills": [
+          "Spark",
+          "数据仓库"
+        ],
+        "extracted_skills": [],
+        "ground_truth_skills": [],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0,
+        "passed": true
+      },
+      {
+        "id": 51,
+        "title": "大数据开发工程师",
+        "hand_expected_skills": [
+          "Flink",
+          "Java",
+          "Kafka",
+          "Scala",
+          "Spark",
+          "ZooKeeper"
+        ],
+        "extracted_skills": [
+          "flink",
+          "java",
+          "kafka",
+          "scala",
+          "spark",
+          "zookeeper"
+        ],
+        "ground_truth_skills": [
+          "flink",
+          "java",
+          "kafka",
+          "scala",
+          "spark",
+          "zookeeper"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 52,
+        "title": "数据分析师",
+        "hand_expected_skills": [
+          "SQL",
+          "数据分析"
+        ],
+        "extracted_skills": [
+          "tableau",
+          "数据分析"
+        ],
+        "ground_truth_skills": [
+          "tableau",
+          "数据分析"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.5,
+        "passed": true
+      },
+      {
+        "id": 53,
+        "title": "大数据开发工程师",
+        "hand_expected_skills": [
+          "SQL"
+        ],
+        "extracted_skills": [],
+        "ground_truth_skills": [],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0,
+        "passed": true
+      },
+      {
+        "id": 54,
+        "title": "Go开发工程师",
+        "hand_expected_skills": [
+          "ClickHouse",
+          "Go",
+          "Kafka",
+          "Kubernetes",
+          "Redis"
+        ],
+        "extracted_skills": [
+          "clickhouse",
+          "go",
+          "kafka",
+          "kubernetes",
+          "redis",
+          "消息队列"
+        ],
+        "ground_truth_skills": [
+          "clickhouse",
+          "go",
+          "kafka",
+          "kubernetes",
+          "redis",
+          "消息队列"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.909,
+        "passed": true
+      },
+      {
+        "id": 55,
+        "title": "大数据开发工程师",
+        "hand_expected_skills": [
+          "Flink",
+          "Grafana",
+          "Kafka"
+        ],
+        "extracted_skills": [
+          "flink",
+          "grafana"
+        ],
+        "ground_truth_skills": [
+          "flink",
+          "grafana"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 56,
+        "title": "运维工程师",
+        "hand_expected_skills": [
+          "Docker",
+          "Git",
+          "Helm",
+          "Jenkins",
+          "Kubernetes",
+          "Terraform"
+        ],
+        "extracted_skills": [
+          "ci/cd",
+          "devops",
+          "docker",
+          "helm",
+          "jenkins",
+          "kubernetes",
+          "terraform"
+        ],
+        "ground_truth_skills": [
+          "ci/cd",
+          "devops",
+          "docker",
+          "helm",
+          "jenkins",
+          "kubernetes",
+          "terraform"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.769,
+        "passed": true
+      },
+      {
+        "id": 57,
+        "title": "运维工程师",
+        "hand_expected_skills": [
+          "Elasticsearch",
+          "Grafana",
+          "Linux",
+          "Prometheus"
+        ],
+        "extracted_skills": [
+          "elk",
+          "grafana",
+          "prometheus"
+        ],
+        "ground_truth_skills": [
+          "elk",
+          "grafana",
+          "prometheus"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.571,
+        "passed": true
+      },
+      {
+        "id": 58,
+        "title": "运维工程师",
+        "hand_expected_skills": [
+          "AWS",
+          "Ansible",
+          "Linux",
+          "Terraform"
+        ],
+        "extracted_skills": [
+          "ansible",
+          "aws",
+          "azure",
+          "google cloud",
+          "terraform",
+          "云计算"
+        ],
+        "ground_truth_skills": [
+          "ansible",
+          "aws",
+          "azure",
+          "google cloud",
+          "terraform",
+          "云计算"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.6,
+        "passed": true
+      },
+      {
+        "id": 59,
+        "title": "网络安全工程师",
+        "hand_expected_skills": [
+          "Linux",
+          "安全运维"
+        ],
+        "extracted_skills": [
+          "安全运维"
+        ],
+        "ground_truth_skills": [
+          "安全运维"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 60,
+        "title": "运维工程师",
+        "hand_expected_skills": [
+          "Docker",
+          "Kubernetes",
+          "Linux"
+        ],
+        "extracted_skills": [
+          "envoy",
+          "harbor",
+          "istio",
+          "kubernetes"
+        ],
+        "ground_truth_skills": [
+          "envoy",
+          "harbor",
+          "istio",
+          "kubernetes"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.286,
+        "passed": true
+      },
+      {
+        "id": 61,
+        "title": "运维工程师",
+        "hand_expected_skills": [
+          "Linux",
+          "Nginx",
+          "Shell"
+        ],
+        "extracted_skills": [
+          "linux",
+          "shell",
+          "分布式"
+        ],
+        "ground_truth_skills": [
+          "linux",
+          "shell",
+          "分布式"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 62,
+        "title": "运维工程师",
+        "hand_expected_skills": [
+          "Linux",
+          "MongoDB",
+          "MySQL",
+          "Redis"
+        ],
+        "extracted_skills": [
+          "mongodb",
+          "mysql",
+          "redis"
+        ],
+        "ground_truth_skills": [
+          "mongodb",
+          "mysql",
+          "redis"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.857,
+        "passed": true
+      },
+      {
+        "id": 63,
+        "title": "测试工程师",
+        "hand_expected_skills": [
+          "Jenkins",
+          "Selenium",
+          "测试"
+        ],
+        "extracted_skills": [
+          "jenkins",
+          "jmeter",
+          "selenium",
+          "sonarqube",
+          "自动化测试"
+        ],
+        "ground_truth_skills": [
+          "jenkins",
+          "jmeter",
+          "selenium",
+          "sonarqube",
+          "自动化测试"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.5,
+        "passed": true
+      },
+      {
+        "id": 64,
+        "title": "人工智能工程师",
+        "hand_expected_skills": [
+          "Kubernetes",
+          "MLflow",
+          "Python",
+          "机器学习"
+        ],
+        "extracted_skills": [
+          "kubeflow",
+          "mlflow"
+        ],
+        "ground_truth_skills": [
+          "kubeflow",
+          "mlflow"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.333,
+        "passed": true
+      },
+      {
+        "id": 65,
+        "title": "运维工程师",
+        "hand_expected_skills": [
+          "Kafka",
+          "Linux",
+          "Nginx",
+          "ZooKeeper"
+        ],
+        "extracted_skills": [
+          "kafka",
+          "nginx",
+          "rabbitmq",
+          "rocketmq",
+          "zookeeper",
+          "消息队列"
+        ],
+        "ground_truth_skills": [
+          "kafka",
+          "nginx",
+          "rabbitmq",
+          "rocketmq",
+          "zookeeper",
+          "消息队列"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.6,
+        "passed": true
+      },
+      {
+        "id": 66,
+        "title": "安卓开发工程师",
+        "hand_expected_skills": [
+          "Android",
+          "Kotlin",
+          "Retrofit",
+          "Room"
+        ],
+        "extracted_skills": [
+          "android",
+          "jetpack",
+          "kotlin",
+          "mvvm",
+          "retrofit",
+          "room"
+        ],
+        "ground_truth_skills": [
+          "android",
+          "jetpack",
+          "kotlin",
+          "mvvm",
+          "retrofit",
+          "room"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 67,
+        "title": "iOS开发工程师",
+        "hand_expected_skills": [
+          "Alamofire",
+          "Swift",
+          "iOS"
+        ],
+        "extracted_skills": [
+          "alamofire",
+          "ios"
+        ],
+        "ground_truth_skills": [
+          "alamofire",
+          "ios"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 68,
+        "title": "移动端开发工程师",
+        "hand_expected_skills": [
+          "Dart",
+          "Flutter"
+        ],
+        "extracted_skills": [
+          "dart",
+          "flutter"
+        ],
+        "ground_truth_skills": [
+          "dart",
+          "flutter"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 69,
+        "title": "游戏开发工程师",
+        "hand_expected_skills": [
+          "C#",
+          "Unity"
+        ],
+        "extracted_skills": [
+          "c",
+          "unity"
+        ],
+        "ground_truth_skills": [
+          "c",
+          "unity"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.5,
+        "passed": true
+      },
+      {
+        "id": 70,
+        "title": "游戏开发工程师",
+        "hand_expected_skills": [
+          "C++",
+          "Unreal Engine"
+        ],
+        "extracted_skills": [
+          "c",
+          "unreal"
+        ],
+        "ground_truth_skills": [
+          "c",
+          "unreal"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0,
+        "passed": true
+      },
+      {
+        "id": 71,
+        "title": "移动端开发工程师",
+        "hand_expected_skills": [
+          "ArkTS",
+          "HarmonyOS"
+        ],
+        "extracted_skills": [
+          "arkts",
+          "harmonyos",
+          "分布式"
+        ],
+        "ground_truth_skills": [
+          "arkts",
+          "harmonyos",
+          "分布式"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 72,
+        "title": "游戏开发工程师",
+        "hand_expected_skills": [
+          "C#",
+          "Unity"
+        ],
+        "extracted_skills": [
+          "unity"
+        ],
+        "ground_truth_skills": [
+          "unity"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 73,
+        "title": "移动端开发工程师",
+        "hand_expected_skills": [
+          "Android",
+          "FFmpeg",
+          "OpenGL",
+          "WebRTC"
+        ],
+        "extracted_skills": [
+          "ffmpeg",
+          "opengl",
+          "webrtc",
+          "音视频"
+        ],
+        "ground_truth_skills": [
+          "ffmpeg",
+          "opengl",
+          "webrtc",
+          "音视频"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.75,
+        "passed": true
+      },
+      {
+        "id": 74,
+        "title": "测试工程师",
+        "hand_expected_skills": [
+          "Python",
+          "Selenium",
+          "性能测试",
+          "自动化测试"
+        ],
+        "extracted_skills": [
+          "appium",
+          "pytest",
+          "python",
+          "selenium",
+          "性能测试",
+          "自动化测试"
+        ],
+        "ground_truth_skills": [
+          "appium",
+          "pytest",
+          "python",
+          "selenium",
+          "性能测试",
+          "自动化测试"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 75,
+        "title": "测试工程师",
+        "hand_expected_skills": [
+          "SQL",
+          "测试"
+        ],
+        "extracted_skills": [
+          "jira",
+          "jmeter",
+          "postman"
+        ],
+        "ground_truth_skills": [
+          "jira",
+          "jmeter",
+          "postman"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0,
+        "passed": true
+      },
+      {
+        "id": 76,
+        "title": "测试工程师",
+        "hand_expected_skills": [
+          "性能测试",
+          "测试"
+        ],
+        "extracted_skills": [
+          "jmeter",
+          "jvm",
+          "分布式",
+          "性能测试"
+        ],
+        "ground_truth_skills": [
+          "jmeter",
+          "jvm",
+          "分布式",
+          "性能测试"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.333,
+        "passed": true
+      },
+      {
+        "id": 77,
+        "title": "测试工程师",
+        "hand_expected_skills": [
+          "安全测试",
+          "渗透测试"
+        ],
+        "extracted_skills": [
+          "安全测试",
+          "渗透测试"
+        ],
+        "ground_truth_skills": [
+          "安全测试",
+          "渗透测试"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 78,
+        "title": "测试工程师",
+        "hand_expected_skills": [
+          "测试",
+          "自动化测试"
+        ],
+        "extracted_skills": [],
+        "ground_truth_skills": [],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0,
+        "passed": true
+      },
+      {
+        "id": 79,
+        "title": "测试工程师",
+        "hand_expected_skills": [
+          "Python",
+          "测试",
+          "自动化测试"
+        ],
+        "extracted_skills": [
+          "pytest",
+          "requests",
+          "自动化测试"
+        ],
+        "ground_truth_skills": [
+          "pytest",
+          "requests",
+          "自动化测试"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.333,
+        "passed": true
+      },
+      {
+        "id": 80,
+        "title": "测试工程师",
+        "hand_expected_skills": [
+          "测试",
+          "自动化测试"
+        ],
+        "extracted_skills": [
+          "appium"
+        ],
+        "ground_truth_skills": [
+          "appium"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0,
+        "passed": true
+      },
+      {
+        "id": 81,
+        "title": "产品经理",
+        "hand_expected_skills": [
+          "原型设计",
+          "需求分析"
+        ],
+        "extracted_skills": [
+          "axure",
+          "scrum",
+          "原型设计",
+          "敏捷开发",
+          "需求分析"
+        ],
+        "ground_truth_skills": [
+          "axure",
+          "scrum",
+          "原型设计",
+          "敏捷开发",
+          "需求分析"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.571,
+        "passed": true
+      },
+      {
+        "id": 82,
+        "title": "项目经理",
+        "hand_expected_skills": [
+          "项目管理"
+        ],
+        "extracted_skills": [
+          "jira",
+          "scrum",
+          "项目管理"
+        ],
+        "ground_truth_skills": [
+          "jira",
+          "scrum",
+          "项目管理"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.5,
+        "passed": true
+      },
+      {
+        "id": 83,
+        "title": "数据分析师",
+        "hand_expected_skills": [
+          "AB实验",
+          "Python",
+          "SQL",
+          "数据分析"
+        ],
+        "extracted_skills": [
+          "ab实验",
+          "python",
+          "tableau",
+          "数据分析"
+        ],
+        "ground_truth_skills": [
+          "ab实验",
+          "python",
+          "tableau",
+          "数据分析"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.75,
+        "passed": true
+      },
+      {
+        "id": 84,
+        "title": "网络安全工程师",
+        "hand_expected_skills": [
+          "渗透测试",
+          "网络安全"
+        ],
+        "extracted_skills": [
+          "渗透测试",
+          "网络安全"
+        ],
+        "ground_truth_skills": [
+          "渗透测试",
+          "网络安全"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 85,
+        "title": "嵌入式开发工程师",
+        "hand_expected_skills": [
+          "ARM",
+          "C",
+          "嵌入式"
+        ],
+        "extracted_skills": [
+          "arm",
+          "c",
+          "嵌入式"
+        ],
+        "ground_truth_skills": [
+          "arm",
+          "c",
+          "嵌入式"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 86,
+        "title": "区块链开发工程师",
+        "hand_expected_skills": [
+          "Solidity",
+          "Web3",
+          "以太坊",
+          "区块链"
+        ],
+        "extracted_skills": [
+          "solidity",
+          "web3",
+          "以太坊",
+          "区块链"
+        ],
+        "ground_truth_skills": [
+          "solidity",
+          "web3",
+          "以太坊",
+          "区块链"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 87,
+        "title": "UI设计师",
+        "hand_expected_skills": [
+          "Figma",
+          "Sketch",
+          "用户体验"
+        ],
+        "extracted_skills": [
+          "figma",
+          "sketch"
+        ],
+        "ground_truth_skills": [
+          "figma",
+          "sketch"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 88,
+        "title": "架构师",
+        "hand_expected_skills": [
+          "分布式",
+          "技术管理",
+          "架构设计"
+        ],
+        "extracted_skills": [
+          "分布式"
+        ],
+        "ground_truth_skills": [
+          "分布式"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.5,
+        "passed": true
+      },
+      {
+        "id": 89,
+        "title": "架构师",
+        "hand_expected_skills": [
+          "AWS",
+          "云计算",
+          "架构设计"
+        ],
+        "extracted_skills": [
+          "aws",
+          "云计算"
+        ],
+        "ground_truth_skills": [
+          "aws",
+          "云计算"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.8,
+        "passed": true
+      },
+      {
+        "id": 90,
+        "title": "解决方案架构师",
+        "hand_expected_skills": [
+          "技术方案"
+        ],
+        "extracted_skills": [
+          "技术方案"
+        ],
+        "ground_truth_skills": [
+          "技术方案"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 91,
+        "title": "网络工程师",
+        "hand_expected_skills": [
+          "Ansible",
+          "网络工程"
+        ],
+        "extracted_skills": [
+          "ansible",
+          "网络工程"
+        ],
+        "ground_truth_skills": [
+          "ansible",
+          "网络工程"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 92,
+        "title": "嵌入式开发工程师",
+        "hand_expected_skills": [
+          "C",
+          "嵌入式",
+          "物联网"
+        ],
+        "extracted_skills": [
+          "linux",
+          "嵌入式",
+          "物联网"
+        ],
+        "ground_truth_skills": [
+          "linux",
+          "嵌入式",
+          "物联网"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.667,
+        "passed": true
+      },
+      {
+        "id": 93,
+        "title": "PHP开发工程师",
+        "hand_expected_skills": [
+          "Laravel",
+          "MySQL",
+          "Nginx",
+          "PHP",
+          "Redis"
+        ],
+        "extracted_skills": [
+          "laravel",
+          "mysql",
+          "nginx",
+          "php",
+          "redis"
+        ],
+        "ground_truth_skills": [
+          "laravel",
+          "mysql",
+          "nginx",
+          "php",
+          "redis"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 94,
+        "title": "实施顾问",
+        "hand_expected_skills": [
+          "ERP",
+          "Oracle",
+          "SAP"
+        ],
+        "extracted_skills": [
+          "erp",
+          "oracle",
+          "sap"
+        ],
+        "ground_truth_skills": [
+          "erp",
+          "oracle",
+          "sap"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 1.0,
+        "passed": true
+      },
+      {
+        "id": 95,
+        "title": "C++开发工程师",
+        "hand_expected_skills": [
+          "C++",
+          "FFmpeg",
+          "音视频"
+        ],
+        "extracted_skills": [
+          "c",
+          "ffmpeg",
+          "webrtc",
+          "音视频"
+        ],
+        "ground_truth_skills": [
+          "c",
+          "ffmpeg",
+          "webrtc",
+          "音视频"
+        ],
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hand_f1": 0.571,
+        "passed": true
+      }
+    ]
+  },
+  "resume_parsing": {
+    "test_name": "简历解析准确率",
+    "llm_used": false,
+    "name_extracted": "张三",
+    "education_extracted": "本科",
+    "years_extracted": "3",
+    "expected_skills": [
+      "Django",
+      "Docker",
+      "Flask",
+      "Git",
+      "HTML",
+      "JavaScript",
+      "Linux",
+      "MySQL",
+      "Python",
+      "Redis"
+    ],
+    "extracted_skills": [
+      "django",
+      "docker",
+      "flask",
+      "git",
+      "html",
+      "html5",
+      "java",
+      "javascript",
+      "linux",
+      "mysql",
+      "python",
+      "redis"
+    ],
+    "precision": 0.833,
+    "recall": 1.0,
+    "f1": 0.909,
+    "passed": true
+  },
+  "matching": {
+    "test_name": "人岗匹配准确率",
+    "total_cases": 5,
+    "passed": 5,
+    "pass_rate": 1.0,
+    "details": [
+      {
+        "target": "Python开发工程师",
+        "user_skills": [
+          "Python",
+          "MySQL",
+          "Git",
+          "Linux",
+          "Django"
+        ],
+        "matched_count": 5,
+        "match_score": 0.36,
+        "expected_min_matched": 5,
+        "passed": true
+      },
+      {
+        "target": "Java开发工程师",
+        "user_skills": [
+          "Java",
+          "Spring Boot",
+          "MySQL",
+          "Redis",
+          "Kafka"
+        ],
+        "matched_count": 5,
+        "match_score": 0.42,
+        "expected_min_matched": 5,
+        "passed": true
+      },
+      {
+        "target": "前端开发工程师",
+        "user_skills": [
+          "JavaScript",
+          "React",
+          "HTML5",
+          "CSS3",
+          "Git"
+        ],
+        "matched_count": 5,
+        "match_score": 0.28,
+        "expected_min_matched": 5,
+        "passed": true
+      },
+      {
+        "target": "算法工程师",
+        "user_skills": [
+          "Python",
+          "TensorFlow",
+          "PyTorch",
+          "机器学习",
+          "深度学习"
+        ],
+        "matched_count": 5,
+        "match_score": 0.12,
+        "expected_min_matched": 5,
+        "passed": true
+      },
+      {
+        "target": "大数据开发工程师",
+        "user_skills": [
+          "Spark",
+          "Hadoop",
+          "Hive",
+          "SQL",
+          "Kafka"
+        ],
+        "matched_count": 5,
+        "match_score": 0.5,
+        "expected_min_matched": 5,
+        "passed": true
+      }
+    ]
+  }
+}
