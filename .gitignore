@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+logs/
+*.log
+.vscode/
+.idea/
+neo4j-community-5.26.0/
+neo4j-community-5.26.0.zip
+neo4j-community.zip
+*.zip
+.env
+*.egg-info/
