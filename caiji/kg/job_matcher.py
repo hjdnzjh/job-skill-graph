@@ -239,6 +239,131 @@ class JobMatcher:
         return steps
 
     # ------------------------------------------------------------------
+    # Radar scoring
+    # ------------------------------------------------------------------
+
+    def radar_score(self, user_skills: List[str], matched_skills: List[str],
+                    missing_skills: List[str], total_required: int) -> dict:
+        """Compute 5-dimension radar scores for skill visualization.
+
+        Args:
+            user_skills: All skills the user has.
+            matched_skills: Skills that matched the target job.
+            missing_skills: Required skills the user lacks.
+            total_required: Total number of required skills.
+
+        Returns:
+            Dict with "radar" key containing list of {dimension, score, label}.
+        """
+        user_lower = {s.lower() for s in user_skills}
+
+        # Dimension 1: 技术深度 — ratio of matched to required
+        depth_score = 0
+        if total_required > 0:
+            depth_score = int(len(matched_skills) / total_required * 100)
+
+        # Dimension 2: 业务理解 — skill category breadth from Neo4j
+        cat_rows = self.neo4j.run_query(
+            "MATCH (s:Skill) WHERE s.name IN $skills RETURN "
+            "DISTINCT s.category AS cat",
+            {"skills": list(user_lower)},
+        ) if user_skills else []
+        known_user_skills = [r["cat"] for r in cat_rows if r.get("cat")]
+        breadth_score = min(len(set(known_user_skills)) * 15, 100)
+
+        # Dimension 3: 协作沟通 — collaboration tools presence
+        collab_tools = {"git", "jira", "jenkins", "slack", "confluence",
+                        "notion", "teams", "agile", "scrum", "ci/cd"}
+        collab_found = user_lower & collab_tools
+        collab_score = min(len(collab_found) * 25, 100)
+
+        # Dimension 4: 学习能力 — skill diversity + modern skills
+        modern_skills = {"python", "docker", "kubernetes", "pytorch",
+                         "tensorflow", "react", "vue", "go", "rust"}
+        modern_found = user_lower & modern_skills
+        learning_score = min(50 + len(modern_found) * 10, 100)
+
+        # Dimension 5: 工具链熟练度 — DevOps/tool coverage
+        tool_skills = {"docker", "kubernetes", "git", "jenkins", "maven",
+                       "nginx", "linux", "shell", "ansible", "ci/cd"}
+        tool_found = user_lower & tool_skills
+        tool_score = min(len(tool_found) * 15, 100)
+
+        radar = [
+            {"dimension": "技术深度", "score": depth_score,
+             "label": "优势领域" if depth_score >= 60 else "需要提升"},
+            {"dimension": "业务理解", "score": breadth_score,
+             "label": "优势领域" if breadth_score >= 60 else "需要提升"},
+            {"dimension": "协作沟通", "score": collab_score,
+             "label": "优势领域" if collab_score >= 60 else "需要提升"},
+            {"dimension": "学习能力", "score": learning_score,
+             "label": "优势领域" if learning_score >= 60 else "需要提升"},
+            {"dimension": "工具链熟练度", "score": tool_score,
+             "label": "优势领域" if tool_score >= 60 else "需要提升"},
+        ]
+        return {"radar": radar}
+
+    def gap_suggestions(self, user_skills: List[str], missing_skills: List[str],
+                        target_title: str) -> list:
+        """Generate actionable suggestions for skill gaps.
+
+        Returns list of dicts with category, suggestion, and related_skills.
+        """
+        suggestions = []
+
+        if not missing_skills:
+            suggestions.append({
+                "category": "overall",
+                "suggestion": "你的技能已覆盖目标岗位的所有核心要求",
+                "related_skills": [],
+            })
+            return suggestions
+
+        # Group missing skills by category from Neo4j
+        cat_rows = self.neo4j.run_query(
+            "MATCH (s:Skill) WHERE s.name IN $skills "
+            "RETURN s.name AS skill, s.category AS category",
+            {"skills": missing_skills},
+        ) if missing_skills else []
+        cat_map = {}
+        for r in cat_rows:
+            cat = r.get("category") or "未分类"
+            cat_map.setdefault(cat, []).append(r["skill"])
+
+        # Uncategorized missing skills
+        categorized = {r["skill"].lower() for r in cat_rows}
+        uncategorized = [s for s in missing_skills
+                         if s.lower() not in categorized]
+
+        # Generate suggestions per category
+        for cat, skills in sorted(cat_map.items()):
+            suggestions.append({
+                "category": cat,
+                "suggestion": f"建议补充 {cat} 方向的技能：{'、'.join(skills)}",
+                "related_skills": skills,
+            })
+
+        if uncategorized:
+            suggestions.append({
+                "category": "未分类",
+                "suggestion": f"建议学习：{'、'.join(uncategorized)}",
+                "related_skills": uncategorized,
+            })
+
+        # Add learning resource suggestions
+        for ms in missing_skills:
+            ms_lower = ms.lower()
+            if ms_lower in {"docker", "kubernetes", "k8s", "ci/cd", "jenkins"}:
+                suggestions.append({
+                    "category": "学习路径推荐",
+                    "suggestion": f"「{ms}」可以通过官方文档 + 动手实验快速入门，推荐 Docker/K8s 实战课程",
+                    "related_skills": [ms],
+                })
+                break
+
+        return suggestions
+
+    # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
 
