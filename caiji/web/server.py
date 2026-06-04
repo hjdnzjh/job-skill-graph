@@ -44,6 +44,7 @@ from web.api_matching import router as matching_router
 from web.api_evolution import router as evolution_router
 from web.api_rag import router as rag_router
 from web.api_updater import router as updater_router
+from web.api_resume import router as resume_router
 
 app.include_router(overview_router)
 app.include_router(skills_router)
@@ -53,18 +54,22 @@ app.include_router(matching_router)
 app.include_router(evolution_router)
 app.include_router(rag_router)
 app.include_router(updater_router)
+app.include_router(resume_router)
 
-# Serve dashboard.html at /
+# Serve SPA at / (dashboard.html fallback if SPA not built)
 from fastapi.responses import FileResponse
 
 _STATIC_DIR = Path(__file__).parent / "static"
 _STATIC_DIR.mkdir(parents=True, exist_ok=True)
+_DIST_DIR = _STATIC_DIR / "dist"
 
 
 @app.get("/")
 async def root():
+    if (_DIST_DIR / "index.html").exists():
+        return FileResponse(_DIST_DIR / "index.html")
     return FileResponse(_STATIC_DIR / "dashboard.html")
 
 
-# Mount static for any other files (font, images, etc.)
+# Mount static for any other files (font, images, SPA assets, etc.)
 app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")

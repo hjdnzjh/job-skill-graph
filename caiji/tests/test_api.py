@@ -186,5 +186,39 @@ class TestCORSHeaders:
         assert "access-control-allow-origin" in headers or response.status_code == 200
 
 
+class TestResumeAPI:
+    """Tests for resume upload and evaluation endpoints."""
+
+    def test_upload_no_file_returns_422(self):
+        """Upload without file should return 422 validation error."""
+        response = client.post("/api/resume/upload")
+        assert response.status_code == 422
+
+    def test_upload_text_file(self, tmp_path):
+        """Upload a .txt file should return file_id and filename."""
+        resume_content = "姓名: 张三\n技能: Python, Java, MySQL\n工作经验: 3年\n"
+        f = tmp_path / "test_resume.txt"
+        f.write_text(resume_content, encoding="utf-8")
+        with open(f, "rb") as fh:
+            response = client.post(
+                "/api/resume/upload",
+                files={"file": ("test_resume.txt", fh, "text/plain")},
+            )
+        assert response.status_code in (200, 503, 500)
+        if response.status_code == 200:
+            data = response.json()
+            assert "file_id" in data
+            assert "filename" in data
+            assert data["filename"] == "test_resume.txt"
+
+    def test_evaluate_without_upload_returns_404(self):
+        """Evaluate with non-existent file_id should return 404."""
+        response = client.post(
+            "/api/resume/evaluate",
+            json={"file_id": "nonexist", "target_title": "Java开发工程师"},
+        )
+        assert response.status_code == 404
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

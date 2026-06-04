@@ -24,6 +24,7 @@ openai>=1.0
 # --- Web Dashboard ---
 fastapi>=0.100
 uvicorn[standard]>=0.23
+python-multipart>=0.0.9
 
 # --- RAG ---
 scikit-learn>=1.3
