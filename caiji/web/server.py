@@ -45,6 +45,8 @@ from web.api_evolution import router as evolution_router
 from web.api_rag import router as rag_router
 from web.api_updater import router as updater_router
 from web.api_resume import router as resume_router
+from web.api_skill_manage import router as skill_manage_router
+from web.api_graph_admin import router as graph_admin_router
 
 app.include_router(overview_router)
 app.include_router(skills_router)
@@ -55,6 +57,8 @@ app.include_router(evolution_router)
 app.include_router(rag_router)
 app.include_router(updater_router)
 app.include_router(resume_router)
+app.include_router(skill_manage_router)
+app.include_router(graph_admin_router)
 
 # Serve SPA at / (dashboard.html fallback if SPA not built)
 from fastapi.responses import FileResponse

@@ -10,7 +10,10 @@ Outputs: new/removed/modified skills with evidence and trend direction.
 import json
 import logging
 import os
+import hashlib
 from typing import Any, Dict, List, Optional
+
+from kg.skill_extractor import TITLE_TO_SKILLS
 
 logger = logging.getLogger(__name__)
 
@@ -104,12 +107,10 @@ class JobUpdater:
 
         Returns a flat list of change records (new/removed/modified skills) with
         timestamps and evidence, suitable for the skill management table.
-        """
-        from kg.skill_extractor import TITLE_TO_SKILLS
-        from datetime import datetime, timedelta
-        import random
 
-        random.seed(42)
+        Note: Dates are deterministically derived from the skill name hash
+        for reproducible results. These are demonstration-quality dates.
+        """
         records = []
         titles = list(TITLE_TO_SKILLS.keys())[:max_jobs]
 
@@ -119,16 +120,14 @@ class JobUpdater:
             except Exception:
                 continue
 
-            now = datetime.now()
-
             # New skills
             for s in analysis.get("new_skills", []):
-                days_ago = random.randint(1, 30)
+                day_offset = (hashlib.md5(s["skill"].encode()).digest()[0] % 28) + 1
                 records.append({
                     "title": title,
                     "change_type": "add",
                     "skill": s["skill"],
-                    "date": (now - timedelta(days=days_ago)).strftime("%Y-%m-%d"),
+                    "date": f"2026-05-{day_offset:02d}",
                     "source": "招聘热度分析",
                     "evidence": f"该技能在 {s.get('demand', 1)} 个岗位招聘数据中出现",
                     "demand": s.get("demand", 1),
@@ -136,12 +135,12 @@ class JobUpdater:
 
             # Removed skills
             for s in analysis.get("removed_skills", []):
-                days_ago = random.randint(7, 60)
+                day_offset = (hashlib.md5(("removed_" + s).encode()).digest()[0] % 28) + 1
                 records.append({
                     "title": title,
                     "change_type": "remove",
                     "skill": s,
-                    "date": (now - timedelta(days=days_ago)).strftime("%Y-%m-%d"),
+                    "date": f"2026-04-{day_offset:02d}",
                     "source": "招聘数据比对",
                     "evidence": "标准技能列表中存在，但当前招聘数据中未发现需求",
                     "demand": 0,
@@ -153,12 +152,12 @@ class JobUpdater:
                 if s["skill"] in trends:
                     t = trends[s["skill"]]
                     if t.get("direction") in ("up", "down") and abs(t.get("change", 0)) > 10:
-                        days_ago = random.randint(3, 15)
+                        day_offset = (hashlib.md5(("mod_" + s["skill"]).encode()).digest()[0] % 28) + 1
                         records.append({
                             "title": title,
                             "change_type": "modify",
                             "skill": s["skill"],
-                            "date": (now - timedelta(days=days_ago)).strftime("%Y-%m-%d"),
+                            "date": f"2026-05-{day_offset:02d}",
                             "source": "需求趋势分析",
                             "evidence": f"需求变化: {t.get('old_demand', 0)} → {t.get('current_demand', 0)} ({t.get('direction', 'stable')})",
                             "demand": t.get("current_demand", 0),
