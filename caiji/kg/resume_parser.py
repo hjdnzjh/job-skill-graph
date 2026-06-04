@@ -130,6 +130,53 @@ class ResumeParser:
         return result
 
     # ------------------------------------------------------------------
+    # Fallback parsing (no LLM)
+    # ------------------------------------------------------------------
+
+    def has_llm(self) -> bool:
+        """Check whether LLM API key is configured."""
+        return bool(self.settings.llm_api_key)
+
+    def parse_with_fallback(self, text: str,
+                            skills_from_text: list = None) -> dict:
+        """Parse resume with LLM if available, otherwise use keyword fallback.
+
+        Args:
+            text: Raw text from resume file.
+            skills_from_text: Pre-extracted skills from keyword scanning.
+
+        Returns:
+            Dict with keys: name, skills, years_of_experience, education,
+            current_title, target_titles, method.
+        """
+        if self.has_llm():
+            try:
+                result = self.extract(text)
+                result["method"] = "llm"
+                return result
+            except Exception as exc:
+                logger.warning(f"LLM extraction failed, falling back: {exc}")
+
+        # Keyword fallback
+        result = {
+            "name": "",
+            "skills": skills_from_text or [],
+            "years_of_experience": None,
+            "education": "",
+            "current_title": "",
+            "target_titles": [],
+            "raw_text": text[:500],
+            "method": "keyword_fallback",
+        }
+        # Try to extract years with simple regex
+        import re
+        exp_match = re.search(r'(\d+)\s*[年岁]', text)
+        if exp_match:
+            result["years_of_experience"] = int(exp_match.group(1))
+
+        return result
+
+    # ------------------------------------------------------------------
     # Skill alignment to knowledge graph
     # ------------------------------------------------------------------
 
