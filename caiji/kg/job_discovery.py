@@ -265,6 +265,7 @@ class EmergingJobDetector:
                 "responsibilities": job.get("responsibilities", ""),
                 "confidence": job.get("confidence", 0.0),
                 "job_count": job.get("job_count", 0),
+                "status": "pending",
             }
 
             # Create EmergingJob node
