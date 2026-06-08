@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Network, Info, Layers, Calendar, ChevronRight } from 'lucide-react';
+import { Network, Info, Layers, Calendar, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { SkillGraph } from '../../components/common/SkillGraph';
 import { Drawer } from '../../components/common/Drawer';
 import { Badge } from '../../components/ui/badge';
-import { mockGraphData, GraphNode, mockJobs, mockSkills } from '../../lib/mockData';
+import { getGraphExport } from '../../services/api';
 import { ScrollReveal } from '../../components/common/ScrollReveal';
 
 export default function SkillGraphPage() {
   const [activeTab, setActiveTab] = useState<'tech' | 'level'>('tech');
   const [selectedYear, setSelectedYear] = useState('2025');
-  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [graphData, setGraphData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleNodeClick = (node: GraphNode) => {
+  useEffect(() => {
+    getGraphExport(200).then(d => {
+      const nodes = d.nodes.map(n => ({ id: String(n.node_id), label: n.name, type: n.label === 'Skill' ? 'skill' : 'job', category: n.category }));
+      const edges = d.edges.map(e => ({ source: String(d.nodes.find(n => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(d.nodes.find(n => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
+      setGraphData({ nodes: nodes.filter(n => n.id), edges: edges.filter(e => e.source && e.target) });
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  const handleNodeClick = (node: any) => {
     setSelectedNode(node);
     setIsDrawerOpen(true);
   };
 
-  return (
+  return loading ? (
+    <div className="flex items-center justify-center h-[calc(100vh-64px)]">
+      <Loader2 className="h-8 w-8 animate-spin text-indigo-400" />
+    </div>
+  ) : (
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden bg-[#0a0e17]">
       {/* Top Toolbar */}
       <ScrollReveal direction="down" className="flex-shrink-0 border-b border-slate-800 bg-slate-950/50 backdrop-blur-md px-6 py-4 flex items-center justify-between z-10">
@@ -108,11 +123,11 @@ export default function SkillGraphPage() {
             transition={{ duration: 0.5 }}
             className="w-full h-full"
           >
-            <SkillGraph 
-              data={mockGraphData} 
+            {graphData && <SkillGraph
+              data={graphData}
               onNodeClick={handleNodeClick}
               height="100%"
-            />
+            />}
           </motion.div>
         </AnimatePresence>
         
@@ -120,7 +135,7 @@ export default function SkillGraphPage() {
         <ScrollReveal direction="right" delay={0.5} className="absolute top-6 left-6 max-w-xs p-4 bg-slate-900/60 border border-slate-800 rounded-xl backdrop-blur-md pointer-events-none">
           <h3 className="text-white font-bold mb-2">当前概览: {selectedYear}</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            图谱包含 {mockGraphData.nodes.filter(n => n.type === 'job').length} 个新兴岗位与 {mockGraphData.nodes.filter(n => n.type === 'skill').length} 个核心技能节点。连线强度代表技能在岗位中的核心程度。
+            图谱包含 {graphData?.nodes?.filter((n: any) => n.type === 'job').length || 0} 个岗位与 {graphData?.nodes?.filter((n: any) => n.type === 'skill').length || 0} 个技能节点。连线强度代表技能在岗位中的核心程度。
           </p>
           <div className="mt-3 flex items-center gap-2 text-[10px] text-indigo-400">
             <div className="h-1 flex-1 bg-slate-800 rounded-full overflow-hidden">
@@ -151,49 +166,38 @@ export default function SkillGraphPage() {
             {selectedNode.type === 'job' ? (
               <>
                 <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-                  <h4 className="text-white font-bold mb-2">岗位描述</h4>
+                  <h4 className="text-white font-bold mb-2">岗位节点</h4>
                   <p className="text-sm text-slate-400 leading-relaxed">
-                    {mockJobs.find(j => j.name === selectedNode.label)?.duties || 'AI 实时挖掘的未来高潜力岗位。'}
+                    分类: {selectedNode.category || '未分类'}
                   </p>
-                </div>
-                <div>
-                  <h4 className="text-white font-bold mb-3 flex items-center gap-2">
-                    <Layers className="h-4 w-4 text-indigo-400" />
-                    核心技能要求
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {mockJobs.find(j => j.name === selectedNode.label)?.requiredSkills.map((skill: string, i: number) => (
-                      <Badge key={i} variant="outline" className="bg-slate-900 border-slate-800">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
                 </div>
               </>
             ) : (
               <>
                 <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
-                  <h4 className="text-white font-bold mb-2">技能详情</h4>
+                  <h4 className="text-white font-bold mb-2">技能节点</h4>
                   <p className="text-sm text-slate-400 leading-relaxed">
-                    {mockSkills.find(s => s.name === selectedNode.label)?.desc || '该技能是当前技术领域的核心竞争力之一。'}
+                    分类: {selectedNode.category || '未分类'}
                   </p>
                 </div>
                 <div>
                   <h4 className="text-white font-bold mb-3 flex items-center gap-2">
                     <ChevronRight className="h-4 w-4 text-cyan-400" />
-                    关联岗位
+                    关联岗位（图谱实时数据）
                   </h4>
                   <div className="space-y-2">
-                    {mockGraphData.links
-                      .filter(l => l.target === selectedNode.id)
-                      .map(l => mockGraphData.nodes.find(n => n.id === l.source))
-                      .filter(Boolean)
-                      .map((n, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-800">
-                          <span className="text-sm text-slate-300">{n?.label}</span>
-                          <Badge className="bg-indigo-500/20 text-indigo-400 border-none text-[10px]">核心</Badge>
-                        </div>
-                      ))}
+                    {graphData?.edges
+                      .filter((l: any) => l.source === selectedNode.id || l.target === selectedNode.id)
+                      .slice(0, 8)
+                      .map((l: any, i: number) => {
+                        const other = graphData.nodes.find((n: any) => n.id === (l.source === selectedNode.id ? l.target : l.source));
+                        return other ? (
+                          <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-800">
+                            <span className="text-sm text-slate-300">{other.label}</span>
+                            <Badge className="bg-indigo-500/20 text-indigo-400 border-none text-[10px]">{other.type}</Badge>
+                          </div>
+                        ) : null;
+                      })}
                   </div>
                 </div>
               </>

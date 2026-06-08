@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Flame, ChevronDown, ChevronUp, Star, MapPin, Clock, Briefcase, ArrowRight } from 'lucide-react';
+import { Search, Flame, ChevronDown, ChevronUp, Star, MapPin, Clock, Briefcase, ArrowRight, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
-import { mockJobs } from '../../lib/mockData';
+import { getPendingJobs } from '../../services/api';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '../../components/common/ScrollReveal';
 
 export default function NewJobs() {
@@ -14,11 +14,20 @@ export default function NewJobs() {
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getPendingJobs({ limit: 100 }).then(d => {
+      const mapped = d.jobs.map((j: any, i: number) => ({ ...j, id: `job_${i}`, name: j.title }));
+      setJobs(mapped); setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
 
   const categories = ['全部', 'AI', '大数据', '物联网', '智能系统', '数字孪生'];
 
-  const filteredJobs = mockJobs.filter(job => {
-    const matchesSearch = job.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredJobs = jobs.filter((job: any) => {
+    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === '全部' || job.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -94,14 +103,14 @@ export default function NewJobs() {
                   </motion.div>
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">{job.name}</h3>
+                      <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">{job.title}</h3>
                       <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">{job.category}</Badge>
                     </div>
                     <div className="flex items-center gap-4 text-sm text-slate-500">
                       <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> 远程/不限</span>
                       <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {job.date}</span>
                       <span className="flex items-center gap-1 text-orange-400/80">
-                        <Flame className="h-3 w-3 fill-orange-400/20" /> 热度 {job.heat}%
+                        <Flame className="h-3 w-3 fill-orange-400/20" /> 热度 {0}%
                       </span>
                     </div>
                   </div>

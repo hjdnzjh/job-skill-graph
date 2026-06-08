@@ -1,27 +1,39 @@
-import React, { useState } from 'react';
-import { 
-  Network, 
-  Plus, 
-  Trash2, 
-  Save, 
-  RefreshCw, 
-  MousePointer2, 
+import React, { useState, useEffect } from 'react';
+import {
+  Network,
+  Plus,
+  Trash2,
+  Save,
+  RefreshCw,
+  MousePointer2,
   Link2,
   Settings,
-  Info
+  Info,
+  Loader2
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { SkillGraph } from '../../components/common/SkillGraph';
 import { Drawer } from '../../components/common/Drawer';
-import { mockGraphData, GraphNode } from '../../lib/mockData';
+import { getGraphExport } from '../../services/api';
 import { Badge } from '../../components/ui/badge';
 
 export default function GraphManage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
   const [editMode, setEditMode] = useState<'select' | 'link'>('select');
+  const [graphData, setGraphData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleNodeClick = (node: GraphNode) => {
+  useEffect(() => {
+    getGraphExport(200).then(d => {
+      const nodes = d.nodes.map(n => ({ id: String(n.node_id), label: n.name, type: n.label === 'Skill' ? 'skill' : 'job', category: n.category }));
+      const edges = d.edges.map(e => ({ source: String(d.nodes.find(n => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(d.nodes.find(n => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
+      setGraphData({ nodes: nodes.filter((n: any) => n.id), edges: edges.filter((e: any) => e.source && e.target) });
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  const handleNodeClick = (node: any) => {
     setSelectedNode(node);
     setIsDrawerOpen(true);
   };
@@ -74,12 +86,12 @@ export default function GraphManage() {
 
       {/* Editor Canvas Area */}
       <div className="flex-1 relative">
-        <SkillGraph 
-          data={mockGraphData} 
+        {loading ? <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin text-indigo-400" /></div> : <SkillGraph
+          data={graphData || { nodes: [], edges: [] }}
           onNodeClick={handleNodeClick}
           height="100%"
           editable={true}
-        />
+        />}
         
         {/* Helper Tooltip */}
         <div className="absolute top-6 right-6 flex items-center gap-2 text-xs text-slate-500 bg-slate-900/80 p-2 rounded-lg border border-slate-800 backdrop-blur-sm">

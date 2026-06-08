@@ -1,28 +1,32 @@
-import React, { useState } from 'react';
-import { 
-  Users, 
-  Upload, 
-  Play, 
-  FileText, 
-  Download, 
+import React, { useState, useEffect } from 'react';
+import {
+  Users,
+  Upload,
+  Play,
+  FileText,
+  Download,
   Search,
   ChevronDown,
   ChevronUp,
   CheckCircle2,
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Badge } from '../../components/ui/badge';
-import { mockJobs } from '../../lib/mockData';
+import { getJobTitles } from '../../services/api';
 
 export default function BatchMatch() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [selectedJobId, setSelectedJobId] = useState(mockJobs[0].id);
+  const [selectedJobId, setSelectedJobId] = useState('');
+  const [titles, setTitles] = useState<string[]>([]);
+
+  useEffect(() => { getJobTitles().then(d => { setTitles(d.titles); if (d.titles.length > 0) setSelectedJobId(d.titles[0]); }).catch(() => {}); }, []);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const candidates = [
@@ -61,7 +65,7 @@ export default function BatchMatch() {
                 onChange={(e) => setSelectedJobId(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-sm text-slate-200"
               >
-                {mockJobs.map(j => <option key={j.id} value={j.id}>{j.name}</option>)}
+                {titles.map((t, i) => <option key={i} value={t}>{t}</option>)}
               </select>
             </div>
 

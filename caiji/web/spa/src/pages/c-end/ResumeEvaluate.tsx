@@ -1,30 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, FileText, CheckCircle2, AlertCircle, ArrowRight, RefreshCw, Star, Info } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, AlertCircle, ArrowRight, RefreshCw, Star, Info, Loader2 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
-import { mockJobs } from '../../lib/mockData';
+import { getJobTitles, uploadResume, evaluateResume, getSkillRanking } from '../../services/api';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '../../components/common/ScrollReveal';
 import { CountUp } from '../../components/common/CountUp';
 
 export default function ResumeEvaluate() {
   const [isUploading, setIsUploading] = useState(false);
   const [showResult, setShowResult] = useState(false);
-  const [selectedJobId, setSelectedJobId] = useState(mockJobs[0].id);
+  const [result, setResult] = useState<any>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [fileId, setFileId] = useState<string | null>(null);
+  const [targetTitle, setTargetTitle] = useState('');
+  const [titles, setTitles] = useState<string[]>([]);
+  const [error, setError] = useState('');
 
-  const handleUpload = () => {
-    if (!file) return;
-    setIsUploading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsUploading(false);
+  useEffect(() => { getJobTitles().then(d => setTitles(d.titles)).catch(() => {}); }, []);
+
+  const handleUploadAndEvaluate = async () => {
+    if (!file || !targetTitle) return;
+    setIsUploading(true); setError('');
+    try {
+      const uploadResult = await uploadResume(file);
+      const evalResult = await evaluateResume(uploadResult.file_id, targetTitle);
+      setResult(evalResult);
       setShowResult(true);
-    }, 2500);
+    } catch (e: any) { setError(e.message); }
+    setIsUploading(false);
   };
-
-  const currentJob = mockJobs.find(j => j.id === selectedJobId) || mockJobs[0];
 
   const skillCloud = [
     { name: 'Python', size: 'text-2xl', color: 'text-blue-400' },
@@ -115,18 +121,18 @@ export default function ResumeEvaluate() {
             <ScrollReveal direction="up" delay={0.4} className="max-w-md mx-auto space-y-4">
               <label className="block text-sm font-medium text-slate-300 text-center">选择目标岗位进行对标</label>
               <select 
-                value={selectedJobId}
-                onChange={(e) => setSelectedJobId(e.target.value)}
+                value={targetTitle}
+                onChange={(e) => setTargetTitle(e.target.value)}
                 className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors"
               >
-                {mockJobs.map(job => (
-                  <option key={job.id} value={job.id}>{job.name}</option>
+                {titles.map((t, i) => (
+                  <option key={i} value={t}>{t}</option>
                 ))}
               </select>
               <Button 
                 className="w-full h-12 text-lg bg-indigo-600 hover:bg-indigo-500" 
                 disabled={!file || isUploading}
-                onClick={handleUpload}
+                onClick={handleUploadAndEvaluate}
               >
                 {isUploading ? (
                   <span className="flex items-center gap-2">
@@ -171,7 +177,7 @@ export default function ResumeEvaluate() {
                   
                   <div className="flex-1 space-y-4 text-center md:text-left">
                     <div>
-                      <h2 className="text-3xl font-bold text-white mb-1">对标结果: {currentJob.name}</h2>
+                      <h2 className="text-3xl font-bold text-white mb-1">对标结果: {result?.match?.target_title || targetTitle}</h2>
                       <p className="text-slate-400">你的背景与该岗位高度契合，具备极强的竞争力。</p>
                     </div>
                     <div className="flex flex-wrap gap-3 justify-center md:justify-start">

@@ -1,27 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ClipboardCheck, 
-  Search, 
-  CheckCircle2, 
-  XCircle, 
-  Save, 
-  Plus, 
+import {
+  ClipboardCheck,
+  Search,
+  CheckCircle2,
+  XCircle,
+  Save,
+  Plus,
   X,
-  Info
+  Info,
+  Loader2
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Input } from '../../components/ui/input';
-import { mockJobs, Job } from '../../lib/mockData';
+import { getPendingJobs, getJobDetail } from '../../services/api';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '../../components/common/ScrollReveal';
 
 export default function JobReview() {
-  const [selectedJob, setSelectedJob] = useState<Job>(mockJobs[0]);
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const filteredJobs = mockJobs.filter(j => j.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  useEffect(() => {
+    getPendingJobs({ status: 'pending', limit: 100 }).then(d => { setJobs(d.jobs); setSelectedJob(d.jobs[0] || null); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (selectedJob?.title) {
+      getJobDetail(selectedJob.title).then(d => setSelectedJob((prev: any) => ({ ...prev, ...d }))).catch(() => {});
+    }
+  }, [selectedJob?.title]);
+
+  const filteredJobs = jobs.filter((j: any) => j.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div className="flex gap-6 h-[calc(100vh-160px)]">
@@ -58,7 +71,7 @@ export default function JobReview() {
                   />
                   
                   <div className="flex justify-between items-start mb-2 relative z-10">
-                    <h4 className={`font-bold text-sm transition-colors ${selectedJob.id === job.id ? 'text-indigo-400' : 'text-white'}`}>{job.name}</h4>
+                    <h4 className={`font-bold text-sm transition-colors ${selectedJob?.title === job.title ? 'text-indigo-400' : 'text-white'}`}>{job.title}</h4>
                     <Badge variant={job.status === 'pending' ? 'warning' : 'success'} className="text-[10px]">
                       {job.status === 'pending' ? '待审核' : '已挖掘'}
                     </Badge>
@@ -78,7 +91,7 @@ export default function JobReview() {
       <div className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div
-            key={selectedJob.id}
+            key={selectedJob.title}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -92,7 +105,7 @@ export default function JobReview() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white">岗位审核与编辑</h3>
-                    <p className="text-xs text-slate-500">正在审核: {selectedJob.name}</p>
+                    <p className="text-xs text-slate-500">正在审核: {selectedJob.title}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -114,38 +127,40 @@ export default function JobReview() {
                   <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-300">岗位名称</label>
-                      <Input defaultValue={selectedJob.name} className="bg-slate-950 border-slate-800 focus:border-indigo-500" />
+                      <Input defaultValue={selectedJob.title} className="bg-slate-950 border-slate-800 focus:border-indigo-500" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-300">行业分类</label>
-                      <Input defaultValue={selectedJob.category} className="bg-slate-950 border-slate-800 focus:border-indigo-500" />
+                      <Input defaultValue={selectedJob.category || selectedJob.industries?.[0] || ''} className="bg-slate-950 border-slate-800 focus:border-indigo-500" />
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-300">岗位描述</label>
-                    <textarea 
+                    <textarea
                       className="w-full min-h-[120px] bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-300 focus:outline-none focus:border-indigo-500"
-                      defaultValue={selectedJob.duties}
+                      defaultValue={selectedJob.description || selectedJob.responsibilities || ''}
                     />
                   </div>
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <label className="text-sm font-medium text-slate-300">核心技能标签 ({selectedJob.requiredSkills.length})</label>
+                      <label className="text-sm font-medium text-slate-300">核心技能标签 ({(selectedJob.required_skills || selectedJob.requiredSkills || []).length})</label>
                       <Button variant="ghost" size="sm" className="h-7 text-xs text-indigo-400 hover:text-indigo-300">
                         <Plus className="mr-1 h-3 w-3" /> 添加技能
                       </Button>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {selectedJob.requiredSkills.map((skill: string, i: number) => (
+                      {[...(selectedJob.required_skills || selectedJob.requiredSkills || [])].map((skill: any, i: number) => {
+                        const name = typeof skill === 'string' ? skill : skill.name || skill.skill || '';
+                        return (
                         <Badge key={i} className="bg-slate-800 text-slate-300 border-slate-700 py-1 pl-3 pr-1 flex items-center gap-1 group">
-                          {skill}
+                          {name}
                           <button className="p-0.5 rounded-full hover:bg-slate-700 opacity-0 group-hover:opacity-100 transition-opacity">
                             <X className="h-3 w-3" />
                           </button>
                         </Badge>
-                      ))}
+                      );})}
                     </div>
                   </div>
 
