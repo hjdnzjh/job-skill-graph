@@ -16,7 +16,7 @@ interface SkillGraphProps {
 export function SkillGraph({ data, onNodeClick, width = '100%', height = 600, editable = false }: SkillGraphProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<(GraphNode & { x: number; y: number })[]>([]);
-  const [links, setLinks] = useState<GraphLink[]>(data.links);
+  const [links, setLinks] = useState<GraphLink[]>(data?.links || []);
   const [viewBox, setViewBox] = useState({ x: 0, y: 0, w: 1000, h: 1000 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });

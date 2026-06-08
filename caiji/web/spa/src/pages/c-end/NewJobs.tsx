@@ -165,7 +165,7 @@ export default function NewJobs() {
                             核心技能
                           </h4>
                           <div className="flex flex-wrap gap-2">
-                            {job.requiredSkills.map((skill: string, i: number) => (
+                            {(job.requiredSkills || job.required_skills || []).map((skill: string, i: number) => (
                               <Badge key={i} variant="secondary" className="bg-slate-800 hover:bg-slate-700 transition-colors">
                                 {skill}
                               </Badge>

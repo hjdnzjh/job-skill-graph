@@ -27,8 +27,8 @@ export default function GraphManage() {
   useEffect(() => {
     getGraphExport(200).then(d => {
       const nodes = d.nodes.map(n => ({ id: String(n.node_id), label: n.name, type: n.label === 'Skill' ? 'skill' : 'job', category: n.category }));
-      const edges = d.edges.map(e => ({ source: String(d.nodes.find(n => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(d.nodes.find(n => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
-      setGraphData({ nodes: nodes.filter((n: any) => n.id), edges: edges.filter((e: any) => e.source && e.target) });
+      const links = d.edges.map(e => ({ source: String(d.nodes.find(n => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(d.nodes.find(n => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
+      setGraphData({ nodes: nodes.filter((n: any) => n.id), links: links.filter((e: any) => e.source && e.target) });
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -87,7 +87,7 @@ export default function GraphManage() {
       {/* Editor Canvas Area */}
       <div className="flex-1 relative">
         {loading ? <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin text-indigo-400" /></div> : <SkillGraph
-          data={graphData || { nodes: [], edges: [] }}
+          data={graphData || { nodes: [], links: [] }}
           onNodeClick={handleNodeClick}
           height="100%"
           editable={true}

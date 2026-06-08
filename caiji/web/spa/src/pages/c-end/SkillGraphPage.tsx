@@ -19,8 +19,8 @@ export default function SkillGraphPage() {
   useEffect(() => {
     getGraphExport(200).then(d => {
       const nodes = d.nodes.map(n => ({ id: String(n.node_id), label: n.name, type: n.label === 'Skill' ? 'skill' : 'job', category: n.category }));
-      const edges = d.edges.map(e => ({ source: String(d.nodes.find(n => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(d.nodes.find(n => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
-      setGraphData({ nodes: nodes.filter(n => n.id), edges: edges.filter(e => e.source && e.target) });
+      const links = d.edges.map(e => ({ source: String(d.nodes.find(n => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(d.nodes.find(n => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
+      setGraphData({ nodes: nodes.filter(n => n.id), links: links.filter(e => e.source && e.target) });
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -186,7 +186,7 @@ export default function SkillGraphPage() {
                     关联岗位（图谱实时数据）
                   </h4>
                   <div className="space-y-2">
-                    {graphData?.edges
+                    {graphData?.links
                       .filter((l: any) => l.source === selectedNode.id || l.target === selectedNode.id)
                       .slice(0, 8)
                       .map((l: any, i: number) => {
