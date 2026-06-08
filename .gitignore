@@ -11,3 +11,5 @@ neo4j-community.zip
 *.zip
 .env
 *.egg-info/
+node_modules/
+%USERPROFILE%/
