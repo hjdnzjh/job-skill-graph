@@ -67,6 +67,14 @@ app.include_router(reports_router)
 # Serve SPA at / (dashboard.html fallback if SPA not built)
 from fastapi.responses import FileResponse
 
+
+@app.get("/favicon.ico")
+async def favicon():
+    fav = _STATIC_DIR / "favicon.ico"
+    if fav.exists():
+        return FileResponse(fav)
+    return FileResponse(_STATIC_DIR / "icons.svg")
+
 _STATIC_DIR = Path(__file__).parent / "static"
 _STATIC_DIR.mkdir(parents=True, exist_ok=True)
 _DIST_DIR = _STATIC_DIR / "dist"

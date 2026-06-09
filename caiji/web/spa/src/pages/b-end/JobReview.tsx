@@ -91,7 +91,7 @@ export default function JobReview() {
       <div className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div
-            key={selectedJob.title}
+            key={selectedJob?.title || 'none'}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -105,7 +105,7 @@ export default function JobReview() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white">岗位审核与编辑</h3>
-                    <p className="text-xs text-slate-500">正在审核: {selectedJob.title}</p>
+                    <p className="text-xs text-slate-500">正在审核: {selectedJob?.title || ''}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

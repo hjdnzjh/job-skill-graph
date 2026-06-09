@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Network, Briefcase, FileText, TrendingUp, ArrowRight } from 'lucide-react';
@@ -146,8 +146,8 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
             <div className="lg:col-span-2">
               <ScrollReveal direction="left" delay={0.2} className="bg-slate-900/40 border border-slate-800 p-8 rounded-3xl backdrop-blur-sm">
-                <div className="h-[400px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
+                <div className="h-[400px] w-full" style={{ minWidth: '300px', width: '100%' }}>
+                  <ResponsiveContainer width="100%" height={400} minWidth={300}>
                     <AreaChart data={jobTrends}>
                       <defs>
                         <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
