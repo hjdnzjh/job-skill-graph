@@ -1,0 +1,70 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(gh auth *)",
+      "Bash(curl -s -u \"2987281617@qq.com:hjdnzjh66@DING\" https://api.github.com/user)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Login:', d.get\\('login','FAILED'\\)\\); print\\('Message:', d.get\\('message','OK'\\)\\)\")",
+      "Bash(curl -s \"https://api.github.com/search/users?q=2987281617@qq.com\")",
+      "Bash(curl -s \"https://api.github.com/users/hjdnzjh/repos\")",
+      "Bash(python -c \"import sys,json; repos=json.load\\(sys.stdin\\); [print\\(r['name']\\) for r in repos]\")",
+      "Bash(curl -s -X POST -u \"hjdnzjh:hjdnzjh66@DING\" https://api.github.com/user/repos -d '{\"name\":\"job-skill-graph\",\"description\":\"多源异构数据驱动岗位和能力图谱构建与动态演化分析\",\"private\":false}' -H \"Content-Type: application/json\")",
+      "Bash(git config *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(export LLM_API_KEY=\"sk-d82d85d343cc4e988e552ebfb48e72ff\")",
+      "Bash(curl -s -X POST https://api.deepseek.com/v1/embeddings -H 'Authorization: Bearer sk-d82d85d343cc4e988e552ebfb48e72ff' -H 'Content-Type: application/json' -d '{\"model\":\"deepseek-chat\",\"input\":\"test\"}')",
+      "Bash(pip install *)",
+      "Bash(python -c ' *)",
+      "Bash(python -c \"from config.settings import Settings; s = Settings\\(\\); print\\('Settings OK'\\)\")",
+      "Bash(python -c \"from neo4j import GraphDatabase; d = GraphDatabase.driver\\('bolt://localhost:7687'\\); d.verify_connectivity\\(\\); print\\('Neo4j OK'\\); d.close\\(\\)\")",
+      "Bash(python tests/test_jd_accuracy.py)",
+      "Bash(python tests/test_jd_accuracy.py --report)",
+      "Bash(netstat -ano)",
+      "Bash(python main_web.py --host 127.0.0.1 --port 8000)",
+      "Bash(cmd //c \"set LLM_API_KEY\")",
+      "Bash(npm install *)",
+      "Bash(cmd //c \"start /B D:\\\\揭榜挂帅\\\\数据采集\\\\neo4j-community-5.26.0\\\\bin\\\\neo4j.bat console\")",
+      "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Select-Object Id, CommandLine | Format-Table -AutoSize\")",
+      "Bash(powershell -Command \"Stop-Process -Id 21588 -Force; Write-Host 'Process 21588 stopped'\")",
+      "Bash(LLM_API_KEY=sk-881b505892354d2ab07793077b8794ea python -c ' *)",
+      "Bash(LLM_API_KEY=\"sk-881b505892354d2ab07793077b8794ea\" LLM_BASE_URL=\"https://api.deepseek.com/v1\" LLM_MODEL=\"deepseek-chat\" python main_web.py --host 0.0.0.0 --port 8000)",
+      "Bash(python scripts/fix_emerging_jobs.py)",
+      "Bash(python -m pytest tests/test_job_matcher_ext.py -v)",
+      "Bash(python -m pytest tests/test_resume_parser_unit.py -v)",
+      "Bash(python -m pytest tests/test_api.py::TestResumeAPI -v)",
+      "Bash(python -m pytest tests/ -v)",
+      "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Stop-Process -Force; Write-Host 'Stopped'\")",
+      "Bash(echo -e \"姓名: 李四\\\\n学历: 本科\\\\n工作经验: 5年\\\\n技能: Python, Java, MySQL, Docker, Git, Linux, Redis, Kafka\\\\n当前职位: Java开发工程师\\\\n项目经历: 负责电商平台后端架构设计，使用 Spring Boot + MyBatis + MySQL，日均处理百万级请求\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s -X POST http://localhost:8000/api/resume/upload -F \"file=@/tmp/test_resume.txt\")",
+      "Bash(curl -s -X POST http://localhost:8000/api/resume/evaluate -H \"Content-Type: application/json\" -d '{\"file_id\":\"a4d9127b\",\"target_title\":\"Java开发工程师\"}')",
+      "Bash(python scripts/add_status_to_jobs.py)",
+      "Bash(python -m pytest tests/test_job_review_api.py -v)",
+      "Bash(LLM_API_KEY=\"sk-881b505892354d2ab07793077b8794ea\" python main_web.py --host 0.0.0.0 --port 8000)",
+      "Bash(python -m pytest tests/test_reports_api.py -v)",
+      "Bash(python -m pytest tests/test_reports_api.py -v --tb=line)",
+      "Bash(python -m pytest tests/test_reports_api.py::TestReportsAPI::test_overview_returns_all_sections -v --tb=long)",
+      "Bash(python -m pytest tests/test_reports_api.py::TestReportsWithMockSnapshots::test_load_snapshots_sorted_by_timestamp tests/test_reports_api.py::TestReportsWithMockSnapshots::test_job_trends_has_three_points -v --tb=short)",
+      "Bash(python -m pytest tests/test_reports_api.py::TestReportsWithMockSnapshots::test_skill_trends_computes_growth_correctly -v --tb=long)",
+      "Bash(python -m pytest tests/ -v --tb=no)",
+      "Bash(python -m pytest tests/ -v --tb=line)",
+      "Bash(start \"\" \"D:\\\\揭榜挂帅\\\\数据采集\\\\neo4j-community-5.26.0\\\\bin\\\\neo4j.bat\" console)",
+      "Bash(powershell -Command \"Start-Process -FilePath 'D:\\\\揭榜挂帅\\\\数据采集\\\\neo4j-community-5.26.0\\\\bin\\\\neo4j.bat' -ArgumentList 'console' -WindowStyle Hidden -NoNewWindow\")",
+      "Bash(cmd //c \"D:\\\\揭榜挂帅\\\\数据采集\\\\neo4j-community-5.26.0\\\\bin\\\\neo4j.bat install-service\")",
+      "Bash(cmd //c \"D:\\\\揭榜挂帅\\\\数据采集\\\\neo4j-community-5.26.0\\\\bin\\\\neo4j.bat windows-service install\")",
+      "Bash(powershell -Command ' *)",
+      "Bash(powershell -Command \"Get-Process -Name java -ErrorAction SilentlyContinue | Format-Table Id, ProcessName, StartTime\")",
+      "Bash(powershell -Command \"Get-Process -Name java -ErrorAction SilentlyContinue | Format-Table Id\")"
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
+  }
+}

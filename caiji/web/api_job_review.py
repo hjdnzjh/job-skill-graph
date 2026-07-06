@@ -18,7 +18,7 @@ from fastapi import APIRouter, Depends, Header, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from web.server import get_settings
+from web._settings import get_settings
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/jobs", tags=["job-review"])

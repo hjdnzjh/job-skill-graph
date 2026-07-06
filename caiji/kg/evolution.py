@@ -76,7 +76,7 @@ class EvolutionTracker:
             return []
         files = [os.path.join(SNAPSHOT_DIR, f)
                  for f in os.listdir(SNAPSHOT_DIR)
-                 if f.endswith(".json")]
+                 if f.endswith(".json") and f != "snapshot_index.json"]
         return sorted(files)
 
     def load_snapshot(self, path: str) -> dict:

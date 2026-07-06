@@ -14,6 +14,7 @@ export default function CLayout() {
     { name: '新兴岗位', path: '/new-jobs', icon: Briefcase },
     { name: '岗位图谱', path: '/skill-graph', icon: Network },
     { name: '简历测评', path: '/resume-evaluate', icon: FileText },
+    { name: '智能问答', path: '/rag-chat', icon: MessageSquare },
   ];
 
   return (

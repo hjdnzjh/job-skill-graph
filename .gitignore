@@ -1,15 +1,60 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
-logs/
-*.log
+*.egg-info/
+
+# Virtual env
+venv/
+.venv/
+
+# IDE
 .vscode/
 .idea/
+
+# Logs
+logs/
+*.log
+neo4j.err
+
+# Environment
+.env
+
+# Node
+node_modules/
+
+# Neo4j
 neo4j-community-5.26.0/
 neo4j-community-5.26.0.zip
 neo4j-community.zip
+
+# Data (generated/runtime)
+caiji/data/chroma_db/
+caiji/data/uploads/
+caiji/data/snapshots/snapshot_index.json
+caiji/test_rag_output.json
+
+# Build artifacts
+caiji/web/static/dist/
+
+# PDF / Docs
+caiji/*.pdf
+caiji/=5.0
+
+# Prototype
+原型/
+
+# PPT output (generated)
+ppt/
+projects/
+
+# Scripts (runtime helpers)
+start_all.bat
+start_all.ps1
+
+# Archives
 *.zip
-.env
-*.egg-info/
-node_modules/
+*.rar
+
+# Windows
 %USERPROFILE%/

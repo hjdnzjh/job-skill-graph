@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  ClipboardCheck, 
-  Settings2, 
-  Network, 
-  Users, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  ClipboardCheck,
+  Settings2,
+  Network,
+  Users,
+  BarChart3,
   LogOut,
   Bell,
-  Search
+  Search,
+  Zap
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Button } from '../components/ui/button';
@@ -24,6 +25,7 @@ export default function BLayout() {
     { name: '新岗位审核', path: '/admin/job-review', icon: ClipboardCheck },
     { name: '存量岗位管理', path: '/admin/skill-manage', icon: Settings2 },
     { name: '图谱管理', path: '/admin/graph-manage', icon: Network },
+    { name: '技能匹配', path: '/admin/quick-match', icon: Zap },
     { name: '批量简历匹配', path: '/admin/batch-resume', icon: Users },
     { name: '数据报表', path: '/admin/reports', icon: BarChart3 },
   ];

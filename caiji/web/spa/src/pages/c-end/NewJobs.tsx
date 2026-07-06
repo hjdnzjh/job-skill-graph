@@ -19,7 +19,17 @@ export default function NewJobs() {
 
   useEffect(() => {
     getPendingJobs({ limit: 100 }).then(d => {
-      const mapped = d.jobs.map((j: any, i: number) => ({ ...j, id: `job_${i}`, name: j.title }));
+      const mapped = d.jobs.map((j: any, i: number) => ({
+        ...j,
+        id: `job_${i}`,
+        title: j.title,
+        name: j.title,
+        duties: j.description || j.responsibilities || '暂无描述',
+        category: j.category || '新兴岗位',
+        requiredSkills: (j.required_skills || []).map((s: any) => typeof s === 'string' ? s : s.name || s.skill || ''),
+        heat: Math.round((j.confidence || 0.5) * 100),
+        date: j.date || '',
+      }));
       setJobs(mapped); setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -110,7 +120,7 @@ export default function NewJobs() {
                       <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> 远程/不限</span>
                       <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {job.date}</span>
                       <span className="flex items-center gap-1 text-orange-400/80">
-                        <Flame className="h-3 w-3 fill-orange-400/20" /> 热度 {0}%
+                        <Flame className="h-3 w-3 fill-orange-400/20" /> 热度 {job.heat}%
                       </span>
                     </div>
                   </div>

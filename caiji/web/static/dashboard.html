@@ -69,7 +69,7 @@ body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:#0f1724;c
 
 <!-- Row 1: Skill Ranking + Skill Categories -->
 <div class="grid-2-60">
-  <div class="panel"><div class="panel-title">技能需求排名 TOP 30</div><div class="panel-body"><div class="chart" id="chartSkillRank"></div></div></div>
+  <div class="panel"><div class="panel-title" style="display:flex;justify-content:space-between;align-items:center">技能需求排名 TOP 30<select id="skillCatFilter" style="padding:4px 8px;background:#0d1525;border:1px solid #2a5f8f;border-radius:4px;color:#8ab4f8;font-size:12px;cursor:pointer" onchange="onSkillCatChange()"><option value="">全部类别</option></select></div><div class="panel-body"><div class="chart" id="chartSkillRank"></div></div></div>
   <div class="panel"><div class="panel-title">技能类别分布</div><div class="panel-body"><div class="chart" id="chartSkillCat"></div></div></div>
 </div>
 
@@ -165,8 +165,11 @@ function showError(msg) {
 function initChart(domId) {
   const dom = document.getElementById(domId);
   if (!dom) return null;
-  const chart = echarts.init(dom, 'dark');
-  new ResizeObserver(() => chart.resize()).observe(dom);
+  let chart = echarts.getInstanceByDom(dom);
+  if (!chart) {
+    chart = echarts.init(dom, 'dark');
+    new ResizeObserver(() => chart.resize()).observe(dom);
+  }
   return chart;
 }
 
@@ -184,26 +187,58 @@ async function loadOverview() {
 }
 
 // ===== Skill Ranking =====
-async function loadSkillRanking() {
+let _skillRankingData = [];
+
+async function loadSkillRanking(category) {
   const chart = initChart('chartSkillRank');
   if (!chart) return;
   try {
-    const data = await fetchJSON(API + '/skills/ranking?limit=30');
-    const skills = data.skills || [];
-    chart.setOption({
-      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-      grid: { left: 120, right: 40, top: 8, bottom: 8 },
-      xAxis: { type: 'value', name: '需求数' },
-      yAxis: { type: 'category', data: skills.map(s => s.name).reverse(), inverse: true, axisLabel: { fontSize: 11 } },
-      series: [{
-        type: 'bar', data: skills.map(s => s.demand).reverse(),
-        itemStyle: { color: new echarts.graphic.LinearGradient(0,0,1,0,[
-          {offset:0,color:'#2a5f8f'},{offset:1,color:'#5cb8ff'}
-        ])},
-        label: { show: true, position: 'right', fontSize: 11 }
-      }]
-    });
+    const data = await fetchJSON(API + '/skills/ranking?limit=100');
+    _skillRankingData = data.skills || [];
+    renderSkillRanking(chart, _skillRankingData, category);
   } catch(e) { chart.dispose(); }
+}
+
+function renderSkillRanking(chart, allSkills, category) {
+  let skills = allSkills;
+  if (category) {
+    skills = allSkills.filter(s => (s.category || '未分类') === category);
+  }
+  skills = skills.slice(0, 30);
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    grid: { left: 120, right: 40, top: 8, bottom: 8 },
+    xAxis: { type: 'value', name: '需求数' },
+    yAxis: { type: 'category', data: skills.map(s => s.name).reverse(), inverse: true, axisLabel: { fontSize: 11 } },
+    series: [{
+      type: 'bar', data: skills.map(s => s.demand).reverse(),
+      itemStyle: { color: new echarts.graphic.LinearGradient(0,0,1,0,[
+        {offset:0,color:'#2a5f8f'},{offset:1,color:'#5cb8ff'}
+      ])},
+      label: { show: true, position: 'right', fontSize: 11 }
+    }]
+  });
+}
+
+function onSkillCatChange() {
+  const cat = document.getElementById('skillCatFilter').value;
+  const chart = initChart('chartSkillRank');
+  if (chart && _skillRankingData.length) {
+    renderSkillRanking(chart, _skillRankingData, cat);
+  }
+}
+
+async function loadSkillCatFilter() {
+  try {
+    const data = await fetchJSON(API + '/skills/categories');
+    const cats = data.categories || [];
+    const sel = document.getElementById('skillCatFilter');
+    cats.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.name; opt.textContent = `${c.name} (${c.total_demand})`;
+      sel.appendChild(opt);
+    });
+  } catch(e) {}
 }
 
 // ===== Skill Categories Pie =====
@@ -512,6 +547,7 @@ async function doRagQuery() {
 // ===== Init =====
 window.addEventListener('DOMContentLoaded', () => {
   loadOverview();
+  loadSkillCatFilter();
   loadSkillRanking();
   loadSkillCategories();
   loadSkillNetwork();

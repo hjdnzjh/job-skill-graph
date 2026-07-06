@@ -1,0 +1,37 @@
+record_id,old_min,old_max,new_min,new_max,method
+0b8b1f66-7971-4f6f-828d-d71e3a5c4d07,NULL,NULL,14.0,20.0,global_median
+0bff7f62-864f-48f6-9fc6-b0138ba936da,NULL,NULL,14.0,20.0,global_median
+13fea03c-363d-4c67-9122-b70f643d9567,NULL,NULL,15.0,25.0,title_median:招聘Data Analyst
+14fef1d7-7b9b-481d-9614-d143f6bf6d75,NULL,NULL,20.0,40.0,title_median:算法工程师
+1e64c520-2d5f-4d6f-b2b0-ee5b51c0d715,NULL,NULL,15.0,25.0,title_median:招聘Data Analyst
+2953fa5f-68c3-468c-8acb-6d8b1b36e0b6,NULL,NULL,20.0,40.0,title_median:算法工程师
+2a15ec3e-43bb-4e57-bdcf-dea5ac41fc16,NULL,NULL,12.0,18.0,title_median:招聘鸿蒙开发工程师
+2a17b894-6327-4b7a-a3d7-22a02c9e0ea3,NULL,NULL,14.0,20.0,global_median
+386450fc-d143-49ca-af4f-4e6f917aed32,NULL,NULL,14.0,20.0,global_median
+3a7153e9-5893-4486-8f39-8831a629cbdb,NULL,NULL,15.0,22.0,title_median:Java开发工程师
+3bfa4b43-1b05-40c9-be77-99f05c7f48b4,NULL,NULL,15.0,24.0,title_median:前端开发工程师
+406a5808-4a1b-4a3a-aeb8-f0649fb29800,NULL,NULL,14.0,20.0,global_median
+417b023b-f1b8-485c-a29e-435fa84c5055,NULL,NULL,14.0,20.0,global_median
+62eac024-67d7-4789-af02-8d1e711ebdb1,NULL,NULL,14.0,20.0,global_median
+67e28e5f-63fa-4c06-939e-8973db2a419b,NULL,NULL,14.0,20.0,global_median
+6a0f2925-d892-4d61-ae07-b2a9d3426be6,NULL,NULL,14.0,20.0,global_median
+7a821f3a-0313-4163-87c4-fcd5d3095ff2,NULL,NULL,45.0,72.5,title_median:招聘数据科学家
+7d400aae-4d11-4e5a-9072-306b4c994ccc,NULL,NULL,14.0,20.0,global_median
+7ed75a7e-9856-4669-9759-7e57d7991a53,NULL,NULL,15.0,22.0,title_median:Java开发工程师
+839de924-bba2-44e8-a2c6-c65143dcaaef,NULL,NULL,14.0,20.0,global_median
+8480d9aa-7dae-4596-82fb-2451bd8a0b4c,NULL,NULL,14.0,20.0,global_median
+88f863ec-e0f5-4ed2-87b2-1085a2c7237a,NULL,NULL,14.0,20.0,global_median
+89d4bd00-962a-4955-9459-8b9fafe01b5f,NULL,NULL,5.0,8.0,title_median:招聘H5开发
+8b582179-8340-4ca9-ad98-d664e79efd37,NULL,NULL,14.0,20.0,global_median
+8fc8b67f-f6e2-44c0-a638-5ffeaa9436e8,NULL,NULL,14.0,20.0,global_median
+929b5f6a-7890-429d-bd13-c798a40278b1,NULL,NULL,14.0,20.0,global_median
+9613a728-954e-4b22-bf20-054043d9584d,NULL,NULL,14.0,20.0,global_median
+9cbaaf9a-e7aa-4ed9-a5d9-777a8671e945,NULL,NULL,14.0,20.0,global_median
+a345aa51-2cba-4d29-b5ac-9b00fedead0b,NULL,NULL,14.0,20.0,global_median
+a4e86746-44c2-44bb-a5ea-f525ac3014b0,NULL,NULL,14.0,20.0,global_median
+c08a18fb-73b4-447b-a940-f50639ae695c,NULL,NULL,15.0,22.0,title_median:Java开发工程师
+c25f71d2-d250-46c0-92ae-06146b1bb208,NULL,NULL,14.0,20.0,global_median
+c642aa4d-10e0-41a7-9242-fbc2681df5fa,NULL,NULL,14.0,20.0,global_median
+d236a25d-9640-439c-954f-4f9fa1e201bb,NULL,NULL,14.0,20.0,global_median
+ee7a60f2-e376-452f-8fd5-99748c8cb19a,NULL,NULL,14.0,20.0,global_median
+f3075d4c-86fa-485e-b359-cde603974971,NULL,NULL,15.0,25.0,title_median:招聘Data Analyst

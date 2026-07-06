@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Star, FileText, History, Settings, LogOut, ChevronRight, Briefcase } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs';
-import { mockJobs } from '../../lib/mockData';
+import { getPendingJobs, getSkillRanking } from '../../services/api';
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState('favorites');
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [skills, setSkills] = useState<any[]>([]);
+
+  useEffect(() => {
+    getPendingJobs({ limit: 10 }).then(d => setJobs(d.jobs)).catch(() => {});
+    getSkillRanking(5).then(d => setSkills(d.skills)).catch(() => {});
+  }, []);
 
   const stats = [
-    { label: '已收藏岗位', value: 12, icon: Star, color: 'text-yellow-500' },
-    { label: '测评报告', value: 8, icon: FileText, color: 'text-indigo-500' },
-    { label: '匹配记录', value: 24, icon: History, color: 'text-emerald-500' },
+    { label: '待探索岗位', value: jobs.length, icon: Star, color: 'text-yellow-500' },
+    { label: '技能数', value: skills.length, icon: FileText, color: 'text-indigo-500' },
+    { label: '匹配记录', value: 0, icon: History, color: 'text-emerald-500' },
   ];
 
   return (
@@ -75,8 +82,8 @@ export default function Profile() {
 
         <TabsContent active={activeTab === 'favorites'}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {mockJobs.slice(0, 4).map((job) => (
-              <Card key={job.id} className="bg-slate-900/40 border-slate-800 hover:border-indigo-500/30 transition-all group">
+            {(jobs.length ? jobs : [{title: '暂无岗位', category: ''}]).slice(0, 4).map((job, i) => (
+              <Card key={i} className="bg-slate-900/40 border-slate-800 hover:border-indigo-500/30 transition-all group">
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex gap-4">
@@ -84,16 +91,11 @@ export default function Profile() {
                         <Briefcase className="h-6 w-6 text-indigo-400" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-white group-hover:text-indigo-400 transition-colors">{job.name}</h3>
-                        <p className="text-xs text-slate-500">{job.category} · 2025-05-20</p>
+                        <h3 className="font-bold text-white group-hover:text-indigo-400 transition-colors">{job.title}</h3>
+                        <p className="text-xs text-slate-500">{job.category || ''} · {job.date || ''}</p>
                       </div>
                     </div>
                     <Button variant="ghost" size="icon" className="text-yellow-500"><Star className="h-4 w-4 fill-current" /></Button>
-                  </div>
-                  <div className="flex gap-2 mb-6">
-                    {job.requiredSkills.slice(0, 3).map(s => (
-                      <Badge key={s} variant="outline" className="text-[10px]">{s}</Badge>
-                    ))}
                   </div>
                   <div className="flex gap-3">
                     <Button size="sm" className="flex-1">投递简历</Button>

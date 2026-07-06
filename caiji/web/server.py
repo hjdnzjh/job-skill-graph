@@ -23,16 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Lazy settings singleton — works with both uvicorn and TestClient
-_settings = None
-
-
-def get_settings():
-    global _settings
-    if _settings is None:
-        from config.settings import Settings
-        _settings = Settings()
-    return _settings
+from web._settings import get_settings  # noqa: E402 — must precede api_* imports
 
 
 # Import and register sub-routers

@@ -258,22 +258,43 @@ class RAGEngine:
             )},
         ]
 
-        response = self.llm.chat.completions.create(
-            model=self.settings.llm_model,
-            messages=messages,
-            temperature=0.1,
-        )
-        answer = response.choices[0].message.content.strip()
+        try:
+            response = self.llm.chat.completions.create(
+                model=self.settings.llm_model,
+                messages=messages,
+                temperature=0.1,
+            )
+            answer = response.choices[0].message.content.strip()
+            llm_unavailable = False
+        except Exception as llm_err:
+            logger.warning(f"LLM API unavailable, using retrieval-only fallback: {llm_err}")
+            answer = self._build_fallback_answer(question, retrieved_docs, graph_context)
+            llm_unavailable = True
 
         # Step 4: Hallucination check (rules + graph verification)
         basic_warnings = self._check_hallucination(answer, retrieved_docs, graph_context)
-        from kg.hallucination_checker import HallucinationChecker
-        hc = HallucinationChecker(self.settings)
-        verification = hc.verify(answer)
-        warnings = basic_warnings + [
-            {"type": "fact_verification", "message": w.get("correction", w.get("claim", ""))}
-            for w in verification.get("warnings", [])
-        ]
+        warnings = basic_warnings
+        hallucination_score = 1.0
+        verified_claims = 0
+        total_claims = 0
+
+        if not llm_unavailable:
+            try:
+                from kg.hallucination_checker import HallucinationChecker
+                hc = HallucinationChecker(self.settings)
+                verification = hc.verify(answer)
+                warnings += [
+                    {"type": "fact_verification", "message": w.get("correction", w.get("claim", ""))}
+                    for w in verification.get("warnings", [])
+                ]
+                hallucination_score = verification.get("overall_score", 1.0)
+                verified_claims = verification.get("verified_claims", 0)
+                total_claims = verification.get("total_claims", 0)
+            except Exception:
+                pass
+
+        if llm_unavailable:
+            warnings.append({"type": "fallback_mode", "message": "LLM 服务不可用，当前为基于检索数据的自动回答"})
 
         return {
             "question": question,
@@ -281,10 +302,66 @@ class RAGEngine:
             "retrieved_docs": retrieved_docs,
             "graph_context": graph_context,
             "warnings": warnings,
-            "hallucination_score": verification.get("overall_score", 1.0),
-            "verified_claims": verification.get("verified_claims", 0),
-            "total_claims": verification.get("total_claims", 0),
+            "hallucination_score": hallucination_score,
+            "verified_claims": verified_claims,
+            "total_claims": total_claims,
         }
+
+    @staticmethod
+    def _build_fallback_answer(question: str, retrieved_docs: list,
+                                graph_context: list) -> str:
+        """Synthesize an answer from retrieved context when LLM is unavailable."""
+        parts = []
+        q_lower = question.lower()
+
+        # Extract key entities from graph context
+        skill_entries = [g for g in graph_context if "核心技能:" in g]
+        salary_entries = [g for g in graph_context if "薪资" in g or "均薪" in g]
+        city_entries = [g for g in graph_context if "岗位," in g and "均薪" in g]
+        skill_demand = [g for g in graph_context if "个岗位需求" in g]
+
+        if any(w in q_lower for w in ("技能", "需要", "掌握", "会什么", "学什么", "要求", "具备")):
+            if skill_entries:
+                for entry in skill_entries[:3]:
+                    match = re.match(r'\[图谱\]\s*(.+?)\s*核心技能:\s*(.+)', entry)
+                    if match:
+                        parts.append(f"根据招聘数据，{match.group(1)}岗位需要掌握的核心技能包括：{match.group(2)}。")
+            if skill_demand:
+                for entry in skill_demand:
+                    match = re.match(r'\[图谱\]\s*(.+?)\s*（(.+?)）:\s*(\d+)\s*个岗位需求', entry)
+                    if match:
+                        parts.append(f"{match.group(1)}（{match.group(2)}）被 {match.group(3)} 个岗位需求。")
+            # Also include retrieved doc info about related jobs
+            title_docs = [d for d in retrieved_docs if "岗位名称:" in d or "核心技能:" in d]
+            if not skill_entries and title_docs:
+                for doc in title_docs[:3]:
+                    parts.append(doc.strip())
+
+        if any(w in q_lower for w in ("薪资", "工资", "薪酬", "待遇", "月薪", "年薪", "收入")):
+            if salary_entries:
+                for entry in salary_entries:
+                    parts.append(entry.replace("[图谱] ", ""))
+            if city_entries:
+                for entry in city_entries:
+                    parts.append(entry.replace("[图谱] ", ""))
+
+        if any(w in q_lower for w in ("城市", "北京", "上海", "深圳", "杭州", "广州", "成都", "武汉", "南京", "西安")):
+            if city_entries:
+                for entry in city_entries:
+                    parts.append(entry.replace("[图谱] ", ""))
+
+        # Fall back to retrieved docs
+        if not parts and retrieved_docs:
+            for doc in retrieved_docs[:5]:
+                parts.append(doc)
+
+        if not parts:
+            parts.append("根据现有数据，未找到与您问题直接相关的信息。建议尝试以下查询：")
+            parts.append('- 输入具体岗位名称，如"Java开发工程师"')
+            parts.append('- 输入具体技能名称，如"Python"')
+            parts.append('- 输入城市名称，如"北京薪资"')
+
+        return "\n\n".join(parts)
 
     def _get_graph_context(self, question: str) -> list:
         """Extract structured context from Neo4j based on question keywords."""
@@ -331,23 +408,35 @@ class RAGEngine:
                 ctx.append(f"[图谱] 整体薪资: 均 {int(r['avg_min'])}-{int(r['avg_max'])}/月, "
                           f"范围 {int(r['gmin'])}-{int(r['gmax'])}")
 
-        # Job title mentions
+        # Job title mentions (with fuzzy matching)
         title_rows_all = self.neo4j.run_query(
             "MATCH (t:JobTitle) WHERE exists((:Job)-[:HAS_TITLE]->(t)) "
             "RETURN t.name AS name"
         )
+        import difflib as _difflib
+        best_title = None
+        best_ratio = 0
         for t in title_rows_all:
+            # Exact match
             if t["name"] in question:
-                skill_rows = self.neo4j.run_query(
-                    "MATCH (j:Job)-[:HAS_TITLE]->(t:JobTitle {name: $title}), "
-                    "(j)-[:REQUIRES]->(s:Skill) "
-                    "RETURN s.name AS skill, count(*) AS n ORDER BY n DESC LIMIT 8",
-                    {"title": t["name"]},
-                )
-                if skill_rows:
-                    skills = [f"{s['skill']}({s['n']})" for s in skill_rows]
-                    ctx.append(f"[图谱] {t['name']} 核心技能: {', '.join(skills)}")
+                best_title = t["name"]
                 break
+            # Fuzzy: check if keywords from title overlap with question
+            title_words = re.findall(r'[A-Za-z+#.0-9]+|[一-鿿]{2,}', t["name"])
+            match_count = sum(1 for w in title_words if w in question)
+            if title_words and match_count / len(title_words) >= 0.5 and match_count > best_ratio:
+                best_ratio = match_count
+                best_title = t["name"]
+        if best_title:
+            skill_rows = self.neo4j.run_query(
+                "MATCH (j:Job)-[:HAS_TITLE]->(t:JobTitle {name: $title}), "
+                "(j)-[:REQUIRES]->(s:Skill) "
+                "RETURN s.name AS skill, count(*) AS n ORDER BY n DESC LIMIT 8",
+                {"title": best_title},
+            )
+            if skill_rows:
+                skills = [f"{s['skill']}({s['n']})" for s in skill_rows]
+                ctx.append(f"[图谱] {best_title} 核心技能: {', '.join(skills)}")
 
         return ctx[:8]  # Limit context length
 

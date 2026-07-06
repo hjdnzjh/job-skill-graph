@@ -10,6 +10,7 @@ import NewJobs from './pages/c-end/NewJobs';
 import SkillGraphPage from './pages/c-end/SkillGraphPage';
 import ResumeEvaluate from './pages/c-end/ResumeEvaluate';
 import Profile from './pages/c-end/Profile';
+import RAGChat from './pages/c-end/RAGChat';
 
 // B-end Pages
 import Dashboard from './pages/b-end/Dashboard';
@@ -18,6 +19,7 @@ import SkillManage from './pages/b-end/SkillManage';
 import GraphManage from './pages/b-end/GraphManage';
 import BatchMatch from './pages/b-end/BatchMatch';
 import Reports from './pages/b-end/Reports';
+import QuickMatch from './pages/b-end/QuickMatch';
 
 export default function App() {
   const location = useLocation();
@@ -30,6 +32,7 @@ export default function App() {
         <Route path="/new-jobs" element={<NewJobs />} />
         <Route path="/skill-graph" element={<SkillGraphPage />} />
         <Route path="/resume-evaluate" element={<ResumeEvaluate />} />
+        <Route path="/rag-chat" element={<RAGChat />} />
         <Route path="/profile" element={<Profile />} />
       </Route>
 
@@ -40,6 +43,7 @@ export default function App() {
         <Route path="skill-manage" element={<SkillManage />} />
         <Route path="graph-manage" element={<GraphManage />} />
         <Route path="batch-resume" element={<BatchMatch />} />
+        <Route path="quick-match" element={<QuickMatch />} />
         <Route path="reports" element={<Reports />} />
       </Route>
     </Routes>

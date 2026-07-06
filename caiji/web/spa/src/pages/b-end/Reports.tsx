@@ -10,17 +10,22 @@ import {
   Loader2
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, PieChart, Pie, Cell, CartesianGrid, Legend } from 'recharts';
-import { getOverview, OverviewData } from '../../services/api';
+import { getOverview, getEvolutionTimeline, OverviewData } from '../../services/api';
 
 export default function Reports() {
   const [timeRange, setTimeRange] = useState('3m');
   const [data, setData] = useState<OverviewData | null>(null);
+  const [timeline, setTimeline] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getOverview().then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
+    Promise.all([
+      getOverview(),
+      getEvolutionTimeline().catch(() => ({ timeline: [] })),
+    ]).then(([d, t]) => { setData(d); setTimeline(t.timeline || []); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
   const COLORS = ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
@@ -187,6 +192,43 @@ export default function Reports() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Evolution Timeline Section */}
+      {timeline.length > 0 && (
+        <Card className="border-slate-800 bg-slate-900/40">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-indigo-400" />
+              演化时间线
+            </CardTitle>
+            <Badge variant="outline" className="text-[10px] border-slate-700">{timeline.length} 个快照</Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-slate-800 text-slate-500 text-xs uppercase tracking-wider">
+                    <th className="px-4 py-3 font-semibold">时间</th>
+                    <th className="px-4 py-3 font-semibold">节点数</th>
+                    <th className="px-4 py-3 font-semibold">边数</th>
+                    <th className="px-4 py-3 font-semibold">岗位数</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                  {timeline.map((t: any, i: number) => (
+                    <tr key={i} className="hover:bg-slate-800/30 transition-colors">
+                      <td className="px-4 py-3 text-sm text-white">{t.timestamp}</td>
+                      <td className="px-4 py-3 text-sm text-slate-300">{t.total_nodes}</td>
+                      <td className="px-4 py-3 text-sm text-slate-300">{t.total_edges}</td>
+                      <td className="px-4 py-3 text-sm text-slate-300">{t.record_count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

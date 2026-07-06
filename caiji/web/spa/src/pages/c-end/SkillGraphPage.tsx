@@ -1,28 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Network, Info, Layers, Calendar, ChevronRight, Loader2 } from 'lucide-react';
+import { Network, Info, Layers, Calendar, ChevronRight, Loader2, GitBranch } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { SkillGraph } from '../../components/common/SkillGraph';
 import { Drawer } from '../../components/common/Drawer';
 import { Badge } from '../../components/ui/badge';
-import { getGraphExport } from '../../services/api';
+import { getGraphExport, getSkillNetwork } from '../../services/api';
 import { ScrollReveal } from '../../components/common/ScrollReveal';
 
 export default function SkillGraphPage() {
-  const [activeTab, setActiveTab] = useState<'tech' | 'level'>('tech');
+  const [activeTab, setActiveTab] = useState<string>('full');
   const [selectedYear, setSelectedYear] = useState('2025');
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [graphData, setGraphData] = useState<any>(null);
+  const [networkData, setNetworkData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getGraphExport(200).then(d => {
-      const nodes = d.nodes.map(n => ({ id: String(n.node_id), label: n.name, type: n.label === 'Skill' ? 'skill' : 'job', category: n.category }));
-      const links = d.edges.map(e => ({ source: String(d.nodes.find(n => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(d.nodes.find(n => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
-      setGraphData({ nodes: nodes.filter(n => n.id), links: links.filter(e => e.source && e.target) });
+    Promise.all([
+      getGraphExport(200).catch(() => ({ nodes: [], edges: [] })),
+      getSkillNetwork(80).catch(() => ({ nodes: [], edges: [] })),
+    ]).then(([graph, network]) => {
+      const nodes = graph.nodes.map((n: any) => ({ id: String(n.node_id), label: n.name, type: n.label === 'Skill' ? 'skill' : 'job', category: n.category }));
+      const links = graph.edges.map((e: any) => ({ source: String(graph.nodes.find((n: any) => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(graph.nodes.find((n: any) => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
+      setGraphData({ nodes: nodes.filter((n: any) => n.id), links: links.filter((e: any) => e.source && e.target) });
+      setNetworkData({ nodes: network.nodes.map((n: any) => ({ id: n.name, label: n.name, type: 'skill', category: n.category })), links: network.edges.map((e: any) => ({ source: e.source, target: e.target })) });
       setLoading(false);
-    }).catch(() => setLoading(false));
+    });
   }, []);
 
   const handleNodeClick = (node: any) => {
@@ -41,42 +46,42 @@ export default function SkillGraphPage() {
         <div className="flex items-center gap-6">
           <div className="flex bg-slate-900 p-1 rounded-lg border border-slate-800">
             <button
-              onClick={() => setActiveTab('tech')}
+              onClick={() => setActiveTab('full')}
               className={`relative px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 overflow-hidden ${
-                activeTab === 'tech' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+                activeTab === 'full' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              {activeTab === 'tech' && (
-                <motion.div 
+              {activeTab === 'full' && (
+                <motion.div
                   layoutId="tab-bg"
                   className="absolute inset-0 bg-indigo-600 shadow-lg"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
               <Layers className="h-4 w-4 relative z-10" />
-              <span className="relative z-10">技术栈视图</span>
+              <span className="relative z-10">全量图谱</span>
             </button>
             <button
-              onClick={() => setActiveTab('level')}
+              onClick={() => setActiveTab('network')}
               className={`relative px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 overflow-hidden ${
-                activeTab === 'level' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+                activeTab === 'network' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              {activeTab === 'level' && (
-                <motion.div 
+              {activeTab === 'network' && (
+                <motion.div
                   layoutId="tab-bg"
                   className="absolute inset-0 bg-indigo-600 shadow-lg"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
-              <Network className="h-4 w-4 relative z-10" />
-              <span className="relative z-10">技能等级视图</span>
+              <GitBranch className="h-4 w-4 relative z-10" />
+              <span className="relative z-10">技能网络</span>
             </button>
           </div>
 
           <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 group hover:border-indigo-500/50 transition-colors">
             <Calendar className="h-4 w-4 text-slate-500 group-hover:text-indigo-400 transition-colors" />
-            <select 
+            <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
               className="bg-transparent text-sm text-slate-200 focus:outline-none cursor-pointer"
@@ -123,8 +128,8 @@ export default function SkillGraphPage() {
             transition={{ duration: 0.5 }}
             className="w-full h-full"
           >
-            {graphData && <SkillGraph
-              data={graphData}
+            {(activeTab === 'network' ? networkData : graphData) && <SkillGraph
+              data={activeTab === 'network' ? networkData : graphData}
               onNodeClick={handleNodeClick}
               height="100%"
             />}
