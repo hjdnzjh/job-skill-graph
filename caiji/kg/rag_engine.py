@@ -27,6 +27,16 @@ _HALLUCINATION_PATTERNS = [
     (re.compile(r'(?:月薪|薪资).*?(\d{5,6})'), "薪资数字需核实"),
 ]
 
+# Domain keyword → domain_code mapping for graph context filtering
+DOMAIN_KEYWORDS = {
+    "AI": "SKD-03", "人工智能": "SKD-03", "机器学习": "SKD-03",
+    "编程": "SKD-01", "开发语言": "SKD-01",
+    "数据库": "SKD-02", "存储": "SKD-02",
+    "云": "SKD-04", "运维": "SKD-05", "DevOps": "SKD-05",
+    "安全": "SKD-06", "测试": "SKD-06",
+    "管理": "SKD-07", "产品": "SKD-07",
+}
+
 # Common skill names for graph context extraction
 _KNOWN_SKILLS = [
     'Python', 'Java', 'MySQL', 'Linux', 'Git', 'Redis', 'Docker',
@@ -367,14 +377,33 @@ class RAGEngine:
         """Extract structured context from Neo4j based on question keywords."""
         ctx = []
 
+        # Check for domain keyword matches and determine domain filter
+        matched_domain_code = None
+        for keyword, domain_code in DOMAIN_KEYWORDS.items():
+            if keyword.lower() in question.lower():
+                matched_domain_code = domain_code
+                break
+
         # Skill mentions
         found_skills = [s for s in _KNOWN_SKILLS if s.lower() in question.lower()]
         if found_skills:
-            skill_rows = self.neo4j.run_query(
-                "MATCH (:Job)-[:REQUIRES]->(s:Skill) WHERE s.name IN $skills "
-                "RETURN s.name AS skill, s.category AS category, count(*) AS demand",
-                {"skills": found_skills},
-            )
+            if matched_domain_code:
+                # Filter skills by domain
+                skill_rows = self.neo4j.run_query(
+                    "MATCH (:Job)-[:REQUIRES]->(s:Skill)"
+                    "-[:BELONGS_TO_TYPE]->(:SkillType)"
+                    "-[:BELONGS_TO_GROUP]->(:SkillGroup)"
+                    "-[:BELONGS_TO_DOMAIN]->(d:SkillDomain {code: $domain_code}) "
+                    "WHERE s.name IN $skills "
+                    "RETURN s.name AS skill, s.category AS category, count(*) AS demand",
+                    {"skills": found_skills, "domain_code": matched_domain_code},
+                )
+            else:
+                skill_rows = self.neo4j.run_query(
+                    "MATCH (:Job)-[:REQUIRES]->(s:Skill) WHERE s.name IN $skills "
+                    "RETURN s.name AS skill, s.category AS category, count(*) AS demand",
+                    {"skills": found_skills},
+                )
             for r in skill_rows:
                 ctx.append(f"[图谱] {r['skill']}（{r['category']}）: {r['demand']} 个岗位需求")
 

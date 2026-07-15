@@ -210,7 +210,46 @@ async def get_overview():
 
         neo4j.close()
 
-        # --- 4. AI Insights ---
+        # --- 4. Domain trends ---
+        domain_trends = []
+        if len(snapshots) >= 2:
+            oldest = snapshots[0]
+            newest = snapshots[-1]
+
+            old_domains = {}
+            for d in oldest.get("skills_by_domain", []):
+                old_domains[d.get("domain")] = d
+            new_domains = {}
+            for d in newest.get("skills_by_domain", []):
+                new_domains[d.get("domain")] = d
+
+            all_domains = set(list(old_domains.keys()) + list(new_domains.keys()))
+            for domain_code in all_domains:
+                od = old_domains.get(domain_code, {"demand": 0, "skill_count": 0, "domain_name": ""})
+                nd = new_domains.get(domain_code, {"demand": 0, "skill_count": 0, "domain_name": ""})
+                domain_name = nd.get("domain_name") or od.get("domain_name", domain_code)
+
+                demand_before = od.get("demand", 0)
+                demand_after = nd.get("demand", 0)
+                if demand_before == 0 and demand_after > 0:
+                    growth_pct = 100.0
+                elif demand_before > 0:
+                    growth_pct = round((demand_after - demand_before) / demand_before * 100, 1)
+                else:
+                    growth_pct = 0.0
+
+                domain_trends.append({
+                    "domain_code": domain_code,
+                    "domain_name": domain_name,
+                    "demand_before": demand_before,
+                    "demand_after": demand_after,
+                    "growth_pct": growth_pct,
+                    "skill_count_before": od.get("skill_count", 0),
+                    "skill_count_after": nd.get("skill_count", 0),
+                })
+            domain_trends.sort(key=lambda x: -abs(x["growth_pct"]))
+
+        # --- 5. AI Insights ---
         insights = _generate_insights(skill_trends, job_trends, status_distribution)
 
         return {
@@ -218,6 +257,7 @@ async def get_overview():
             "skill_trends": skill_trends[:50],
             "skill_trends_detail": skill_trends_detail[:50],
             "status_distribution": status_distribution,
+            "domain_trends": domain_trends,
             "insights": insights,
             "warnings": warnings,
         }

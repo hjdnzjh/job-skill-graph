@@ -10,13 +10,16 @@ import {
   Filter,
   Eye,
   CheckCircle,
-  Loader2
+  Loader2,
+  X
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Badge } from '../../components/ui/badge';
 import { Drawer } from '../../components/common/Drawer';
+import { TaxonomyTree, TaxonomyNode } from '../../components/common/TaxonomyTree';
+import { getSkillTree } from '../../services/api';
 
 async function fetchSkillChanges() {
   const res = await fetch('/api/skills/changes');
@@ -31,10 +34,21 @@ export default function SkillManage() {
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [changeRecords, setChangeRecords] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
+  const [taxonomyData, setTaxonomyData] = useState<TaxonomyNode[]>([]);
 
   useEffect(() => {
     fetchSkillChanges().then(d => { setChangeRecords(d); setLoading(false); }).catch(() => setLoading(false));
+    getSkillTree().then(d => setTaxonomyData(d.tree || [])).catch(() => {});
   }, []);
+
+  const filteredRecords = changeRecords.filter(r => {
+    if (selectedDomains.length === 0) return true;
+    return selectedDomains.some(code =>
+      r.domain_code === code || r.domain === code
+    );
+  });
 
   const handleOpenDetail = (record: any) => {
     setSelectedRecord(record);
@@ -69,10 +83,34 @@ export default function SkillManage() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-slate-400">
-              <Filter className="h-4 w-4 mr-2" /> 筛选
+          <div className="flex items-center gap-2 relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`text-slate-400 ${selectedDomains.length > 0 ? 'text-indigo-400 bg-indigo-500/10' : ''}`}
+              onClick={() => setFilterOpen(!filterOpen)}
+            >
+              <Filter className="h-4 w-4 mr-2" />
+              筛选{selectedDomains.length > 0 ? ` (${selectedDomains.length})` : ''}
             </Button>
+            {filterOpen && (
+              <div className="absolute right-0 top-full mt-2 z-50 w-80 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-bold text-white">按领域筛选</h4>
+                  <button onClick={() => setFilterOpen(false)} className="text-slate-500 hover:text-white">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <TaxonomyTree
+                  data={taxonomyData}
+                  value={selectedDomains}
+                  onChange={setSelectedDomains}
+                  multiple={true}
+                  searchable={true}
+                  placeholder="搜索领域..."
+                />
+              </div>
+            )}
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -88,7 +126,7 @@ export default function SkillManage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">
-                {changeRecords.map((record) => (
+                {filteredRecords.map((record) => (
                   <tr key={record.id} className="hover:bg-slate-800/30 transition-colors group">
                     <td className="px-6 py-4 text-sm font-medium text-white">{record.title}</td>
                     <td className="px-6 py-4">

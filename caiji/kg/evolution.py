@@ -59,6 +59,7 @@ class EvolutionTracker:
             "city_distribution": self._snapshot_city_distribution(),
             "industry_distribution": self._snapshot_industry_distribution(),
             "skill_communities": self._snapshot_skill_communities(),
+            "skills_by_domain": self._snapshot_skills_by_domain(),
         }
 
         filename = datetime.now().strftime("%Y-%m-%d_%H%M%S") + ".json"
@@ -123,6 +124,15 @@ class EvolutionTracker:
             "community_changes": self._compare_communities(
                 snap_a.get("skill_communities", []),
                 snap_b.get("skill_communities", []),
+            ),
+            "industry_changes": self._compare_industry_distribution(
+                snap_a.get("industry_distribution", []),
+                snap_b.get("industry_distribution", []),
+            ),
+            "skills_by_domain": self._compare_skills_by_category(
+                snap_a.get("top_skills", []),
+                snap_b.get("top_skills", []),
+                "skill",
             ),
         }
 
@@ -267,6 +277,28 @@ class EvolutionTracker:
         )
         return rows
 
+    def _snapshot_skills_by_domain(self) -> list:
+        """Snapshot skill demand counts grouped by skill domain."""
+        rows = self.neo4j.run_query(
+            "MATCH (d:SkillDomain)<-[:BELONGS_TO_DOMAIN]-(:SkillGroup)"
+            "<-[:BELONGS_TO_GROUP]-(:SkillType)"
+            "<-[:BELONGS_TO_TYPE]-(s:Skill)<-[:REQUIRES]-(:Job) "
+            "RETURN d.code AS domain, d.name AS domain_name, "
+            "count(*) AS demand, count(DISTINCT s) AS skill_count "
+            "ORDER BY demand DESC"
+        )
+        return [dict(r) for r in rows]
+
+    def _get_skill_domain_map(self) -> dict:
+        """Return a mapping of {skill_name: domain_code} from Neo4j."""
+        rows = self.neo4j.run_query(
+            "MATCH (s:Skill)-[:BELONGS_TO_TYPE]->(:SkillType)"
+            "-[:BELONGS_TO_GROUP]->(:SkillGroup)"
+            "-[:BELONGS_TO_DOMAIN]->(d:SkillDomain) "
+            "RETURN s.name AS skill, d.code AS domain_code"
+        )
+        return {r["skill"]: r["domain_code"] for r in rows}
+
     def _snapshot_skill_communities(self) -> list:
         """Detect skill communities via NetworkX Louvain."""
         try:
@@ -392,6 +424,82 @@ class EvolutionTracker:
                 f"最大聚类大小: {before[0]['size']} → {after[0]['size']}",
             ],
         }
+
+    @staticmethod
+    def _compare_industry_distribution(before: list, after: list) -> dict:
+        """Compare industry distribution between two snapshots."""
+        before_map = {r["industry"]: r for r in before}
+        after_map = {r["industry"]: r for r in after}
+
+        entered = [k for k in after_map if k not in before_map]
+        exited = [k for k in before_map if k not in after_map]
+
+        both = {}
+        for k in before_map:
+            if k in after_map:
+                both[k] = {
+                    "jobs_before": before_map[k].get("jobs", 0),
+                    "jobs_after": after_map[k].get("jobs", 0),
+                    "delta": after_map[k].get("jobs", 0) - before_map[k].get("jobs", 0),
+                }
+
+        return {
+            "entered": entered,
+            "exited": exited,
+            "changed": both,
+            "top_growing": sorted(both.items(), key=lambda x: -x[1]["delta"])[:5],
+            "top_declining": sorted(both.items(), key=lambda x: x[1]["delta"])[:5],
+        }
+
+    @staticmethod
+    def _compare_skills_by_category(
+        before: list, after: list, name_key: str
+    ) -> dict:
+        """Group skill changes by domain using category info from snapshot data.
+
+        Uses the _compare_ranked_list diff and groups entered/exited/risers/fallers
+        by each skill's category field (which carries domain info when available).
+        Returns {domain_code: {"entered": N, "exited": N, "risers": N, "fallers": N}}.
+        """
+        diff = EvolutionTracker._compare_ranked_list(before, after, name_key)
+
+        # Build a category lookup from both snapshots
+        cat_map = {}
+        for r in before:
+            cat_map[r.get(name_key, "")] = r.get("category", "unknown")
+        for r in after:
+            if r.get(name_key) not in cat_map:
+                cat_map[r.get(name_key, "")] = r.get("category", "unknown")
+
+        def _group_by_cat(items, key=None):
+            grouped = {}
+            for item in items:
+                name = item if isinstance(item, str) else item[0]
+                cat = cat_map.get(name, "unknown")
+                if key and not isinstance(item, str):
+                    # For risers/fallers which are tuples (name, rank_delta, val_delta)
+                    cat = cat_map.get(item[0], "unknown")
+                grouped[cat] = grouped.get(cat, 0) + 1
+            return grouped
+
+        entered_by_cat = _group_by_cat(diff.get("entered", []))
+        exited_by_cat = _group_by_cat(diff.get("exited", []))
+        risers_by_cat = _group_by_cat(diff.get("risers", []))
+        fallers_by_cat = _group_by_cat(diff.get("fallers", []))
+
+        all_cats = set()
+        for g in [entered_by_cat, exited_by_cat, risers_by_cat, fallers_by_cat]:
+            all_cats.update(g.keys())
+
+        result = {}
+        for cat in all_cats:
+            result[cat] = {
+                "entered": entered_by_cat.get(cat, 0),
+                "exited": exited_by_cat.get(cat, 0),
+                "risers": risers_by_cat.get(cat, 0),
+                "fallers": fallers_by_cat.get(cat, 0),
+            }
+        return result
 
     @staticmethod
     def _print_ranked_changes(changes: dict, label: str):

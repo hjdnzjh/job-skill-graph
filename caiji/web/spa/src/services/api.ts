@@ -26,13 +26,43 @@ export interface OverviewData {
 }
 export const getOverview = () => request<OverviewData>('/reports/overview');
 
-// ── Skills ──
-export interface SkillRank { skill: string; category: string; demand: number }
-export const getSkillRanking = (limit = 30) => request<{ skills: SkillRank[] }>(`/skills/ranking?limit=${limit}`);
+// ── Taxonomy ──
+export interface TaxonomyNode {
+  code: string;
+  name: string;
+  count?: number;
+  total_demand?: number;
+  children?: TaxonomyNode[];
+  groups?: TaxonomyNode[];
+  types?: TaxonomyNode[];
+  skills?: { name: string; demand: number }[];
+  categories?: TaxonomyNode[];
+  titles?: { name: string; job_count: number }[];
+}
 
-export interface SkillNode { name: string; category: string; demand: number }
+export const getSkillTree = () => request<{ tree: TaxonomyNode[] }>('/taxonomy/skills');
+export const getJobTree = () => request<{ tree: TaxonomyNode[]; classification_coverage: number; total_titles: number; classified_titles: number }>('/taxonomy/jobs');
+
+// ── Skills ──
+export interface SkillRank { name: string; domain_code: string; domain_name: string; group_code: string; group_name: string; type_code: string; type_name: string; demand: number }
+export const getSkillRanking = (params?: { domain?: string; group?: string; limit?: number }) => {
+  const q = new URLSearchParams();
+  if (params?.domain) q.set('domain', params.domain);
+  if (params?.group) q.set('group', params.group);
+  if (params?.limit) q.set('limit', String(params.limit));
+  const qs = q.toString();
+  return request<{ skills: SkillRank[] }>(`/skills/ranking${qs ? `?${qs}` : ''}`);
+};
+
+export interface SkillNode { name: string; category: string; domain_code?: string; demand: number }
 export interface SkillEdge { source: string; target: string; weight: number }
-export const getSkillNetwork = (limit = 50) => request<{ nodes: SkillNode[]; edges: SkillEdge[] }>(`/skills/network?limit=${limit}`);
+export const getSkillNetwork = (params?: { limit?: number; domain?: string }) => {
+  const q = new URLSearchParams();
+  if (params?.limit) q.set('limit', String(params.limit));
+  if (params?.domain) q.set('domain', params.domain);
+  const qs = q.toString();
+  return request<{ nodes: SkillNode[]; edges: SkillEdge[] }>(`/skills/network${qs ? `?${qs}` : ''}`);
+};
 
 // ── Graph / Node Admin ──
 export interface GraphNode { label: string; name: string; category: string; node_id: number }
@@ -80,6 +110,8 @@ export const evaluateResume = (fileId: string, targetTitle: string) =>
 
 // ── Evolution ──
 export const getEvolutionTimeline = () => request<{ timeline: any[] }>('/evolution/timeline');
+export const getEvolutionCompare = (a: string, b: string) => request<{ comparison: any }>(`/evolution/compare?a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`);
+export const getCategoryTrends = () => request<{ category_trends: { domain_code: string; domain_name: string; demand_before: number; demand_after: number; growth_pct: number; skill_count_before: number; skill_count_after: number }[] }>('/evolution/category-trends');
 
 // ── RAG ──
 export const queryRag = (question: string, topK = 5) =>

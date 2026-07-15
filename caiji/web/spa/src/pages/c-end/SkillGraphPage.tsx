@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/button';
 import { SkillGraph } from '../../components/common/SkillGraph';
 import { Drawer } from '../../components/common/Drawer';
 import { Badge } from '../../components/ui/badge';
-import { getGraphExport, getSkillNetwork } from '../../services/api';
+import { getGraphExport, getSkillNetwork, getSkillTree, TaxonomyNode } from '../../services/api';
 import { ScrollReveal } from '../../components/common/ScrollReveal';
 
 export default function SkillGraphPage() {
@@ -16,19 +16,27 @@ export default function SkillGraphPage() {
   const [graphData, setGraphData] = useState<any>(null);
   const [networkData, setNetworkData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [domains, setDomains] = useState<TaxonomyNode[]>([]);
+  const [selectedDomain, setSelectedDomain] = useState<string>('');
 
   useEffect(() => {
+    // Fetch domains for the filter
+    getSkillTree().then(d => setDomains(d.tree || [])).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
     Promise.all([
       getGraphExport(200).catch(() => ({ nodes: [], edges: [] })),
-      getSkillNetwork(80).catch(() => ({ nodes: [], edges: [] })),
+      getSkillNetwork({ limit: 80, domain: selectedDomain || undefined }).catch(() => ({ nodes: [], edges: [] })),
     ]).then(([graph, network]) => {
-      const nodes = graph.nodes.map((n: any) => ({ id: String(n.node_id), label: n.name, type: n.label === 'Skill' ? 'skill' : 'job', category: n.category }));
+      const nodes = graph.nodes.map((n: any) => ({ id: String(n.node_id), label: n.name, type: n.label === 'Skill' ? 'skill' : 'job', category: n.category, domain_code: n.domain_code }));
       const links = graph.edges.map((e: any) => ({ source: String(graph.nodes.find((n: any) => n.name === e.source_name && n.label === e.source_label)?.node_id || ''), target: String(graph.nodes.find((n: any) => n.name === e.target_name && n.label === e.target_label)?.node_id || ''), }));
       setGraphData({ nodes: nodes.filter((n: any) => n.id), links: links.filter((e: any) => e.source && e.target) });
-      setNetworkData({ nodes: network.nodes.map((n: any) => ({ id: n.name, label: n.name, type: 'skill', category: n.category })), links: network.edges.map((e: any) => ({ source: e.source, target: e.target })) });
+      setNetworkData({ nodes: network.nodes.map((n: any) => ({ id: n.name, label: n.name, type: 'skill', category: n.category, domain_code: n.domain_code })), links: network.edges.map((e: any) => ({ source: e.source, target: e.target })) });
       setLoading(false);
     });
-  }, []);
+  }, [selectedDomain]);
 
   const handleNodeClick = (node: any) => {
     setSelectedNode(node);
@@ -77,6 +85,21 @@ export default function SkillGraphPage() {
               <GitBranch className="h-4 w-4 relative z-10" />
               <span className="relative z-10">技能网络</span>
             </button>
+          </div>
+
+          {/* Domain filter */}
+          <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 group hover:border-indigo-500/50 transition-colors">
+            <Layers className="h-4 w-4 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+            <select
+              value={selectedDomain}
+              onChange={(e) => setSelectedDomain(e.target.value)}
+              className="bg-transparent text-sm text-slate-200 focus:outline-none cursor-pointer max-w-[160px]"
+            >
+              <option value="">全部领域</option>
+              {domains.map((d) => (
+                <option key={d.code} value={d.code}>{d.name}</option>
+              ))}
+            </select>
           </div>
 
           <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 group hover:border-indigo-500/50 transition-colors">

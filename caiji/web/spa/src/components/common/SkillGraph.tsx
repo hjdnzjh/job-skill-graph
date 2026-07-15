@@ -2,6 +2,28 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GraphNode, GraphLink } from '../../lib/mockData';
 
+const DOMAIN_COLORS: Record<string, string> = {
+  'SKD-01': '#6366f1', // indigo
+  'SKD-02': '#06b6d4', // cyan
+  'SKD-03': '#10b981', // emerald
+  'SKD-04': '#f59e0b', // amber
+  'SKD-05': '#ef4444', // red
+  'SKD-06': '#8b5cf6', // purple
+  'SKD-07': '#ec4899', // pink
+};
+
+function getNodeColor(node: GraphNode): { fill: string; glow: string } {
+  if (node.type === 'job') {
+    return { fill: '#4f46e5', glow: '#6366f1' };
+  }
+  // Skill node: use domain_code color if available, else default cyan
+  if (node.domain_code && DOMAIN_COLORS[node.domain_code]) {
+    const color = DOMAIN_COLORS[node.domain_code];
+    return { fill: color, glow: color };
+  }
+  return { fill: '#0891b2', glow: '#06b6d4' };
+}
+
 interface SkillGraphProps {
   data: {
     nodes: GraphNode[];
@@ -167,16 +189,18 @@ export function SkillGraph({ data, onNodeClick, width = '100%', height = 600, ed
         </AnimatePresence>
 
         {/* Nodes */}
-        {nodes.map((node, i) => (
+        {nodes.map((node, i) => {
+          const color = getNodeColor(node);
+          return (
           <motion.g
             key={node.id}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 260, 
-              damping: 20, 
-              delay: i * 0.02 
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+              delay: i * 0.02
             }}
             whileHover={{ scale: 1.2 }}
             className="cursor-pointer"
@@ -187,7 +211,7 @@ export function SkillGraph({ data, onNodeClick, width = '100%', height = 600, ed
               r={node.type === 'job' ? 25 : 18}
               cx={node.x}
               cy={node.y}
-              fill={node.type === 'job' ? '#6366f1' : '#06b6d4'}
+              fill={color.glow}
               animate={{
                 opacity: [0.3, 0.6, 0.3],
                 scale: [1, 1.1, 1]
@@ -200,16 +224,16 @@ export function SkillGraph({ data, onNodeClick, width = '100%', height = 600, ed
               }}
               filter="url(#glow)"
             />
-            
+
             <circle
               r={node.type === 'job' ? 20 : 15}
               cx={node.x}
               cy={node.y}
-              fill={node.type === 'job' ? '#4f46e5' : '#0891b2'}
+              fill={color.fill}
               stroke="#fff"
               strokeWidth={2}
             />
-            
+
             <text
               x={node.x}
               y={node.y + (node.type === 'job' ? 40 : 35)}
@@ -222,7 +246,8 @@ export function SkillGraph({ data, onNodeClick, width = '100%', height = 600, ed
               {node.label}
             </text>
           </motion.g>
-        ))}
+          );
+        })}
       </svg>
       
       {/* Background Star Points */}

@@ -26,6 +26,7 @@ export interface GraphNode {
   label: string;
   type: 'job' | 'skill';
   category?: string;
+  domain_code?: string;
 }
 
 export interface GraphLink {

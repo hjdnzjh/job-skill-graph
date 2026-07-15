@@ -14,7 +14,7 @@ import {
 import { Button } from '../../components/ui/button';
 import { SkillGraph } from '../../components/common/SkillGraph';
 import { Drawer } from '../../components/common/Drawer';
-import { getGraphExport } from '../../services/api';
+import { getGraphExport, getSkillTree, getJobTree, TaxonomyNode } from '../../services/api';
 import { Badge } from '../../components/ui/badge';
 
 export default function GraphManage() {
@@ -23,6 +23,8 @@ export default function GraphManage() {
   const [editMode, setEditMode] = useState<'select' | 'link'>('select');
   const [graphData, setGraphData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [skillDomains, setSkillDomains] = useState<TaxonomyNode[]>([]);
+  const [jobDomains, setJobDomains] = useState<TaxonomyNode[]>([]);
 
   useEffect(() => {
     getGraphExport(200).then(d => {
@@ -31,7 +33,15 @@ export default function GraphManage() {
       setGraphData({ nodes: nodes.filter((n: any) => n.id), links: links.filter((e: any) => e.source && e.target) });
       setLoading(false);
     }).catch(() => setLoading(false));
+
+    getSkillTree().then(d => setSkillDomains(d.tree || [])).catch(() => {});
+    getJobTree().then(d => setJobDomains(d.tree || [])).catch(() => {});
   }, []);
+
+  // Build category options based on selected node type
+  const categoryOptions = selectedNode?.type === 'skill'
+    ? skillDomains
+    : jobDomains;
 
   const handleNodeClick = (node: any) => {
     setSelectedNode(node);
@@ -127,11 +137,17 @@ export default function GraphManage() {
 
             <div className="space-y-2">
               <label className="text-xs font-medium text-slate-500 uppercase">所属领域/分类</label>
-              <select className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                <option>{selectedNode.category || '未分类'}</option>
-                <option>AI</option>
-                <option>大数据</option>
-                <option>物联网</option>
+              <select
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
+                defaultValue={selectedNode.category || ''}
+              >
+                {selectedNode.category && (
+                  <option value={selectedNode.category}>{selectedNode.category || '未分类'}</option>
+                )}
+                <option value="">未分类</option>
+                {categoryOptions.map((d) => (
+                  <option key={d.code} value={d.code}>{d.name}</option>
+                ))}
               </select>
             </div>
 

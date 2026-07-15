@@ -230,6 +230,19 @@ class JobUpdater:
         if len(files) < 2:
             return {}
 
+        # Pre-load skill domain mapping from Neo4j
+        domain_map = {}
+        try:
+            domain_rows = self.neo4j.run_query(
+                "MATCH (s:Skill)-[:BELONGS_TO_TYPE]->(:SkillType)"
+                "-[:BELONGS_TO_GROUP]->(:SkillGroup)"
+                "-[:BELONGS_TO_DOMAIN]->(d:SkillDomain) "
+                "RETURN s.name AS skill, d.code AS domain_code"
+            )
+            domain_map = {r["skill"]: r["domain_code"] for r in domain_rows}
+        except Exception:
+            pass
+
         trends = {}
         try:
             # Load oldest and newest snapshots
@@ -258,6 +271,7 @@ class JobUpdater:
                     "current_demand": new_demand,
                     "change": new_demand - old_demand,
                     "direction": direction,
+                    "domain_code": domain_map.get(skill, ""),
                 }
         except Exception as e:
             logger.warning(f"Could not load snapshots: {e}")

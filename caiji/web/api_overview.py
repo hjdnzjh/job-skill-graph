@@ -14,6 +14,47 @@ def _get_neo4j(settings):
     return Neo4jClient(settings)
 
 
+def _get_taxonomy_counts(neo4j):
+    """Return counts of all taxonomy classification nodes."""
+    try:
+        rows = neo4j.run_query(
+            "MATCH (n) "
+            "WHERE n:SkillDomain OR n:SkillGroup OR n:SkillType "
+            "   OR n:JobDomain OR n:JobCategory "
+            "   OR n:IndustrySector OR n:IndustryDivision OR n:IndustryGroup "
+            "RETURN labels(n)[0] AS label, count(n) AS cnt"
+        )
+        return {r["label"]: r["cnt"] for r in rows}
+    except Exception:
+        return {}
+
+
+def _get_domain_distribution(neo4j):
+    """Return job and skill distributions across domains."""
+    try:
+        jobs = neo4j.run_query(
+            "MATCH (d:JobDomain) "
+            "OPTIONAL MATCH (:JobTitle {domain_code: d.code})<-[:HAS_TITLE]-(j:Job) "
+            "RETURN d.code AS code, d.name AS name, count(j) AS job_count "
+            "ORDER BY d.code"
+        )
+        skills = neo4j.run_query(
+            "MATCH (d:SkillDomain) "
+            "OPTIONAL MATCH (s:Skill {domain_code: d.code}) "
+            "OPTIONAL MATCH (j:Job)-[:REQUIRES]->(s) "
+            "RETURN d.code AS code, d.name AS name, "
+            "       count(DISTINCT s) AS skill_count, "
+            "       count(DISTINCT j) AS demand "
+            "ORDER BY d.code"
+        )
+        return {
+            "jobs": jobs,
+            "skills": skills,
+        }
+    except Exception:
+        return {"jobs": [], "skills": []}
+
+
 @router.get("/overview")
 async def get_overview():
     """Return graph-wide KPI statistics."""
@@ -46,6 +87,8 @@ async def get_overview():
             "total_industries": nodes_by_label.get("Industry", 0),
             "nodes_by_label": nodes_by_label,
             "relationships_by_type": rels_by_type,
+            "taxonomy": _get_taxonomy_counts(neo4j),
+            "domain_distribution": _get_domain_distribution(neo4j),
         }
     except Exception as exc:
         logger.error(f"Overview API error: {exc}")

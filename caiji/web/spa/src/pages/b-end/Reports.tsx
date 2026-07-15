@@ -7,26 +7,51 @@ import {
   TrendingDown,
   Info,
   Maximize2,
-  Loader2
+  Loader2,
+  GitCompare,
+  ArrowUp,
+  ArrowDown,
+  ArrowRight,
+  Plus,
+  Minus
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, PieChart, Pie, Cell, CartesianGrid, Legend } from 'recharts';
-import { getOverview, getEvolutionTimeline, OverviewData } from '../../services/api';
+import { getOverview, getEvolutionTimeline, getEvolutionCompare, getCategoryTrends, OverviewData } from '../../services/api';
 
 export default function Reports() {
   const [timeRange, setTimeRange] = useState('3m');
   const [data, setData] = useState<OverviewData | null>(null);
   const [timeline, setTimeline] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [snapshotA, setSnapshotA] = useState('');
+  const [snapshotB, setSnapshotB] = useState('');
+  const [comparison, setComparison] = useState<any>(null);
+  const [comparing, setComparing] = useState(false);
+  const [categoryTrends, setCategoryTrends] = useState<any[]>([]);
 
   useEffect(() => {
     Promise.all([
       getOverview(),
       getEvolutionTimeline().catch(() => ({ timeline: [] })),
-    ]).then(([d, t]) => { setData(d); setTimeline(t.timeline || []); setLoading(false); }).catch(() => setLoading(false));
+      getCategoryTrends().catch(() => ({ category_trends: [] })),
+    ]).then(([d, t, ct]) => { setData(d); setTimeline(t.timeline || []); setCategoryTrends(ct.category_trends || []); setLoading(false); }).catch(() => setLoading(false));
   }, []);
+
+  const handleCompare = async () => {
+    if (!snapshotA || !snapshotB) return;
+    setComparing(true);
+    try {
+      const result = await getEvolutionCompare(snapshotA, snapshotB);
+      setComparison(result.comparison || result);
+    } catch (e) {
+      console.error('Compare failed:', e);
+    } finally {
+      setComparing(false);
+    }
+  };
 
   const COLORS = ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
 
@@ -63,6 +88,182 @@ export default function Reports() {
           ))}
         </div>
       </div>
+
+      {/* Snapshot Comparison */}
+      {timeline.length > 0 && (
+        <Card className="border-slate-800 bg-slate-900/40">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
+              <GitCompare className="h-5 w-5 text-indigo-400" />
+              快照对比
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-wrap items-end gap-4">
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">快照 A (基准)</label>
+                <select
+                  value={snapshotA}
+                  onChange={(e) => setSnapshotA(e.target.value)}
+                  className="w-48 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="">选择快照...</option>
+                  {timeline.map((t: any, i: number) => (
+                    <option key={i} value={t.timestamp || t.id || String(i)}>
+                      {t.timestamp || t.label || `快照 ${i + 1}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <ArrowRight className="h-5 w-5 text-slate-500 mb-2" />
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500">快照 B (对比)</label>
+                <select
+                  value={snapshotB}
+                  onChange={(e) => setSnapshotB(e.target.value)}
+                  className="w-48 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="">选择快照...</option>
+                  {timeline.map((t: any, i: number) => (
+                    <option key={i} value={t.timestamp || t.id || String(i)}>
+                      {t.timestamp || t.label || `快照 ${i + 1}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <Button
+                onClick={handleCompare}
+                disabled={!snapshotA || !snapshotB || comparing}
+                className="bg-indigo-600 hover:bg-indigo-500"
+              >
+                {comparing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <GitCompare className="h-4 w-4 mr-2" />}
+                对比
+              </Button>
+            </div>
+
+            {/* Comparison Results */}
+            {comparison && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-slate-800">
+                {comparison.entered && (
+                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm mb-2">
+                      <Plus className="h-4 w-4" /> 新进入 ({comparison.entered.length || comparison.entered})
+                    </div>
+                    <div className="text-2xl font-bold text-emerald-300">
+                      {Array.isArray(comparison.entered) ? comparison.entered.length : comparison.entered}
+                    </div>
+                  </div>
+                )}
+                {comparison.exited && (
+                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                    <div className="flex items-center gap-2 text-red-400 font-bold text-sm mb-2">
+                      <Minus className="h-4 w-4" /> 已退出 ({Array.isArray(comparison.exited) ? comparison.exited.length : comparison.exited})
+                    </div>
+                    <div className="text-2xl font-bold text-red-300">
+                      {Array.isArray(comparison.exited) ? comparison.exited.length : comparison.exited}
+                    </div>
+                  </div>
+                )}
+                {comparison.risers && (
+                  <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                    <div className="flex items-center gap-2 text-amber-400 font-bold text-sm mb-2">
+                      <ArrowUp className="h-4 w-4" /> 需求上升 ({Array.isArray(comparison.risers) ? comparison.risers.length : comparison.risers})
+                    </div>
+                    <div className="text-2xl font-bold text-amber-300">
+                      {Array.isArray(comparison.risers) ? comparison.risers.length : comparison.risers}
+                    </div>
+                  </div>
+                )}
+                {comparison.fallers && (
+                  <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                    <div className="flex items-center gap-2 text-purple-400 font-bold text-sm mb-2">
+                      <ArrowDown className="h-4 w-4" /> 需求下降 ({Array.isArray(comparison.fallers) ? comparison.fallers.length : comparison.fallers})
+                    </div>
+                    <div className="text-2xl font-bold text-purple-300">
+                      {Array.isArray(comparison.fallers) ? comparison.fallers.length : comparison.fallers}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Detailed diff table */}
+            {comparison && (comparison.entered?.length > 0 || comparison.exited?.length > 0) && (
+              <div className="overflow-x-auto pt-2">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-slate-800 text-slate-500 text-xs uppercase tracking-wider">
+                      <th className="px-4 py-2 font-semibold">技能名称</th>
+                      <th className="px-4 py-2 font-semibold">变化类型</th>
+                      <th className="px-4 py-2 font-semibold">需求变化</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800">
+                    {(comparison.entered || []).slice(0, 10).map((item: any, i: number) => (
+                      <tr key={`entered-${i}`} className="hover:bg-slate-800/30">
+                        <td className="px-4 py-2 text-sm text-white">{typeof item === 'string' ? item : item.name || item.skill}</td>
+                        <td className="px-4 py-2"><Badge variant="success">新进入</Badge></td>
+                        <td className="px-4 py-2 text-sm text-emerald-400">{item.demand_change || item.growth || '新增'}</td>
+                      </tr>
+                    ))}
+                    {(comparison.exited || []).slice(0, 10).map((item: any, i: number) => (
+                      <tr key={`exited-${i}`} className="hover:bg-slate-800/30">
+                        <td className="px-4 py-2 text-sm text-white">{typeof item === 'string' ? item : item.name || item.skill}</td>
+                        <td className="px-4 py-2"><Badge variant="destructive">已退出</Badge></td>
+                        <td className="px-4 py-2 text-sm text-red-400">已移除</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Category Trends Section */}
+      {categoryTrends.length > 0 && (
+        <Card className="border-slate-800 bg-slate-900/40">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-emerald-400" />
+              各领域需求增长趋势
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-slate-800 text-slate-500 text-xs uppercase tracking-wider">
+                    <th className="px-4 py-3 font-semibold">领域</th>
+                    <th className="px-4 py-3 font-semibold">需求 (前)</th>
+                    <th className="px-4 py-3 font-semibold">需求 (后)</th>
+                    <th className="px-4 py-3 font-semibold">增长率</th>
+                    <th className="px-4 py-3 font-semibold">技能数 (前)</th>
+                    <th className="px-4 py-3 font-semibold">技能数 (后)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                  {categoryTrends.map((ct: any, i: number) => (
+                    <tr key={ct.domain_code || i} className="hover:bg-slate-800/30 transition-colors">
+                      <td className="px-4 py-3 text-sm text-white font-medium">{ct.domain_name}</td>
+                      <td className="px-4 py-3 text-sm text-slate-300">{ct.demand_before}</td>
+                      <td className="px-4 py-3 text-sm text-slate-300">{ct.demand_after}</td>
+                      <td className="px-4 py-3">
+                        <span className={`text-sm font-bold ${ct.growth_pct >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {ct.growth_pct >= 0 ? '+' : ''}{ct.growth_pct}%
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-slate-300">{ct.skill_count_before}</td>
+                      <td className="px-4 py-3 text-sm text-slate-300">{ct.skill_count_after}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Monthly Job Growth */}

@@ -14,7 +14,7 @@ export default function Profile() {
 
   useEffect(() => {
     getPendingJobs({ limit: 10 }).then(d => setJobs(d.jobs)).catch(() => {});
-    getSkillRanking(5).then(d => setSkills(d.skills)).catch(() => {});
+    getSkillRanking({ limit: 5 }).then(d => setSkills(d.skills)).catch(() => {});
   }, []);
 
   const stats = [

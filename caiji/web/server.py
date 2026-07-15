@@ -39,8 +39,10 @@ from web.api_resume import router as resume_router
 from web.api_skill_manage import router as skill_manage_router
 from web.api_graph_admin import router as graph_admin_router
 from web.api_job_review import router as job_review_router
+from web.api_taxonomy import router as taxonomy_router
 from web.api_reports import router as reports_router
 
+app.include_router(taxonomy_router)
 app.include_router(overview_router)
 app.include_router(skills_router)
 app.include_router(distribution_router)

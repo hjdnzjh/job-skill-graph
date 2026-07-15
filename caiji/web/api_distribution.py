@@ -69,10 +69,95 @@ async def get_city_skill_profiles(top: int = Query(default=5, ge=1, le=20)):
 
 
 @router.get("/industries/distribution")
-async def get_industry_distribution():
-    """Return job count per industry."""
+async def get_industry_distribution(
+    format: str = Query(default="flat", description="'flat' for simple list, 'tree' for hierarchical taxonomy tree"),
+):
+    """Return job count per industry.
+
+    - format=flat: flat list of industries with job counts
+    - format=tree: hierarchical tree (sector → division → group → industry)
+    """
     try:
         neo4j = _get_neo4j(get_settings())
+
+        if format == "tree":
+            rows = neo4j.run_query(
+                "MATCH (s:IndustrySector) "
+                "OPTIONAL MATCH (s)<-[:BELONGS_TO_SECTOR]-(d:IndustryDivision) "
+                "OPTIONAL MATCH (d)<-[:BELONGS_TO_DIVISION]-(g:IndustryGroup) "
+                "OPTIONAL MATCH (g)<-[:BELONGS_TO_GROUP]-(i:Industry) "
+                "OPTIONAL MATCH (i)<-[:BELONGS_TO]-(j:Job) "
+                "RETURN s.code AS sector_code, s.name AS sector_name, "
+                "       d.code AS division_code, d.name AS division_name, "
+                "       g.code AS group_code, g.name AS group_name, "
+                "       i.code AS industry_code, i.name AS industry_name, "
+                "       count(DISTINCT j) AS job_count "
+                "ORDER BY sector_code, division_code, group_code, industry_name"
+            )
+
+            sectors_map = {}
+            divisions_map = {}
+            groups_map = {}
+
+            for row in rows:
+                s_code = row["sector_code"]
+                s_name = row["sector_name"]
+                d_code = row["division_code"]
+                d_name = row["division_name"]
+                g_code = row["group_code"]
+                g_name = row["group_name"]
+                i_name = row["industry_name"]
+                i_code = row["industry_code"]
+                j_count = row["job_count"] or 0
+
+                if s_code not in sectors_map:
+                    sectors_map[s_code] = {"code": s_code, "name": s_name, "divisions": {}}
+
+                if d_code:
+                    d_key = (s_code, d_code)
+                    if d_key not in divisions_map:
+                        divisions_map[d_key] = {"code": d_code, "name": d_name, "groups": {}}
+                        sectors_map[s_code]["divisions"][d_code] = divisions_map[d_key]
+
+                    if g_code:
+                        g_key = (s_code, d_code, g_code)
+                        if g_key not in groups_map:
+                            groups_map[g_key] = {"code": g_code, "name": g_name, "industries": []}
+                            divisions_map[d_key]["groups"][g_code] = groups_map[g_key]
+
+                        if i_name:
+                            groups_map[g_key]["industries"].append({
+                                "code": i_code,
+                                "name": i_name,
+                                "job_count": j_count,
+                            })
+
+            def _compute_ind_stats(node):
+                if "industries" in node:
+                    node["count"] = len(node["industries"])
+                    node["total_demand"] = sum(i.get("job_count", 0) for i in node["industries"])
+                elif "groups" in node:
+                    for g in node["groups"].values():
+                        _compute_ind_stats(g)
+                    node["count"] = sum(g.get("count", 0) for g in node["groups"].values())
+                    node["total_demand"] = sum(g.get("total_demand", 0) for g in node["groups"].values())
+                elif "divisions" in node:
+                    for d in node["divisions"].values():
+                        _compute_ind_stats(d)
+                    node["count"] = sum(d.get("count", 0) for d in node["divisions"].values())
+                    node["total_demand"] = sum(d.get("total_demand", 0) for d in node["divisions"].values())
+
+            tree = []
+            for s in sectors_map.values():
+                _compute_ind_stats(s)
+                s["divisions"] = list(s["divisions"].values())
+                for d in s["divisions"]:
+                    d["groups"] = list(d["groups"].values())
+                tree.append(s)
+
+            return {"tree": tree}
+
+        # format=flat (default) — legacy behavior
         rows = neo4j.run_query(
             "MATCH (j:Job)-[:BELONGS_TO]->(i:Industry) "
             "RETURN i.name AS industry, count(j) AS jobs "

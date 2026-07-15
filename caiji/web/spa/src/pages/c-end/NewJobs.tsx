@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
-import { getPendingJobs } from '../../services/api';
+import { getPendingJobs, getJobTree, TaxonomyNode } from '../../services/api';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '../../components/common/ScrollReveal';
 
 export default function NewJobs() {
@@ -16,8 +16,12 @@ export default function NewJobs() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [domains, setDomains] = useState<TaxonomyNode[]>([]);
 
   useEffect(() => {
+    // Fetch job taxonomy for domain tabs
+    getJobTree().then(d => setDomains(d.tree || [])).catch(() => {});
+    // Fetch pending jobs
     getPendingJobs({ limit: 100 }).then(d => {
       const mapped = d.jobs.map((j: any, i: number) => ({
         ...j,
@@ -26,6 +30,8 @@ export default function NewJobs() {
         name: j.title,
         duties: j.description || j.responsibilities || '暂无描述',
         category: j.category || '新兴岗位',
+        domain_code: j.domain_code || '',
+        domain_name: j.domain_name || '',
         requiredSkills: (j.required_skills || []).map((s: any) => typeof s === 'string' ? s : s.name || s.skill || ''),
         heat: Math.round((j.confidence || 0.5) * 100),
         date: j.date || '',
@@ -34,11 +40,12 @@ export default function NewJobs() {
     }).catch(() => setLoading(false));
   }, []);
 
-  const categories = ['全部', 'AI', '大数据', '物联网', '智能系统', '数字孪生'];
-
   const filteredJobs = jobs.filter((job: any) => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === '全部' || job.category === selectedCategory;
+    const matchesCategory = selectedCategory === '全部' ||
+      job.category === selectedCategory ||
+      job.domain_name === selectedCategory ||
+      job.domain_code === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -71,21 +78,35 @@ export default function NewJobs() {
             />
           </div>
           <div className="flex bg-slate-900 p-1 rounded-lg border border-slate-800">
-            {categories.map(cat => (
+            <button
+              onClick={() => setSelectedCategory('全部')}
+              className={`relative px-4 py-1.5 rounded-md text-sm font-medium transition-all overflow-hidden ${
+                selectedCategory === '全部' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              {selectedCategory === '全部' && (
+                <motion.div
+                  layoutId="cat-active"
+                  className="absolute inset-0 bg-indigo-600 shadow-lg"
+                />
+              )}
+              <span className="relative z-10">全部</span>
+            </button>
+            {domains.map(d => (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                key={d.code}
+                onClick={() => setSelectedCategory(d.name)}
                 className={`relative px-4 py-1.5 rounded-md text-sm font-medium transition-all overflow-hidden ${
-                  selectedCategory === cat ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+                  selectedCategory === d.name ? 'text-white' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {selectedCategory === cat && (
-                  <motion.div 
+                {selectedCategory === d.name && (
+                  <motion.div
                     layoutId="cat-active"
                     className="absolute inset-0 bg-indigo-600 shadow-lg"
                   />
                 )}
-                <span className="relative z-10">{cat}</span>
+                <span className="relative z-10">{d.name}</span>
               </button>
             ))}
           </div>

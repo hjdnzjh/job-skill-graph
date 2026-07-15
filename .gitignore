@@ -29,10 +29,15 @@ neo4j-community-5.26.0.zip
 neo4j-community.zip
 
 # Data (generated/runtime)
+data/snapshots/
+caiji/data/archive/
 caiji/data/chroma_db/
 caiji/data/uploads/
 caiji/data/snapshots/snapshot_index.json
+caiji/data/processed/*_final.jsonl
 caiji/test_rag_output.json
+caiji/data/rag_index.pkl
+*_recruitment_raw.jsonl
 
 # Build artifacts
 caiji/web/static/dist/
@@ -52,9 +57,18 @@ projects/
 start_all.bat
 start_all.ps1
 
+# Verification artifacts
+_verify_*.txt
+
+# Runtime snapshots (generated)
+caiji/data/snapshots/2*.json
+
 # Archives
 *.zip
 *.rar
+
+# Temporary packaging
+_package_temp/
 
 # Windows
 %USERPROFILE%/
