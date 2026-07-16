@@ -23,18 +23,19 @@ from web._settings import get_settings
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/jobs", tags=["job-review"])
 
-ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "")
-
 
 def _verify_admin(x_admin_key: str = Header(default="", alias="X-Admin-Key")):
-    """Dependency: verify admin API key for write operations."""
-    if not ADMIN_API_KEY:
-        return True  # No key configured = allow (dev mode)
-    if x_admin_key != ADMIN_API_KEY:
+    """依赖注入：校验管理端 API 密钥，保护写操作。密钥统一从 Settings 读取。"""
+    from web._settings import get_settings
+    admin_key = get_settings().admin_api_key
+    if not admin_key:
+        logger.warning("ADMIN_API_KEY 未设置——管理端点处于无认证状态")
+        return True
+    if x_admin_key != admin_key:
         from fastapi import HTTPException
         raise HTTPException(
             status_code=403,
-            detail="需要管理员权限，请设置 X-Admin-Key 请求头",
+            detail="需要管理员密钥（X-Admin-Key）",
         )
     return True
 

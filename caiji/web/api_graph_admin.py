@@ -4,9 +4,10 @@ Provides CRUD operations for Neo4j nodes and edges, plus export.
 """
 
 import logging
+import os
 from typing import Optional
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Header, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -14,6 +15,22 @@ from web._settings import get_settings
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/graph", tags=["graph-admin"])
+
+
+def _verify_admin(x_admin_key: str = Header(default="", alias="X-Admin-Key")):
+    """依赖注入：校验管理端 API 密钥，保护写操作。密钥统一从 Settings 读取。"""
+    from web._settings import get_settings
+    admin_key = get_settings().admin_api_key
+    if not admin_key:
+        logger.warning("ADMIN_API_KEY 未设置——管理端点处于无认证状态")
+        return True
+    if x_admin_key != admin_key:
+        from fastapi import HTTPException
+        raise HTTPException(
+            status_code=403,
+            detail="需要管理员密钥（X-Admin-Key）",
+        )
+    return True
 
 
 class NodeCreate(BaseModel):
@@ -81,7 +98,7 @@ async def list_nodes(
 
 
 @router.post("/nodes")
-async def create_node(body: NodeCreate):
+async def create_node(body: NodeCreate, _auth=Depends(_verify_admin)):
     """Create a new node in the graph."""
     try:
         neo4j = _get_neo4j()
@@ -109,7 +126,7 @@ async def create_node(body: NodeCreate):
 
 
 @router.put("/nodes/{node_id}")
-async def update_node(node_id: int, body: NodeUpdate):
+async def update_node(node_id: int, body: NodeUpdate, _auth=Depends(_verify_admin)):
     """Update properties of an existing node."""
     try:
         neo4j = _get_neo4j()
@@ -136,7 +153,7 @@ async def update_node(node_id: int, body: NodeUpdate):
 
 
 @router.delete("/nodes/{node_id}")
-async def delete_node(node_id: int):
+async def delete_node(node_id: int, _auth=Depends(_verify_admin)):
     """Delete a node and its relationships. Returns count of affected edges."""
     try:
         neo4j = _get_neo4j()
@@ -194,7 +211,7 @@ async def list_edges(
 
 
 @router.post("/edges")
-async def create_edge(body: EdgeCreate):
+async def create_edge(body: EdgeCreate, _auth=Depends(_verify_admin)):
     """Create a relationship between two nodes."""
     try:
         neo4j = _get_neo4j()
@@ -240,6 +257,7 @@ async def delete_edge(
     target_label: str = Query(..., description="Target node label"),
     target_name: str = Query(..., description="Target node name"),
     rel_type: str = Query(..., description="Relationship type"),
+    _auth=Depends(_verify_admin),
 ):
     """Delete a relationship between two nodes.
 

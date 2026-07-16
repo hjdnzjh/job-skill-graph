@@ -10,7 +10,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
 from web._settings import get_settings
@@ -20,14 +20,18 @@ router = APIRouter(prefix="/api/skills", tags=["skill-manage"])
 
 
 @router.get("/changes")
-async def list_changes():
-    """Return aggregated skill change records across all jobs."""
+async def list_changes(
+    limit: int = Query(default=50, ge=1, le=500, description="Max records returned"),
+    offset: int = Query(default=0, ge=0, description="Record offset for pagination"),
+):
+    """Return paginated skill change records across all jobs."""
     try:
         from kg.job_updater import JobUpdater
         updater = JobUpdater(get_settings())
-        records = updater.list_all_changes()
+        records = updater.list_all_changes(limit=limit, offset=offset)
+        total = updater.count_all_changes()
         updater.close()
-        return {"changes": records, "total": len(records)}
+        return {"changes": records, "total": total, "offset": offset, "limit": limit}
     except Exception as exc:
         logger.error(f"Skill changes list error: {exc}")
         return JSONResponse({"error": str(exc)}, status_code=500)

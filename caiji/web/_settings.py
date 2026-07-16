@@ -8,4 +8,7 @@ def get_settings():
     if _settings is None:
         from config.settings import Settings
         _settings = Settings()
+        # Start the log-buffer flush thread on first access
+        from web.middleware.logging import init_log_buffer
+        init_log_buffer(_settings)
     return _settings

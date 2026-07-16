@@ -3,9 +3,10 @@
 import logging
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from web._settings import get_settings  # noqa: E402 — must precede api_* imports
+# Rate limiting middleware — after CORS, before logging
+from web.middleware.rate_limit import RateLimitMiddleware  # noqa: E402
+from web._settings import get_settings  # noqa: E402 — imported above but we need it here too
+
+_settings = get_settings()
+app.add_middleware(
+    RateLimitMiddleware,
+    default_limit=_settings.rate_limit_global,
+)
+# Register per-endpoint admin limit
+RateLimitMiddleware.set_endpoint_limit("/api/admin", _settings.rate_limit_admin)
+# Make rate-limit toggle available at runtime
+app.state.rate_limit_enabled = _settings.rate_limit_enabled
+
+# Register request-logging middleware (after CORS, before routers)
+from web.middleware.logging import request_logging_middleware  # noqa: E402
+app.middleware("http")(request_logging_middleware)
 
 
 # Import and register sub-routers
@@ -41,8 +58,10 @@ from web.api_graph_admin import router as graph_admin_router
 from web.api_job_review import router as job_review_router
 from web.api_taxonomy import router as taxonomy_router
 from web.api_reports import router as reports_router
+from web.api_admin import router as admin_router
+from web.api_collector import router as collector_router
 
-app.include_router(taxonomy_router)
+app.include_router(collector_router)
 app.include_router(overview_router)
 app.include_router(skills_router)
 app.include_router(distribution_router)
@@ -55,21 +74,24 @@ app.include_router(resume_router)
 app.include_router(skill_manage_router)
 app.include_router(graph_admin_router)
 app.include_router(job_review_router)
+app.include_router(taxonomy_router)
 app.include_router(reports_router)
+app.include_router(admin_router)
 
-# Serve SPA at / (dashboard.html fallback if SPA not built)
-from fastapi.responses import FileResponse
+# ── Global exception handler (after routers, before static) ──────────
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    request_id = getattr(request.state, "request_id", "unknown")
+    logger.exception(
+        f"Unhandled error [request_id={request_id}] {request.method} {request.url.path}"
+    )
+    return JSONResponse(
+        status_code=500,
+        content={"error": "internal_error", "request_id": request_id},
+    )
 
-
-@app.get("/favicon.ico")
-async def favicon():
-    fav = _STATIC_DIR / "favicon.ico"
-    if fav.exists():
-        return FileResponse(fav)
-    return FileResponse(_STATIC_DIR / "icons.svg")
 
 _STATIC_DIR = Path(__file__).parent / "static"
-_STATIC_DIR.mkdir(parents=True, exist_ok=True)
 _DIST_DIR = _STATIC_DIR / "dist"
 
 
@@ -80,5 +102,10 @@ async def root():
     return FileResponse(_STATIC_DIR / "dashboard.html")
 
 
-# Mount static for any other files (font, images, SPA assets, etc.)
+@app.get("/admin")
+async def admin_dashboard():
+    template_dir = Path(__file__).parent / "templates"
+    return FileResponse(template_dir / "admin.html")
+
+
 app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>管理面板 — 岗位-能力知识图谱平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+  <!-- ═══════════════ Header ═══════════════ -->
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <h1 class="text-xl font-bold text-gray-800">管理控制台</h1>
+      <div class="flex items-center gap-4 text-sm">
+        <span id="status-mysql" class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-gray-300 inline-block"></span>
+          MySQL
+        </span>
+        <span id="status-neo4j" class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-gray-300 inline-block"></span>
+          Neo4j
+        </span>
+        <span id="status-uptime" class="text-gray-500 ml-2"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- ═══════════════ Stats Cards ═══════════════ -->
+    <section>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="stats-cards">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ═══════════════ Collection Control ═══════════════ -->
+    <section class="bg-white rounded-lg shadow p-5">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">采集控制</h2>
+      <div class="flex flex-wrap items-end gap-3">
+        <div class="flex-1 min-w-[140px]">
+          <label class="block text-xs text-gray-500 mb-1">平台</label>
+          <select id="trigger-platform"
+                  class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <option value="tencent">腾讯招聘</option>
+            <option value="liepin">猎聘网</option>
+            <option value="boss_zhipin">Boss直聘</option>
+            <option value="zhilian">智联招聘</option>
+            <option value="bytedance">字节跳动</option>
+            <option value="alibaba">阿里巴巴</option>
+            <option value="huawei">华为</option>
+          </select>
+        </div>
+        <div class="flex-1 min-w-[160px]">
+          <label class="block text-xs text-gray-500 mb-1">关键词</label>
+          <input id="trigger-keyword" type="text" value="Java"
+                 class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                 placeholder="例如: Python开发" />
+        </div>
+        <div class="flex-1 min-w-[120px]">
+          <label class="block text-xs text-gray-500 mb-1">城市</label>
+          <input id="trigger-city" type="text" value="深圳"
+                 class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                 placeholder="例如: 北京" />
+        </div>
+        <button id="btn-trigger"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded text-sm transition disabled:opacity-50">
+          触发采集
+        </button>
+      </div>
+      <p id="trigger-msg" class="text-sm mt-2"></p>
+    </section>
+
+    <!-- ═══════════════ Recent Collection Runs ═══════════════ -->
+    <section class="bg-white rounded-lg shadow p-5">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">最近采集运行</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left border-collapse">
+          <thead class="bg-gray-50 text-gray-600 border-b">
+            <tr>
+              <th class="px-3 py-2">ID</th>
+              <th class="px-3 py-2">平台</th>
+              <th class="px-3 py-2">关键词</th>
+              <th class="px-3 py-2">城市</th>
+              <th class="px-3 py-2">状态</th>
+              <th class="px-3 py-2">记录数</th>
+              <th class="px-3 py-2">页数</th>
+              <th class="px-3 py-2">耗时</th>
+              <th class="px-3 py-2">开始时间</th>
+            </tr>
+          </thead>
+          <tbody id="runs-tbody">
+            <!-- filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══════════════ Alerts ═══════════════ -->
+    <section class="bg-white rounded-lg shadow p-5">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">最近告警</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left border-collapse">
+          <thead class="bg-gray-50 text-gray-600 border-b">
+            <tr>
+              <th class="px-3 py-2">时间</th>
+              <th class="px-3 py-2">级别</th>
+              <th class="px-3 py-2">来源</th>
+              <th class="px-3 py-2">消息</th>
+              <th class="px-3 py-2">已确认</th>
+            </tr>
+          </thead>
+          <tbody id="alerts-tbody">
+            <!-- filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══════════════ Cleanup ═══════════════ -->
+    <section class="bg-white rounded-lg shadow p-5">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">数据清理</h2>
+      <div class="flex items-center gap-4">
+        <button id="btn-cleanup"
+                class="bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-2 rounded text-sm transition disabled:opacity-50">
+          一键清理日志 + 快照
+        </button>
+        <span id="cleanup-msg" class="text-sm text-gray-500"></span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════ Scripts ═══════════════ -->
+  <script>
+  /* ── Helpers ──────────────────────────────────────────────────── */
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => document.querySelectorAll(sel);
+
+  async function api(url, opts = {}) {
+    const res = await fetch(url, opts);
+    return res.json();
+  }
+
+  function statusDot(connected) {
+    const color = connected ? 'bg-green-500' : 'bg-red-500';
+    return `<span class="w-2.5 h-2.5 rounded-full ${color} inline-block"></span>`;
+  }
+
+  function runStatusBadge(status) {
+    const map = {
+      success: 'bg-green-100 text-green-700',
+      failed:  'bg-red-100 text-red-700',
+      running: 'bg-yellow-100 text-yellow-700',
+    };
+    const cls = map[status] || 'bg-gray-100 text-gray-600';
+    return `<span class="px-2 py-0.5 rounded text-xs font-medium ${cls}">${status}</span>`;
+  }
+
+  function formatDuration(sec) {
+    if (!sec || sec === 0) return '-';
+    if (sec < 60) return `${sec.toFixed(1)}s`;
+    return `${Math.floor(sec / 60)}m ${Math.floor(sec % 60)}s`;
+  }
+
+  /* ── Health polling ──────────────────────────────────────────── */
+  async function refreshHealth() {
+    try {
+      const h = await api('/api/admin/health');
+      const upEl = $('#status-uptime');
+      if (h.uptime_seconds != null) {
+        const m = Math.floor(h.uptime_seconds / 60);
+        upEl.textContent = `运行: ${m} 分钟`;
+      }
+
+      const mysqlEl = $('#status-mysql');
+      const mysqlOk = h.mysql && h.mysql.connected;
+      mysqlEl.innerHTML = statusDot(mysqlOk) + ' MySQL';
+
+      const neoEl = $('#status-neo4j');
+      const neoOk = h.neo4j && h.neo4j.connected;
+      neoEl.innerHTML = statusDot(neoOk) + ' Neo4j';
+    } catch (e) {
+      console.error('Health check failed:', e);
+    }
+  }
+
+  /* ── Stats ───────────────────────────────────────────────────── */
+  async function refreshStats() {
+    try {
+      const s = await api('/api/admin/stats');
+      const container = $('#stats-cards');
+
+      const cards = [
+        { label: '今日请求', value: (s.total_requests || 0).toLocaleString(), color: 'text-blue-600' },
+        { label: '错误率',    value: ((s.error_rate || 0) * 100).toFixed(2) + '%', color: 'text-red-600' },
+        { label: 'P99 延迟',  value: (s.p99_ms || 0) + ' ms', color: 'text-purple-600' },
+        { label: 'P50 延迟',  value: (s.p50_ms || 0) + ' ms', color: 'text-gray-600' },
+      ];
+
+      container.innerHTML = cards.map(c => `
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="text-xs text-gray-500 mb-1">${c.label}</div>
+          <div class="text-2xl font-bold ${c.color}">${c.value}</div>
+        </div>
+      `).join('');
+    } catch (e) {
+      console.error('Stats refresh failed:', e);
+    }
+  }
+
+  /* ── Collection runs table ───────────────────────────────────── */
+  async function refreshRuns() {
+    try {
+      const data = await api('/api/collector/logs?limit=10&offset=0');
+      const logs = data.logs || [];
+      const tbody = $('#runs-tbody');
+
+      if (logs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="px-3 py-4 text-center text-gray-400">暂无采集记录</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = logs.map(r => `
+        <tr class="border-b hover:bg-gray-50">
+          <td class="px-3 py-2 text-gray-500">#${r.id}</td>
+          <td class="px-3 py-2 font-medium">${r.platform}</td>
+          <td class="px-3 py-2">${r.keyword}</td>
+          <td class="px-3 py-2 text-gray-500">${r.city || '-'}</td>
+          <td class="px-3 py-2">${runStatusBadge(r.status)}</td>
+          <td class="px-3 py-2">${r.records_collected}</td>
+          <td class="px-3 py-2">${r.pages_crawled}</td>
+          <td class="px-3 py-2 text-gray-500">${formatDuration(r.duration_seconds)}</td>
+          <td class="px-3 py-2 text-gray-500 text-xs">${(r.started_at || '').replace('T',' ').substring(0,19)}</td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      console.error('Runs refresh failed:', e);
+    }
+  }
+
+  /* ── Alerts ──────────────────────────────────────────────────── */
+  async function refreshAlerts() {
+    try {
+      const data = await api('/api/admin/alerts?page=1&page_size=20');
+      const items = data.items || [];
+      const tbody = $('#alerts-tbody');
+
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-3 py-4 text-center text-gray-400">暂无告警</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = items.map(a => {
+        const sevMap = { critical: 'bg-red-200 text-red-800', error: 'bg-red-100 text-red-700',
+                         warning: 'bg-yellow-100 text-yellow-700', info: 'bg-blue-100 text-blue-700' };
+        const sevCls = sevMap[a.severity] || 'bg-gray-100 text-gray-600';
+        const ackIcon = a.acknowledged ? '&#10003;' : '<span class="text-red-500 font-bold">&#10007;</span>';
+        const rowBg = a.acknowledged ? '' : 'bg-red-50';
+        return `
+          <tr class="border-b hover:bg-gray-50 ${rowBg}">
+            <td class="px-3 py-2 text-gray-500 text-xs">${(a.created_at || '').replace('T',' ').substring(0,19)}</td>
+            <td class="px-3 py-2"><span class="px-2 py-0.5 rounded text-xs font-medium ${sevCls}">${a.severity}</span></td>
+            <td class="px-3 py-2">${a.source}</td>
+            <td class="px-3 py-2 max-w-xs truncate">${a.message}</td>
+            <td class="px-3 py-2 text-center">${ackIcon}</td>
+          </tr>
+        `;
+      }).join('');
+    } catch (e) {
+      console.error('Alerts refresh failed:', e);
+    }
+  }
+
+  /* ── Trigger collection ──────────────────────────────────────── */
+  async function triggerCollection() {
+    const btn = $('#btn-trigger');
+    const msg = $('#trigger-msg');
+    btn.disabled = true;
+    btn.textContent = '提交中...';
+    msg.textContent = '';
+
+    const body = {
+      platform: $('#trigger-platform').value,
+      keyword: $('#trigger-keyword').value.trim(),
+      city: $('#trigger-city').value.trim(),
+      max_pages: 3,
+    };
+
+    try {
+      const res = await fetch('/api/collector/trigger', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        msg.innerHTML = `<span class="text-green-600">采集已启动，Run ID: ${data.run_id}</span>`;
+        setTimeout(refreshRuns, 2000);
+      } else {
+        msg.innerHTML = `<span class="text-red-600">${data.error || data.detail || '启动失败'}</span>`;
+      }
+    } catch (e) {
+      msg.innerHTML = `<span class="text-red-600">网络错误: ${e.message}</span>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '触发采集';
+    }
+  }
+
+  /* ── Cleanup ─────────────────────────────────────────────────── */
+  async function triggerCleanup() {
+    const btn = $('#btn-cleanup');
+    const msgEl = $('#cleanup-msg');
+    btn.disabled = true;
+    btn.textContent = '清理中...';
+    msgEl.textContent = '';
+
+    try {
+      const res = await fetch('/api/admin/cleanup?target=all', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.results) {
+        const parts = Object.entries(data.results).map(([k,v]) => `${k}: ${v}`).join(' | ');
+        msgEl.innerHTML = `<span class="text-green-600">完成: ${parts}</span>`;
+      } else {
+        msgEl.innerHTML = `<span class="text-red-600">${data.error || '清理失败'}</span>`;
+      }
+    } catch (e) {
+      msgEl.innerHTML = `<span class="text-red-600">网络错误: ${e.message}</span>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '一键清理日志 + 快照';
+    }
+  }
+
+  /* ── Init ────────────────────────────────────────────────────── */
+  $('#btn-trigger').addEventListener('click', triggerCollection);
+  $('#btn-cleanup').addEventListener('click', triggerCleanup);
+
+  // Load everything on page load
+  refreshHealth();
+  refreshStats();
+  refreshRuns();
+  refreshAlerts();
+
+  // Auto-refresh status lights every 30s
+  setInterval(refreshHealth, 30000);
+
+  // Also refresh stats, runs, alerts on a slower cycle
+  setInterval(() => {
+    refreshStats();
+    refreshRuns();
+    refreshAlerts();
+  }, 60000);
+  </script>
+
+</body>
+</html>

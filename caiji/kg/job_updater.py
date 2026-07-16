@@ -102,17 +102,20 @@ class JobUpdater:
             x["current_count"] - x["canonical_count"]
         ))
 
-    def list_all_changes(self, max_jobs: int = 50) -> list:
+    def list_all_changes(self, limit: int = 50, offset: int = 0) -> list:
         """Aggregate skill change records across all updatable jobs.
 
         Returns a flat list of change records (new/removed/modified skills) with
         timestamps and evidence, suitable for the skill management table.
 
+        Supports pagination via offset and limit parameters.
+
         Note: Dates are deterministically derived from the skill name hash
         for reproducible results. These are demonstration-quality dates.
         """
         records = []
-        titles = list(TITLE_TO_SKILLS.keys())[:max_jobs]
+        all_titles = list(TITLE_TO_SKILLS.keys())
+        titles = all_titles[offset : offset + limit]
 
         for title in titles:
             try:
@@ -165,6 +168,28 @@ class JobUpdater:
 
         records.sort(key=lambda x: x["date"], reverse=True)
         return records
+
+    def count_all_changes(self) -> int:
+        """Return total count of change records across all jobs.
+
+        This counts all flattened records (one per skill-change), not
+        just job titles.  Useful for pagination metadata.
+
+        Note: This iterates all titles and computes the full record set;
+        for large datasets a cached count in a store would be preferable.
+        """
+        total = 0
+        for title in TITLE_TO_SKILLS.keys():
+            try:
+                analysis = self.analyze(title)
+            except Exception:
+                continue
+            total += (
+                len(analysis.get("new_skills", []))
+                + len(analysis.get("removed_skills", []))
+                + len(analysis.get("common_skills", []))
+            )
+        return total
 
     def report(self, job_title: str) -> str:
         """Generate a human-readable update report for one job title."""
