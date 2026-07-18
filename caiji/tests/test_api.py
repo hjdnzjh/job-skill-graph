@@ -13,19 +13,22 @@ client = TestClient(app)
 
 
 class TestRootEndpoint:
-    """Tests for the root endpoint."""
+    """前后端分离后，根路由返回 API 信息 JSON。"""
 
-    def test_root_returns_html(self):
-        """Root endpoint should return the dashboard HTML."""
+    def test_root_returns_json(self):
+        """根路由 / 应返回 API 信息 JSON。"""
         response = client.get("/")
+        assert response.status_code == 200
+        data = response.json()
+        assert "service" in data
+        assert "version" in data
+
+    def test_admin_dashboard(self):
+        """管理面板 /admin 应返回 HTML 页面。"""
+        response = client.get("/admin")
         assert response.status_code == 200
         content_type = response.headers.get("content-type", "")
         assert "text/html" in content_type
-
-    def test_static_mount(self):
-        """Static files should be served."""
-        response = client.get("/static/dashboard.html")
-        assert response.status_code == 200
 
 
 class TestOverviewAPI:

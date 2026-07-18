@@ -562,3 +562,47 @@ async def collector_sources():
     except Exception as e:
         logger.error(f"collector/sources error: {e}")
         return JSONResponse({"error": str(e)}, status_code=500)
+
+
+# ---------------------------------------------------------------------------
+# 调度管理端点
+# ---------------------------------------------------------------------------
+
+class ScheduleRequest(BaseModel):
+    platform: str = "tencent"
+    keyword: str = "Java"
+    city: str = "深圳"
+    interval_hours: int = 24
+
+
+@router.get("/schedule")
+async def list_schedules():
+    """列出所有定时采集任务"""
+    try:
+        from collector.scheduler import get_scheduler
+        jobs = get_scheduler().list_jobs()
+        return {"schedules": jobs}
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+
+@router.post("/schedule")
+async def add_schedule(req: ScheduleRequest):
+    """添加定时采集任务"""
+    try:
+        from collector.scheduler import get_scheduler
+        jid = get_scheduler().add_job(req.platform, req.keyword, req.city, req.interval_hours)
+        return {"status": "added", "job_id": jid}
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+
+@router.delete("/schedule/{job_id}")
+async def remove_schedule(job_id: str):
+    """删除定时采集任务"""
+    try:
+        from collector.scheduler import get_scheduler
+        get_scheduler().remove_job(job_id)
+        return {"status": "removed", "job_id": job_id}
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
