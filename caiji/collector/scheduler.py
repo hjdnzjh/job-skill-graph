@@ -177,6 +177,25 @@ class CollectorScheduler:
             raise
         return job_id
 
+    def add_snapshot_job(self, interval_hours: int = 168):
+        """每周自动保存演化快照"""
+        job_id = "snapshot_weekly"
+        self.remove_job(job_id)
+        self._scheduler.add_job(
+            func=self._run_snapshot,
+            trigger=IntervalTrigger(hours=interval_hours),
+            id=job_id,
+            name="每周演化快照",
+            replace_existing=True,
+        )
+
+    def _run_snapshot(self):
+        """执行快照保存"""
+        from kg.evolution import EvolutionTracker
+        from config.settings import Settings
+        tracker = EvolutionTracker(Settings())
+        tracker.save_snapshot(record_count=None)  # None = 从 Neo4j 自动取
+
     def remove_job(self, job_id: str):
         """Remove a scheduled job by ID."""
         try:

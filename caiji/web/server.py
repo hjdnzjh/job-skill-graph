@@ -25,6 +25,7 @@ async def lifespan(app: FastAPI):
         scheduler = get_scheduler()
         scheduler.add_job("tencent", "Java", "深圳", interval_hours=24)
         scheduler.add_job("tencent", "Python", "北京", interval_hours=24)
+        scheduler.add_snapshot_job(interval_hours=168)  # 每周一次
         scheduler.start()
         logger.info("采集调度器已启动")
     except Exception as exc:

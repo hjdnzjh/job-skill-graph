@@ -212,45 +212,43 @@ async def get_overview():
 
         # --- 4. Domain trends ---
         domain_trends = []
-        if len(snapshots) >= 2:
-            oldest = snapshots[0]
+        if len(snapshots) >= 1:
             newest = snapshots[-1]
+            domain_trends = _build_cross_domain_from_snapshot(newest)
 
-            old_domains = {}
-            for d in oldest.get("skills_by_domain", []):
-                old_domains[d.get("domain")] = d
-            new_domains = {}
-            for d in newest.get("skills_by_domain", []):
-                new_domains[d.get("domain")] = d
+            # Add before/after comparison if 2+ snapshots
+            if len(snapshots) >= 2:
+                oldest = snapshots[0]
+                old_domains = {}
+                for d in oldest.get("skills_by_domain", []):
+                    old_domains[d.get("domain")] = d
+                for entry in domain_trends:
+                    domain_code = entry.get("code", "")
+                    od = old_domains.get(domain_code, {"demand": 0, "skill_count": 0})
+                    demand_before = od.get("demand", 0)
+                    entry["demand_before"] = demand_before
+                    if demand_before == 0 and entry["demand"] > 0:
+                        entry["growth_pct"] = 100.0
+                    elif demand_before > 0:
+                        entry["growth_pct"] = round(
+                            (entry["demand"] - demand_before) / demand_before * 100, 1
+                        )
+                    else:
+                        entry["growth_pct"] = 0.0
+                    entry["skill_count_before"] = od.get("skill_count", 0)
 
-            all_domains = set(list(old_domains.keys()) + list(new_domains.keys()))
-            for domain_code in all_domains:
-                od = old_domains.get(domain_code, {"demand": 0, "skill_count": 0, "domain_name": ""})
-                nd = new_domains.get(domain_code, {"demand": 0, "skill_count": 0, "domain_name": ""})
-                domain_name = nd.get("domain_name") or od.get("domain_name", domain_code)
+            domain_trends.sort(key=lambda x: -abs(x.get("growth_pct", 0)))
 
-                demand_before = od.get("demand", 0)
-                demand_after = nd.get("demand", 0)
-                if demand_before == 0 and demand_after > 0:
-                    growth_pct = 100.0
-                elif demand_before > 0:
-                    growth_pct = round((demand_after - demand_before) / demand_before * 100, 1)
-                else:
-                    growth_pct = 0.0
+        # --- 5. Cross-platform distribution (from latest snapshot) ---
+        cross_platform = {}
+        if len(snapshots) >= 1:
+            cross_platform = _build_cross_platform_from_snapshot(snapshots[-1])
 
-                domain_trends.append({
-                    "domain_code": domain_code,
-                    "domain_name": domain_name,
-                    "demand_before": demand_before,
-                    "demand_after": demand_after,
-                    "growth_pct": growth_pct,
-                    "skill_count_before": od.get("skill_count", 0),
-                    "skill_count_after": nd.get("skill_count", 0),
-                })
-            domain_trends.sort(key=lambda x: -abs(x["growth_pct"]))
+        # --- 6. Cross-domain distribution (same as domain_trends, formatted) ---
+        cross_domain = domain_trends
 
-        # --- 5. AI Insights ---
-        insights = _generate_insights(skill_trends, job_trends, status_distribution)
+        # --- 7. AI Insights ---
+        insights = _generate_insights(skill_trends, job_trends, status_distribution, snapshots)
 
         return {
             "job_trends": job_trends,
@@ -258,6 +256,8 @@ async def get_overview():
             "skill_trends_detail": skill_trends_detail[:50],
             "status_distribution": status_distribution,
             "domain_trends": domain_trends,
+            "cross_platform": cross_platform,
+            "cross_domain": cross_domain,
             "insights": insights,
             "warnings": warnings,
         }
@@ -268,7 +268,7 @@ async def get_overview():
 
 
 def _generate_insights(skill_trends: list, job_trends: list,
-                       status_distribution: list) -> list:
+                       status_distribution: list, snapshots: list = None) -> list:
     """Generate actionable insights from trend data.
 
     Uses configurable thresholds to avoid trivial or misleading results.
@@ -324,19 +324,26 @@ def _generate_insights(skill_trends: list, job_trends: list,
             ),
         })
 
-    # Insight 4: Data volume growth
+    # Insight 4: Data volume growth (with real data source annotation)
     if len(job_trends) >= 2:
         first_cnt = job_trends[0].get("count", 0)
         last_cnt = job_trends[-1].get("count", 0)
         if first_cnt > 0 and last_cnt > first_cnt:
             growth_pct = int((last_cnt - first_cnt) / first_cnt * 100)
+            snapshot_count = len(snapshots) if snapshots else 0
+            source_annotation = (
+                f"基于 {snapshot_count} 个真实快照分析，来自 MySQL job_records + Neo4j 知识图谱"
+                if snapshot_count > 0
+                else "数据来源：真实快照"
+            )
             insights.append({
                 "category": "数据规模增长",
                 "title": "岗位数据持续扩展",
                 "description": (
                     f"岗位记录数从 {first_cnt} 增长至 {last_cnt}，"
-                    f"增长 {growth_pct}%。数据覆盖度持续提升。"
+                    f"增长 {growth_pct}%。{source_annotation}。"
                 ),
+                "data_source": "real_snapshots",
             })
 
     # Insight 5: Pending review alert
@@ -362,3 +369,46 @@ def _generate_insights(skill_trends: list, job_trends: list,
         })
 
     return insights
+
+
+def _build_cross_domain_from_snapshot(snap: dict) -> list:
+    """Build cross-domain distribution from a single snapshot's skills_by_domain."""
+    domains = snap.get("skills_by_domain", [])
+    total_demand = sum(d.get("demand", 0) for d in domains) if domains else 0
+
+    result = []
+    for d in domains:
+        demand = d.get("demand", 0)
+        result.append({
+            "name": d.get("domain_name", d.get("domain", "")),
+            "code": d.get("domain", ""),
+            "demand": demand,
+            "demand_after": demand,
+            "share_pct": round(demand / total_demand * 100, 1) if total_demand > 0 else 0.0,
+            "skill_count": d.get("skill_count", 0),
+        })
+    return result
+
+
+def _build_cross_platform_from_snapshot(snap: dict) -> dict:
+    """Build cross-platform distribution from a single snapshot's platform_distribution."""
+    pd = snap.get("platform_distribution", {})
+    if not pd:
+        return {}
+
+    by_platform = pd.get("by_platform", {})
+    total = sum(by_platform.values()) if by_platform else 0
+    by_type = pd.get("by_type", {})
+
+    platforms = {}
+    for name, count in sorted(by_platform.items(), key=lambda x: -x[1]):
+        platforms[name] = {
+            "count": count,
+            "share_pct": round(count / total * 100, 1) if total > 0 else 0.0,
+        }
+    return {
+        "by_platform": platforms,
+        "by_type": by_type,
+        "total_sources": pd.get("total_sources", 0),
+        "total_records": total,
+    }

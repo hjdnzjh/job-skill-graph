@@ -42,12 +42,23 @@ class EvolutionTracker:
     # Snapshot
     # ------------------------------------------------------------------
 
-    def save_snapshot(self, record_count: int = 0) -> str:
+    def save_snapshot(self, record_count: Optional[int] = 0) -> str:
         """Extract current Neo4j state and save as timestamped JSON file.
+
+        Args:
+            record_count: Total record count. If None, auto-queries Neo4j.
 
         Returns the path to the saved snapshot file.
         """
         os.makedirs(SNAPSHOT_DIR, exist_ok=True)
+
+        # Auto-query record count from Neo4j if not provided
+        if record_count is None:
+            try:
+                result = self.neo4j.run_query("MATCH (j:Job) RETURN count(j) AS cnt")
+                record_count = result[0]["cnt"] if result else 0
+            except Exception:
+                record_count = 0
 
         snapshot = {
             "timestamp": datetime.now().isoformat(),
@@ -60,6 +71,7 @@ class EvolutionTracker:
             "industry_distribution": self._snapshot_industry_distribution(),
             "skill_communities": self._snapshot_skill_communities(),
             "skills_by_domain": self._snapshot_skills_by_domain(),
+            "platform_distribution": self._snapshot_platform_distribution(),
         }
 
         filename = datetime.now().strftime("%Y-%m-%d_%H%M%S") + ".json"
@@ -72,12 +84,19 @@ class EvolutionTracker:
         return filepath
 
     def list_snapshots(self) -> List[str]:
-        """Return sorted list of snapshot file paths (oldest first)."""
+        """Return sorted list of snapshot file paths (oldest first).
+
+        默认只读 SNAPSHOT_DIR 根目录下的真实快照，排除 simulated/ 子目录。
+        """
         if not os.path.isdir(SNAPSHOT_DIR):
             return []
-        files = [os.path.join(SNAPSHOT_DIR, f)
-                 for f in os.listdir(SNAPSHOT_DIR)
-                 if f.endswith(".json") and f != "snapshot_index.json"]
+        files = []
+        for f in os.listdir(SNAPSHOT_DIR):
+            full = os.path.join(SNAPSHOT_DIR, f)
+            if os.path.isdir(full):
+                continue  # 排除子目录（如 simulated/）
+            if f.endswith(".json") and f != "snapshot_index.json":
+                files.append(full)
         return sorted(files)
 
     def load_snapshot(self, path: str) -> dict:
@@ -133,6 +152,10 @@ class EvolutionTracker:
                 snap_a.get("top_skills", []),
                 snap_b.get("top_skills", []),
                 "skill",
+            ),
+            "platform_changes": self._compare_platforms(
+                snap_a.get("platform_distribution", {}),
+                snap_b.get("platform_distribution", {}),
             ),
         }
 
@@ -288,6 +311,52 @@ class EvolutionTracker:
             "ORDER BY demand DESC"
         )
         return [dict(r) for r in rows]
+
+    def _snapshot_platform_distribution(self) -> dict:
+        """Query MySQL for record counts grouped by source_type and source_name.
+
+        Returns dict with two views:
+            by_platform: {source_name: count}
+            by_type:     {source_type: count}
+            total_sources: number of distinct (source_type, source_name) pairs
+        """
+        try:
+            import pymysql
+            s = self.settings
+            conn = pymysql.connect(
+                host=s.mysql_host,
+                port=s.mysql_port,
+                user=s.mysql_user,
+                password=s.mysql_password,
+                database=s.mysql_database,
+            )
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT source_type, source_name, COUNT(*) AS cnt "
+                "FROM job_records "
+                "GROUP BY source_type, source_name "
+                "ORDER BY cnt DESC"
+            )
+            rows = cur.fetchall()
+
+            by_platform = {}
+            by_type = {}
+            for source_type, source_name, cnt in rows:
+                key = f"{source_type}/{source_name}"
+                by_platform[key] = cnt
+                by_type[source_type] = by_type.get(source_type, 0) + cnt
+
+            cur.close()
+            conn.close()
+
+            return {
+                "by_platform": by_platform,
+                "by_type": by_type,
+                "total_sources": len(rows),
+            }
+        except Exception as exc:
+            logger.warning(f"Failed to snapshot platform distribution: {exc}")
+            return {"by_platform": {}, "by_type": {}, "total_sources": 0}
 
     def _get_skill_domain_map(self) -> dict:
         """Return a mapping of {skill_name: domain_code} from Neo4j."""
@@ -449,6 +518,60 @@ class EvolutionTracker:
             "changed": both,
             "top_growing": sorted(both.items(), key=lambda x: -x[1]["delta"])[:5],
             "top_declining": sorted(both.items(), key=lambda x: x[1]["delta"])[:5],
+        }
+
+    @staticmethod
+    def _compare_platforms(before: dict, after: dict) -> dict:
+        """Compare platform distribution between two snapshots.
+
+        Computes growth for each platform key and source_type.
+        """
+        before_platforms = before.get("by_platform", {})
+        after_platforms = after.get("by_platform", {})
+        before_types = before.get("by_type", {})
+        after_types = after.get("by_type", {})
+
+        # Per-platform comparison
+        all_platforms = set(list(before_platforms.keys()) + list(after_platforms.keys()))
+        platform_deltas = {}
+        for key in sorted(all_platforms):
+            b_cnt = before_platforms.get(key, 0)
+            a_cnt = after_platforms.get(key, 0)
+            if b_cnt == 0 and a_cnt > 0:
+                growth_pct = 100.0
+            elif b_cnt > 0:
+                growth_pct = round((a_cnt - b_cnt) / b_cnt * 100, 1)
+            else:
+                growth_pct = 0.0
+            platform_deltas[key] = {
+                "before": b_cnt,
+                "after": a_cnt,
+                "delta": a_cnt - b_cnt,
+                "growth_pct": growth_pct,
+            }
+
+        # Per-type comparison
+        all_types = set(list(before_types.keys()) + list(after_types.keys()))
+        type_deltas = {}
+        for key in sorted(all_types):
+            b_cnt = before_types.get(key, 0)
+            a_cnt = after_types.get(key, 0)
+            if b_cnt == 0 and a_cnt > 0:
+                growth_pct = 100.0
+            elif b_cnt > 0:
+                growth_pct = round((a_cnt - b_cnt) / b_cnt * 100, 1)
+            else:
+                growth_pct = 0.0
+            type_deltas[key] = {
+                "before": b_cnt,
+                "after": a_cnt,
+                "delta": a_cnt - b_cnt,
+                "growth_pct": growth_pct,
+            }
+
+        return {
+            "by_platform": platform_deltas,
+            "by_type": type_deltas,
         }
 
     @staticmethod
