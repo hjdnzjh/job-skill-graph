@@ -131,6 +131,18 @@ def _get_collector(platform: str):
         elif platform == "huawei":
             from collector.huawei import HuaweiCollector
             _COLLECTOR_MAP[platform] = HuaweiCollector()
+        elif platform == "arxiv":
+            from collector.arxiv import ArxivCollector
+            _COLLECTOR_MAP[platform] = ArxivCollector()
+        elif platform == "semantic_scholar":
+            from collector.semantic_scholar import SemanticScholarCollector
+            _COLLECTOR_MAP[platform] = SemanticScholarCollector()
+        elif platform == "policy":
+            from collector.policy import PolicyCollector
+            _COLLECTOR_MAP[platform] = PolicyCollector()
+        elif platform == "enterprise":
+            from collector.enterprise import EnterpriseCollector
+            _COLLECTOR_MAP[platform] = EnterpriseCollector()
         else:
             raise ValueError(f"Unknown platform: {platform}")
     return _COLLECTOR_MAP[platform]
@@ -148,7 +160,37 @@ _PLATFORM_SOURCE_TYPE = {
     "bytedance": DataSourceType.ENTERPRISE,
     "alibaba": DataSourceType.ENTERPRISE,
     "huawei": DataSourceType.ENTERPRISE,
+    "arxiv": DataSourceType.ACADEMIC,
+    "semantic_scholar": DataSourceType.ACADEMIC,
+    "policy": DataSourceType.POLICY,
+    "enterprise": DataSourceType.ENTERPRISE,
 }
+
+
+def _parse_publish_date(value) -> Optional[datetime]:
+    """Parse a publish_date string into a datetime object.
+
+    Supports ISO 8601 format (e.g. '2024-01-15T12:00:00Z' or '2024-01-15').
+    """
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        return value
+    s = str(value).strip()
+    if not s:
+        return None
+    # Try common date formats
+    for fmt in (
+        "%Y-%m-%dT%H:%M:%SZ",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%d",
+        "%Y-%m",
+    ):
+        try:
+            return datetime.strptime(s, fmt)
+        except ValueError:
+            continue
+    return None
 
 
 def _dict_to_unified_schema(raw: dict, platform: str) -> UnifiedJobSchema:
@@ -185,7 +227,7 @@ def _dict_to_unified_schema(raw: dict, platform: str) -> UnifiedJobSchema:
         skills_required=skills,
         skills_preferred=[],
         abilities=[],
-        publish_date=None,
+        publish_date=_parse_publish_date(raw.get("publish_date")),
         crawl_timestamp=datetime.now(),
         data_format=DataFormat.SEMI_STRUCTURED,
         extra={"source_platform": platform},
@@ -366,6 +408,7 @@ async def trigger_collection(req: TriggerRequest):
     valid_platforms = [
         "tencent", "liepin", "boss_zhipin", "zhilian",
         "bytedance", "alibaba", "huawei",
+        "arxiv", "semantic_scholar", "policy", "enterprise",
     ]
     if req.platform not in valid_platforms:
         return JSONResponse(
